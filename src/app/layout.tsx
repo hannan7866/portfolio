@@ -117,7 +117,7 @@ const jsonLd = {
     "https://github.com/hannan7866",
     "https://linkedin.com/in/abdul-hannan-92a911405",
     "https://apple-vision-pro-experience.vercel.app/",
-    "https://hannan7866-lalamotors-website-main.vercel.app/",
+    "https://hannan7866-lalamotors-website-main-6alcm07g7.vercel.app/",
     "https://skillswap-main-one.vercel.app/",
     "https://tubaportfolio.vercel.app/",
   ],
