@@ -250,6 +250,58 @@ const PROJECTS: Project[] = [
     liveUrl: "https://tubaportfolio.vercel.app/",
     githubUrl: "https://github.com/hannan7866/tuba-portfolio",
   },
+  {
+    id: "duotech-portfolio",
+    number: "07",
+    title: "DuoTech — Engineering Matrix & Duo Platform",
+    subtitle: "Collaborative Full-Stack & Frontend Synergy Web Platform",
+    categoryType: "production",
+    categoryLabel: "Production / Collaborative",
+    badge: "Live Collaborative Platform",
+    image: "/images/duo.png",
+    tags: [
+      "Next.js 14",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Canvas API",
+      "Vercel",
+    ],
+    shortDescription:
+      "A high-performance, dark-themed engineering duo matrix showcasing the combined synergy of backend system architectures, offline ERP engines, and pixel-perfect interactive frontend animations.",
+    architectureStory:
+      "Engineered as a synchronized collaborative platform presenting dual engineering specializations. Features an interactive terminal system probe with live JSON/telemetry state toggling, custom canvas particle animations, magnetic micro-interactions, responsive case study modals, and multi-channel client conversion touchpoints.",
+    keyModules: [
+      {
+        title: "System Telemetry & Interactive Terminal",
+        desc: "Live simulated terminal console with real-time JSON, overview metrics, and system probe diagnostics.",
+      },
+      {
+        title: "Dual Engineering Matrix",
+        desc: "Comparative skill matrix bridging heavy backend/AI systems (Abdul) with high-performance frontend UI/UX (Arslaan).",
+      },
+      {
+        title: "Curated Showcase & Case Studies",
+        desc: "Dynamic modal workflows, animated performance benchmarks, and real-world client testimonials.",
+      },
+      {
+        title: "Conversion & Instant Booking",
+        desc: "Multi-channel intake pipeline routing inquiries via direct email, WhatsApp, phone, and social platforms.",
+      },
+    ],
+    technicalHighlights: [
+      "Dynamic interactive terminal console with real-time JSON and telemetry state switching.",
+      "High-performance micro-interactions, magnetic buttons, and custom Framer Motion spring physics.",
+      "Interactive 2D canvas background particle engine synchronized with responsive viewport rendering.",
+      "Futuristic dark-mode UI with custom glassmorphism, blur glow accents, and responsive typography.",
+    ],
+    recruiterTakeaway:
+      "Demonstrates high-level collaborative engineering, interactive UI component architecture, modern Next.js/Tailwind development, and delivering engaging web platforms.",
+    year: "2025",
+    liveUrl: "https://duotech-portfolio.vercel.app/",
+    githubUrl: "https://github.com/hannan7866",
+  },
 ];
 
 export default function Projects() {
@@ -308,9 +360,21 @@ export default function Projects() {
       <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-10 no-scrollbar select-none">
         {[
           { id: "all", label: "All Projects", count: PROJECTS.length },
-          { id: "production", label: "🌟 Production / Real-World", count: 2 },
-          { id: "engineering", label: "⚡ Engineering & Technical", count: 3 },
-          { id: "client", label: "🎨 Client / Creative Work", count: 1 },
+          {
+            id: "production",
+            label: "🌟 Production / Real-World",
+            count: PROJECTS.filter((p) => p.categoryType === "production").length,
+          },
+          {
+            id: "engineering",
+            label: "⚡ Engineering & Technical",
+            count: PROJECTS.filter((p) => p.categoryType === "engineering").length,
+          },
+          {
+            id: "client",
+            label: "🎨 Client / Creative Work",
+            count: PROJECTS.filter((p) => p.categoryType === "client").length,
+          },
         ].map((tab) => (
           <button
             key={tab.id}
