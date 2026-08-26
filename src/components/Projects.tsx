@@ -143,7 +143,7 @@ const PROJECTS: Project[] = [
     recruiterTakeaway:
       "Proves end-to-end full-stack web engineering mastery: relational database design with triggers, serverless API architecture, e-commerce cart & inventory state, third-party CRM pipelines, and multi-channel automation.",
     year: "2025",
-    liveUrl: "https://hannan7866-lalamotors-website-main-6alcm07g7.vercel.app/",
+    liveUrl: "https://hannan7866-lalamotors-website-main.vercel.app/",
     githubUrl: "https://github.com/hannan7866/lalamotors-website-main",
   },
   {

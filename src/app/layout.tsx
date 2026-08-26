@@ -31,7 +31,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://github.com/hannan7866"),
+  metadataBase: new URL("https://portfolio-hannan7866s-projects.vercel.app"),
   title: "Abdul Hannan — Full-Stack Developer | Software Engineer",
   description:
     "Full-Stack Developer & Software Engineer building real-world products, business systems, and interactive web experiences. 1.5+ years hands-on experience, 1,000+ real-world transactions, Python, React, Next.js, Node.js, SQL, AI/LLMs.",
@@ -80,12 +80,12 @@ export const metadata: Metadata = {
     "Responsive Web Design",
     "Lala Motors",
   ],
-  authors: [{ name: "Abdul Hannan", url: "https://github.com/hannan7866" }],
+  authors: [{ name: "Abdul Hannan", url: "https://portfolio-hannan7866s-projects.vercel.app" }],
   openGraph: {
     title: "Abdul Hannan — Full-Stack Developer | Software Engineer",
     description:
       "Building real-world products, offline-first business systems, and interactive web experiences. 1,000+ real-world transactions processed.",
-    url: "https://github.com/hannan7866",
+    url: "https://portfolio-hannan7866s-projects.vercel.app",
     siteName: "Abdul Hannan Portfolio",
     images: [
       {
@@ -112,14 +112,16 @@ const jsonLd = {
   "@type": "Person",
   name: "Abdul Hannan",
   jobTitle: "Full-Stack Developer | Software Engineer",
-  url: "https://github.com/hannan7866",
+  url: "https://portfolio-hannan7866s-projects.vercel.app",
   sameAs: [
     "https://github.com/hannan7866",
     "https://linkedin.com/in/abdul-hannan-92a911405",
-    "https://apple-vision-pro-experience.vercel.app/",
-    "https://hannan7866-lalamotors-website-main-6alcm07g7.vercel.app/",
-    "https://skillswap-main-one.vercel.app/",
+    "https://hannan7866-lalamotors-website-main.vercel.app/",
+    "https://portfolio-hannan7866s-projects.vercel.app/",
+    "https://duotech-portfolio.vercel.app/",
     "https://tubaportfolio.vercel.app/",
+    "https://apple-vision-pro-experience.vercel.app/",
+    "https://skillswap-main-one.vercel.app/",
   ],
   knowsAbout: [
     "Python",
