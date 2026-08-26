@@ -116,7 +116,7 @@ const jsonLd = {
   sameAs: [
     "https://github.com/hannan7866",
     "https://linkedin.com/in/abdul-hannan-92a911405",
-    "https://hannan7866-lalamotors-website-main.vercel.app/",
+    "https://lalamotors.vercel.app/",
     "https://portfolio-hannan7866s-projects.vercel.app/",
     "https://duotech-portfolio.vercel.app/",
     "https://tubaportfolio.vercel.app/",
