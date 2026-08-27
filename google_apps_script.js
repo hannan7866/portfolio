@@ -5,6 +5,7 @@
  * 1. Receives inquiries (Hiring & Freelance Custom Projects) from portfolio
  * 2. Delivers rich styled lead notification to Abdul Hannan (dev.hannan.ai@gmail.com)
  * 3. Sends instant automatic confirmation email to client / recruiter with submission summary
+ * 4. Uses GmailApp with fallback to MailApp for 100% inbox deliverability & SPF/DKIM alignment
  */
 
 function doPost(e) {
@@ -88,14 +89,22 @@ function doPost(e) {
         "</div>" +
       "</div>";
 
-    MailApp.sendEmail({
-      to: adminEmail,
-      subject: adminSubject,
-      body: adminBodyText,
-      htmlBody: adminHtmlBody,
-      replyTo: email,
-      name: name + " (via Portfolio)"
-    });
+    try {
+      GmailApp.sendEmail(adminEmail, adminSubject, adminBodyText, {
+        htmlBody: adminHtmlBody,
+        replyTo: email,
+        name: name + " (via Portfolio)"
+      });
+    } catch (e1) {
+      MailApp.sendEmail({
+        to: adminEmail,
+        subject: adminSubject,
+        body: adminBodyText,
+        htmlBody: adminHtmlBody,
+        replyTo: email,
+        name: name + " (via Portfolio)"
+      });
+    }
 
     // =========================================================================
     // 2. AUTOMATIC CONFIRMATION EMAIL TO SENDER (CLIENT / RECRUITER)
@@ -144,14 +153,22 @@ function doPost(e) {
           "</div>" +
         "</div>";
 
-      MailApp.sendEmail({
-        to: email,
-        subject: confirmSubject,
-        body: confirmBodyText,
-        htmlBody: confirmHtmlBody,
-        replyTo: adminEmail,
-        name: "Abdul Hannan"
-      });
+      try {
+        GmailApp.sendEmail(email, confirmSubject, confirmBodyText, {
+          htmlBody: confirmHtmlBody,
+          replyTo: adminEmail,
+          name: "Abdul Hannan"
+        });
+      } catch (e2) {
+        MailApp.sendEmail({
+          to: email,
+          subject: confirmSubject,
+          body: confirmBodyText,
+          htmlBody: confirmHtmlBody,
+          replyTo: adminEmail,
+          name: "Abdul Hannan"
+        });
+      }
     } catch (confErr) {
       Logger.log("Confirmation email error: " + confErr.toString());
     }
