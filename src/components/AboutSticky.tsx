@@ -31,7 +31,7 @@ interface AboutStickyProps {
 
 export default function AboutSticky({ onOpenContact }: AboutStickyProps) {
   return (
-    <section id="about" className="relative py-28 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto">
+    <section id="about" className="relative py-28 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto overflow-hidden w-full max-w-[100vw]">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column (Sticky Identity Profile Card) */}
         <div className="lg:col-span-5 lg:sticky lg:top-28">

@@ -28,7 +28,7 @@ export default function Home() {
 
   return (
     <SmoothScroll>
-      <main className="relative min-h-screen bg-[#0d0d0f] text-white selection:bg-[#f41761] selection:text-white">
+      <main className="relative min-h-screen bg-[#0d0d0f] text-white selection:bg-[#f41761] selection:text-white overflow-x-hidden w-full max-w-[100vw]">
         {/* Floating Header / Navbar */}
         <Navbar onOpenContact={() => handleOpenContact("hire")} />
 

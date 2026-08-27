@@ -23,12 +23,12 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-5 pointer-events-none transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 py-4 sm:py-5 pointer-events-none transition-all duration-300 w-full max-w-[100vw]">
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between gap-6 sm:gap-8 px-4 py-2 rounded-full transition-all duration-300 ${
+        className={`pointer-events-auto flex items-center justify-between gap-4 sm:gap-8 px-3.5 sm:px-4 py-2 rounded-full transition-all duration-300 max-w-[calc(100vw-1.5rem)] ${
           isScrolled
             ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/90"
             : "bg-black/60 backdrop-blur-lg border border-white/10"

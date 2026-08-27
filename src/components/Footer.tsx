@@ -55,26 +55,26 @@ export default function Footer({ onOpenContact }: FooterProps) {
   }, []);
 
   return (
-    <footer id="contact" className="relative pt-24 pb-0 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#0d0d0f]">
+    <footer id="contact" className="relative pt-24 pb-0 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#0d0d0f] overflow-hidden w-full max-w-[100vw]">
       
       {/* Top Heading: "Lets [word] / incredible work together." */}
       <div className="relative mb-14 select-none">
-        <div className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white font-sans leading-normal">
+        <div className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white font-sans leading-normal">
           {/* First Line: Lets + Handwritten Swapped Word */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span>Lets</span>
             
             {/* Dynamic Swapped Word Container */}
-            <div className="relative inline-flex items-center justify-start min-w-[220px] sm:min-w-[320px] md:min-w-[380px] h-14 sm:h-20 md:h-24 overflow-visible">
+            <div className="relative inline-flex items-center justify-start min-w-[140px] sm:min-w-[300px] md:min-w-[360px] h-12 sm:h-20 md:h-24 overflow-hidden sm:overflow-visible">
               <AnimatePresence mode="wait">
                 <motion.span
                   key={WORDS[index]}
-                  initial={{ y: 30, opacity: 0 }}
+                  initial={{ y: 25, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -30, opacity: 0 }}
+                  exit={{ y: -25, opacity: 0 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   style={{ fontFamily: "var(--font-handwritten)" }}
-                  className="absolute left-0 text-[#FF1E56] text-5xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-2"
+                  className="text-[#FF1E56] text-4xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-1 sm:py-2"
                 >
                   {WORDS[index]}
                 </motion.span>
@@ -116,103 +116,83 @@ export default function Footer({ onOpenContact }: FooterProps) {
           <span className="text-xs text-zinc-500 font-medium tracking-wide">
             Call Me
           </span>
-          <button
-            onClick={onOpenContact}
-            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors text-left cursor-pointer"
+          <a
+            href="tel:+917310542113"
+            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors"
           >
-            Book Now / Direct Call
-          </button>
+            +91-7310542113
+          </a>
         </div>
 
-        {/* Social Buttons */}
+        {/* Social Profiles */}
         <div className="flex flex-col gap-2 sm:items-end">
           <span className="text-xs text-zinc-500 font-medium tracking-wide">
-            Social &amp; Instant Chat
+            Follow &amp; Connect
           </span>
-          <div className="flex items-center gap-2.5">
-            {/* WhatsApp */}
+          <div className="flex items-center gap-2">
             <a
-              href="https://wa.me/917310542113?text=Hi%20Abdul%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project%2Frole%20with%20you."
+              href="https://wa.me/917310542113"
               target="_blank"
               rel="noreferrer"
               aria-label="WhatsApp"
-              title="Chat on WhatsApp"
-              className="w-7 h-7 rounded-full bg-[#25D366] text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
             >
               <WhatsappIcon className="w-3.5 h-3.5" />
             </a>
-
-            {/* Instagram */}
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              title="Instagram"
-              className="w-7 h-7 rounded-full bg-[#FF1E56] hover:bg-[#e11255] text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md"
-            >
-              <InstagramIcon className="w-3.5 h-3.5" />
-            </a>
-
-            {/* LinkedIn */}
-            <a
-              href="https://linkedin.com/in/abdul-hannan-92a911405"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              title="LinkedIn Profile"
-              className="w-7 h-7 rounded-full bg-[#FF1E56] hover:bg-[#e11255] text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5" />
-            </a>
-
-            {/* GitHub */}
             <a
               href="https://github.com/hannan7866"
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub"
-              title="GitHub Profile"
-              className="w-7 h-7 rounded-full bg-[#FF1E56] hover:bg-[#e11255] text-white flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
             >
               <GithubIcon className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://linkedin.com/in/abdul-hannan-92a911405"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
+            >
+              <LinkedinIcon className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
+            >
+              <InstagramIcon className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
       </div>
 
-      {/* Menu & Copyright Row */}
-      <div className="pt-6 pb-6 border-t border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Bottom Bar: Copyright & Navigation */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 border-t border-white/[0.08] text-xs text-zinc-500 font-medium">
         <div>
-          <span className="text-xs text-zinc-500 block mb-1 font-medium">
-            Menu
-          </span>
-          <div className="flex items-center gap-6 text-sm font-bold text-white">
-            <Link href="#projects" className="hover:text-[#FF1E56] transition-colors">
-              Work
-            </Link>
-            <Link href="#skills" className="hover:text-[#FF1E56] transition-colors">
-              Services
-            </Link>
-            <Link href="#about" className="hover:text-[#FF1E56] transition-colors">
-              About
-            </Link>
-            <Link href="#faq" className="hover:text-[#FF1E56] transition-colors">
-              FAQs
-            </Link>
-          </div>
+          © {new Date().getFullYear()} Abdul Hannan. All rights reserved.
         </div>
 
-        <div className="text-xs text-zinc-500 font-medium sm:text-right">
-          © 2026 Abdul Hannan
+        <div className="flex items-center gap-6">
+          <Link href="#hero" className="hover:text-white transition-colors">
+            Home
+          </Link>
+          <Link href="#projects" className="hover:text-white transition-colors">
+            Projects
+          </Link>
+          <Link href="#skills" className="hover:text-white transition-colors">
+            Skills
+          </Link>
+          <Link href="#about" className="hover:text-white transition-colors">
+            About
+          </Link>
+          <Link href="#faq" className="hover:text-white transition-colors">
+            FAQ
+          </Link>
         </div>
-      </div>
-
-      {/* Giant Bottom Signature Typography */}
-      <div className="w-full pt-4 pb-0 flex justify-center items-end select-none overflow-hidden leading-none">
-        <h1 className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black tracking-[-0.06em] uppercase leading-none text-[#FF1E56] text-center font-display whitespace-nowrap m-0 p-0 transform translate-y-1">
-          MR. ABDUL
-        </h1>
       </div>
     </footer>
   );

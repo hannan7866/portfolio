@@ -315,47 +315,47 @@ export default function ContactModal({
                 </div>
 
                 {/* 3-Way Intent Switcher Tab Bar */}
-                <div className="grid grid-cols-3 p-1.5 rounded-2xl bg-[#171720] border border-white/5 mb-6 gap-1.5">
+                <div className="grid grid-cols-3 p-1 sm:p-1.5 rounded-2xl bg-[#171720] border border-white/5 mb-6 gap-1 sm:gap-1.5">
                   {/* Tab 1: Hire for Company */}
                   <button
                     type="button"
                     onClick={() => setActiveTab("hire")}
-                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                    className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "hire"
                         ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30"
                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    <Briefcase className="w-4 h-4 shrink-0" />
-                    <span>Hire for Role</span>
+                    <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="truncate">Hire for Role</span>
                   </button>
 
                   {/* Tab 2: Client Project */}
                   <button
                     type="button"
                     onClick={() => setActiveTab("project")}
-                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                    className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "project"
                         ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    <Rocket className="w-4 h-4 shrink-0" />
-                    <span>Build a Project</span>
+                    <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="truncate">Build Project</span>
                   </button>
 
                   {/* Tab 3: Direct Contact */}
                   <button
                     type="button"
                     onClick={() => setActiveTab("direct")}
-                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                    className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "direct"
                         ? "bg-white/20 text-white shadow-md"
                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    <Phone className="w-4 h-4 shrink-0" />
-                    <span>Direct Contact</span>
+                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="truncate">Direct Contact</span>
                   </button>
                 </div>
 

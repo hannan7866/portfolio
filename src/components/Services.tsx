@@ -88,7 +88,7 @@ const CAPABILITIES: CapabilityItem[] = [
 
 export default function Services() {
   return (
-    <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden w-full max-w-[100vw]">
       {/* Background glow */}
       <div className="absolute top-1/2 right-10 w-96 h-96 bg-[#FF1E56]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -126,7 +126,7 @@ export default function Services() {
             from responsive frontends and backend REST APIs to database design and automated workflows.
           </motion.p>
 
-          {/* Tools Matrix: Strict Uniform Grid of Dark Square Icons (Requirement 1) */}
+          {/* Tools Matrix: Strict Uniform Grid of Dark Square Icons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -155,23 +155,23 @@ export default function Services() {
           </motion.div>
         </div>
 
-        {/* Right Column: Tilted Scroll Reveal Capabilities Cards */}
-        <div className="lg:col-span-7 flex flex-col gap-6">
+        {/* Right Column: Scroll Reveal Capabilities Cards */}
+        <div className="lg:col-span-7 flex flex-col gap-6 overflow-hidden">
           {CAPABILITIES.map((cap, index) => (
             <motion.div
               key={cap.id}
-              initial={{ opacity: 0, y: 80, rotate: 8, filter: "blur(4px)" }}
-              whileInView={{ opacity: 1, y: 0, rotate: 0, filter: "blur(0px)" }}
-              viewport={{ once: false, margin: "-80px" }}
+              initial={{ opacity: 0, y: 50, filter: "blur(4px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: false, margin: "-60px" }}
               transition={{
                 type: "spring",
-                stiffness: 85,
-                damping: 18,
-                mass: 0.95,
-                delay: index * 0.06,
+                stiffness: 90,
+                damping: 20,
+                mass: 0.9,
+                delay: index * 0.05,
               }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-              className={`relative rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-2xl ${
+              whileHover={{ scale: 1.01, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+              className={`relative rounded-3xl p-6 sm:p-9 transition-all duration-500 shadow-2xl ${
                 cap.isHighlighted
                   ? "bg-gradient-to-br from-[#FF1E56] via-[#e11255] to-[#c70b47] text-white shadow-[0_20px_50px_rgba(255,30,86,0.45)] border border-[#ff4785]"
                   : "bg-[#131318] border border-white/10 hover:border-white/20 text-zinc-200"

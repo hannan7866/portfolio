@@ -18,12 +18,12 @@ interface FloatingDockProps {
 
 export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
   return (
-    <div className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 pointer-events-none">
+    <div className="fixed bottom-4 right-3 sm:bottom-6 sm:right-6 z-40 pointer-events-none max-w-[calc(100vw-1.5rem)]">
       <motion.div
         initial={{ y: 50, opacity: 0, scale: 0.9 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-auto flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-[0_8px_30px_rgb(0,0,0,0.8)] hover:border-white/30 transition-all group"
+        className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-[0_8px_30px_rgb(0,0,0,0.8)] hover:border-white/30 transition-all group"
       >
         <button
           onClick={onOpenContact}

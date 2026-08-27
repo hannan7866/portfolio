@@ -62,7 +62,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
   };
 
   return (
-    <section id="faq" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
+    <section id="faq" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06] overflow-hidden w-full max-w-[100vw]">
       {/* Ambient background glow */}
       <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#FF1E56]/[0.08] rounded-full blur-[150px] pointer-events-none" />
 
