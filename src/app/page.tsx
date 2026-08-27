@@ -11,12 +11,14 @@ import AboutSticky from "@/components/AboutSticky";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import FloatingDock from "@/components/FloatingDock";
-import ContactModal from "@/components/ContactModal";
+import ContactModal, { ContactMode } from "@/components/ContactModal";
 
 export default function Home() {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [contactMode, setContactMode] = useState<ContactMode>("hire");
 
-  const handleOpenContact = () => {
+  const handleOpenContact = (mode: ContactMode = "hire") => {
+    setContactMode(mode);
     setIsContactOpen(true);
   };
 
@@ -28,34 +30,38 @@ export default function Home() {
     <SmoothScroll>
       <main className="relative min-h-screen bg-[#0d0d0f] text-white selection:bg-[#f41761] selection:text-white">
         {/* Floating Header / Navbar */}
-        <Navbar onOpenContact={handleOpenContact} />
+        <Navbar onOpenContact={() => handleOpenContact("hire")} />
 
         {/* Hero Section with 1:1 Layout, Typography & 3D Cursor Tracking Avatar */}
-        <Hero onOpenContact={handleOpenContact} />
+        <Hero onOpenContact={() => handleOpenContact("hire")} />
 
-        {/* Latest Projects Showcase (Hover scale-110, dark overlay, case study modal) */}
+        {/* Latest Projects Showcase */}
         <Projects />
 
         {/* Testimonial Quote Banner */}
         <TestimonialQuote />
 
-        {/* Core Skills & Capabilities with Tilted Scroll Reveal */}
+        {/* Core Skills & Capabilities */}
         <Services />
 
-        {/* About & Experience Section with Sticky Scroll Profile Layout */}
-        <AboutSticky onOpenContact={handleOpenContact} />
+        {/* About & Experience Section */}
+        <AboutSticky onOpenContact={() => handleOpenContact("hire")} />
 
-        {/* FAQs Section with Accordion and Magenta Booking Card */}
-        <FAQ onOpenContact={handleOpenContact} />
+        {/* FAQs Section */}
+        <FAQ onOpenContact={() => handleOpenContact("project")} />
 
-        {/* Footer with Dynamic Word Swap & Links */}
-        <Footer onOpenContact={handleOpenContact} />
+        {/* Footer */}
+        <Footer onOpenContact={() => handleOpenContact("hire")} />
 
         {/* Floating Bottom Quick Contact Bar */}
-        <FloatingDock onOpenContact={handleOpenContact} />
+        <FloatingDock onOpenContact={() => handleOpenContact("direct")} />
 
-        {/* Interactive Contact & Booking Modal */}
-        <ContactModal isOpen={isContactOpen} onClose={handleCloseContact} />
+        {/* Interactive Dual-Intent Contact & Booking Modal */}
+        <ContactModal
+          isOpen={isContactOpen}
+          onClose={handleCloseContact}
+          initialMode={contactMode}
+        />
       </main>
     </SmoothScroll>
   );

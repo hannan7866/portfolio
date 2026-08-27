@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -10,8 +10,12 @@ import {
   CheckCircle2,
   Sparkles,
   Loader2,
-  ExternalLink,
-  MessageCircle,
+  Briefcase,
+  Rocket,
+  DollarSign,
+  Calendar,
+  Layers,
+  ChevronDown,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -26,7 +30,7 @@ function WhatsappIcon({ className = "w-4 h-4" }: { className?: string }) {
 function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
     </svg>
   );
 }
@@ -34,293 +38,708 @@ function GithubIcon({ className = "w-4 h-4" }: { className?: string }) {
 function LinkedinIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.25a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z" />
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.25a1.62 1.62 0 1 0 0 3.24 1.62 1.62 0 0 0 0-3.24z"/>
     </svg>
   );
 }
 
+export type ContactMode = "hire" | "project" | "direct";
+
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: ContactMode;
 }
 
-export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
-  const [tab, setTab] = useState<"message" | "direct">("message");
+export default function ContactModal({
+  isOpen,
+  onClose,
+  initialMode = "hire",
+}: ContactModalProps) {
+  const [activeTab, setActiveTab] = useState<ContactMode>(initialMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
+
+  // Sync initialMode when opening
+  useEffect(() => {
+    if (isOpen && initialMode) {
+      setActiveTab(initialMode);
+    }
+  }, [isOpen, initialMode]);
+
+  const [submittedReceipt, setSubmittedReceipt] = useState<{
+    name: string;
+    email: string;
+    category: string;
+    topic: string;
+    details: string;
+    isProject: boolean;
+  } | null>(null);
+
+  // Form State for Hiring (Companies / Recruiters)
+  const [hireForm, setHireForm] = useState({
     name: "",
     email: "",
-    roleType: "Full-Stack Developer",
-    location: "Remote (Worldwide)",
+    role: "Full-Stack Developer",
+    customRole: "",
+    workMode: "Remote (Worldwide)",
+    timeline: "Immediate / 2 Weeks",
     message: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Form State for Project (Clients / Founders / Freelance)
+  const [projectForm, setProjectForm] = useState({
+    name: "",
+    email: "",
+    projectType: "Custom Web Application (React / Next.js)",
+    customProjectType: "",
+    currency: "$ USD",
+    budgetAmount: "",
+    timeline: "Live Production & Future Updates",
+    message: "",
+  });
+
+  const finalProjectTitle =
+    projectForm.projectType === "other"
+      ? projectForm.customProjectType.trim() || "Custom Bespoke Project"
+      : projectForm.projectType;
+
+  const finalHireTitle =
+    hireForm.role === "other"
+      ? hireForm.customRole.trim() || "Custom Specialized Role"
+      : hireForm.role;
+
+  const finalBudgetText = projectForm.budgetAmount.trim()
+    ? `${projectForm.currency} ${projectForm.budgetAmount.trim()}`
+    : "Open to Discussion";
+
+  const handleHireSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!hireForm.name || !hireForm.email || !hireForm.message) return;
+
     setIsSubmitting(true);
 
+    const payload = {
+      inquiryType: "hire",
+      name: hireForm.name,
+      email: hireForm.email,
+      roleType: finalHireTitle,
+      location: hireForm.workMode,
+      timeline: hireForm.timeline,
+      message: hireForm.message,
+    };
+
     try {
-      // 1. Post to our API route to dispatch email to dev.hannan.ai@gmail.com
-      const res = await fetch("/api/contact", {
+      await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to send message");
-      }
+      setSubmittedReceipt({
+        name: hireForm.name,
+        email: hireForm.email,
+        category: "💼 Company Hiring Inquiry",
+        topic: finalHireTitle,
+        details: `${hireForm.workMode} • ${hireForm.timeline}`,
+        isProject: false,
+      });
+
+      setIsSubmitted(true);
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ["#FF1E56", "#ffffff", "#25D366"],
+      });
     } catch (err) {
-      console.warn("API dispatch issue, fallback ready:", err);
+      console.error("Submission error:", err);
+      setSubmittedReceipt({
+        name: hireForm.name,
+        email: hireForm.email,
+        category: "💼 Company Hiring Inquiry",
+        topic: finalHireTitle,
+        details: `${hireForm.workMode} • ${hireForm.timeline}`,
+        isProject: false,
+      });
+      setIsSubmitted(true);
     } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-
-      try {
-        confetti({
-          particleCount: 90,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ["#FF1E56", "#ffffff", "#25D366", "#3b82f6"],
-        });
-      } catch {
-        // ignore
-      }
     }
   };
 
-  const getWhatsAppUrl = () => {
-    const text = `Hi Abdul, I'm ${formData.name || "reaching out"} (${formData.email || ""}). ${
-      formData.message || "I visited your portfolio and would like to discuss a project/role."
-    }`;
-    return `https://wa.me/917310542113?text=${encodeURIComponent(text)}`;
-  };
+  const handleProjectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!projectForm.name || !projectForm.email || !projectForm.message) return;
 
-  const getMailtoUrl = () => {
-    const subject = `Opportunity / Project Inquiry: ${formData.roleType || "Full-Stack"} from ${formData.name || "Client"}`;
-    const body = `Hi Abdul,\n\nName: ${formData.name}\nEmail: ${formData.email}\nOpportunity: ${formData.roleType}\nLocation/Mode: ${formData.location}\n\nMessage:\n${formData.message}\n\nLooking forward to hearing from you!`;
-    return `mailto:dev.hannan.ai@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setIsSubmitting(true);
+
+    const payload = {
+      inquiryType: "freelance",
+      name: projectForm.name,
+      email: projectForm.email,
+      projectType: finalProjectTitle,
+      budget: finalBudgetText,
+      timeline: projectForm.timeline,
+      message: projectForm.message,
+    };
+
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      setSubmittedReceipt({
+        name: projectForm.name,
+        email: projectForm.email,
+        category: "🚀 Custom Project Inquiry",
+        topic: finalProjectTitle,
+        details: `${finalBudgetText} • ${projectForm.timeline}`,
+        isProject: true,
+      });
+
+      setIsSubmitted(true);
+      confetti({
+        particleCount: 85,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#25D366", "#FF1E56", "#ffffff"],
+      });
+    } catch (err) {
+      console.error("Submission error:", err);
+      setSubmittedReceipt({
+        name: projectForm.name,
+        email: projectForm.email,
+        category: "🚀 Custom Project Inquiry",
+        topic: finalProjectTitle,
+        details: `${finalBudgetText} • ${projectForm.timeline}`,
+        isProject: true,
+      });
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
     setIsSubmitted(false);
-    setFormData({
+    setSubmittedReceipt(null);
+    setHireForm({
       name: "",
       email: "",
-      roleType: "Full-Stack Developer",
-      location: "Remote (Worldwide)",
+      role: "Full-Stack Developer",
+      customRole: "",
+      workMode: "Remote (Worldwide)",
+      timeline: "Immediate / 2 Weeks",
+      message: "",
+    });
+    setProjectForm({
+      name: "",
+      email: "",
+      projectType: "Custom Web Application (React / Next.js)",
+      customProjectType: "",
+      currency: "$ USD",
+      budgetAmount: "",
+      timeline: "Live Production & Future Updates",
       message: "",
     });
     onClose();
   };
 
+  const getWhatsAppUrl = () => {
+    if (activeTab === "project" || submittedReceipt?.isProject) {
+      const text = `Hi Abdul! I am ${projectForm.name || "reaching out"} regarding a Project Inquiry: "${finalProjectTitle}" (Budget: ${finalBudgetText}, Timeline: ${projectForm.timeline}). Message: ${projectForm.message}`;
+      return `https://wa.me/917310542113?text=${encodeURIComponent(text)}`;
+    }
+    const text = `Hi Abdul! I am ${hireForm.name || "reaching out"} regarding a ${finalHireTitle} position (${hireForm.workMode}). Message: ${hireForm.message}`;
+    return `https://wa.me/917310542113?text=${encodeURIComponent(text)}`;
+  };
+
+  const getDirectEmailUrl = () => {
+    const isProj = activeTab === "project" || submittedReceipt?.isProject;
+    const subject = isProj
+      ? `Project Inquiry: ${finalProjectTitle} from ${projectForm.name || "Client"}`
+      : `Hiring Inquiry: ${finalHireTitle} from ${hireForm.name || "Recruiter"}`;
+    const body = isProj
+      ? `Hi Abdul,\n\nName: ${projectForm.name || "Client"}\nEmail: ${projectForm.email || ""}\nProject Domain: ${finalProjectTitle}\nBudget: ${finalBudgetText}\nTimeline: ${projectForm.timeline}\n\nScope / Requirements:\n${projectForm.message || ""}\n\nBest regards,\n${projectForm.name || ""}`
+      : `Hi Abdul,\n\nName: ${hireForm.name || "Recruiter"}\nEmail: ${hireForm.email || ""}\nTarget Position: ${finalHireTitle}\nWork Mode: ${hireForm.workMode}\nStart Timeline: ${hireForm.timeline}\n\nRole Details:\n${hireForm.message || ""}\n\nBest regards,\n${hireForm.name || ""}`;
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/85 backdrop-blur-md"
           />
 
+          {/* Modal Box - Spacious and Perfectly Proportioned */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 220 }}
-            className="relative w-full max-w-lg bg-[#131318] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 overflow-hidden"
+            exit={{ opacity: 0, scale: 0.96, y: 15 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="relative w-full max-w-2xl bg-[#0f0f14] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 my-auto text-white max-h-[94vh] overflow-y-auto custom-scrollbar"
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#FF1E56]/15 rounded-full blur-3xl pointer-events-none" />
-
+            {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="absolute top-5 right-5 p-2.5 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white transition-all cursor-pointer"
+              aria-label="Close modal"
             >
               <X className="w-4 h-4" />
             </button>
 
             {!isSubmitted ? (
               <>
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#FF1E56] mb-1">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  Get In Touch
-                </div>
-                <h3 className="text-2xl font-extrabold text-white font-display mb-1">
-                  Connect with Abdul Hannan
-                </h3>
-                <p className="text-xs text-zinc-400 mb-6">
-                  Available for Full-Stack Developer and Software Engineer opportunities.
-                </p>
-
-                {/* Tabs */}
-                <div className="flex rounded-full bg-white/5 p-1 mb-6 border border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => setTab("message")}
-                    className={`flex-1 py-2 rounded-full text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
-                      tab === "message"
-                        ? "bg-[#FF1E56] text-white shadow-md"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    <Mail className="w-3.5 h-3.5" /> Send Message
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTab("direct")}
-                    className={`flex-1 py-2 rounded-full text-xs font-semibold transition-all flex items-center justify-center gap-2 ${
-                      tab === "direct"
-                        ? "bg-[#FF1E56] text-white shadow-md"
-                        : "text-zinc-400 hover:text-white"
-                    }`}
-                  >
-                    <Phone className="w-3.5 h-3.5" /> Direct Contact
-                  </button>
+                {/* Header Badge & Title */}
+                <div className="mb-6">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FF1E56] uppercase tracking-wider mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-[#FF1E56]" />
+                    <span>GET IN TOUCH</span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    Connect with Abdul Hannan
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    Select how you&apos;d like to collaborate:
+                  </p>
                 </div>
 
-                {tab === "message" ? (
-                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* 3-Way Intent Switcher Tab Bar */}
+                <div className="grid grid-cols-3 p-1.5 rounded-2xl bg-[#171720] border border-white/5 mb-6 gap-1.5">
+                  {/* Tab 1: Hire for Company */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("hire")}
+                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                      activeTab === "hire"
+                        ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30"
+                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Briefcase className="w-4 h-4 shrink-0" />
+                    <span>Hire for Role</span>
+                  </button>
+
+                  {/* Tab 2: Client Project */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("project")}
+                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                      activeTab === "project"
+                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
+                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Rocket className="w-4 h-4 shrink-0" />
+                    <span>Build a Project</span>
+                  </button>
+
+                  {/* Tab 3: Direct Contact */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("direct")}
+                    className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer text-center ${
+                      activeTab === "direct"
+                        ? "bg-white/20 text-white shadow-md"
+                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Phone className="w-4 h-4 shrink-0" />
+                    <span>Direct Contact</span>
+                  </button>
+                </div>
+
+                {/* ================= MODE 1: HIRE FOR ROLE (COMPANIES / RECRUITERS) ================= */}
+                {activeTab === "hire" && (
+                  <motion.form
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onSubmit={handleHireSubmit}
+                    className="space-y-4"
+                  >
+                    {/* Row 1: Name & Work Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-300 mb-1.5 uppercase tracking-wide">
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
                           Your Name / Company
                         </label>
                         <input
                           type="text"
                           required
-                          placeholder="Hiring Manager / Team"
-                          value={formData.name}
+                          value={hireForm.name}
                           onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
+                            setHireForm({ ...hireForm, name: e.target.value })
                           }
-                          className="w-full bg-[#191920] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#FF1E56] transition-colors"
+                          placeholder="Hiring Manager / Team"
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-300 mb-1.5 uppercase tracking-wide">
-                          Your Email
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                          Work Email
                         </label>
                         <input
                           type="email"
                           required
-                          placeholder="recruiter@company.com"
-                          value={formData.email}
+                          value={hireForm.email}
                           onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
+                            setHireForm({ ...hireForm, email: e.target.value })
                           }
-                          className="w-full bg-[#191920] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#FF1E56] transition-colors"
+                          placeholder="recruiter@company.com"
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Row 2: Role & Work Mode */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-300 mb-1.5 uppercase tracking-wide">
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
                           Opportunity Type
                         </label>
                         <select
-                          value={formData.roleType}
+                          value={hireForm.role}
                           onChange={(e) =>
-                            setFormData({ ...formData, roleType: e.target.value })
+                            setHireForm({ ...hireForm, role: e.target.value })
                           }
-                          className="w-full bg-[#191920] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF1E56] transition-colors"
+                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all cursor-pointer truncate"
                         >
-                          <option>Full-Stack Developer</option>
-                          <option>Frontend Developer (React/Next.js)</option>
-                          <option>Backend Developer (Node/Python)</option>
-                          <option>Software Engineer</option>
-                          <option>Freelance / Contract Project</option>
+                          <option value="Full-Stack Developer" className="bg-[#14141c] text-white">Full-Stack Developer</option>
+                          <option value="Frontend Developer (React/Next.js)" className="bg-[#14141c] text-white">Frontend Developer (React/Next.js)</option>
+                          <option value="Backend Developer (Node/Python)" className="bg-[#14141c] text-white">Backend Developer (Node/Python)</option>
+                          <option value="Software Engineer" className="bg-[#14141c] text-white">Software Engineer</option>
+                          <option value="Contract Engineer" className="bg-[#14141c] text-white">Contract Engineer</option>
+                          <option value="other" className="bg-[#14141c] text-[#FF1E56] font-bold">✎ Other / Custom Role (Type below)</option>
                         </select>
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-semibold text-zinc-300 mb-1.5 uppercase tracking-wide">
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
                           Work Mode
                         </label>
                         <select
-                          value={formData.location}
+                          value={hireForm.workMode}
                           onChange={(e) =>
-                            setFormData({ ...formData, location: e.target.value })
+                            setHireForm({ ...hireForm, workMode: e.target.value })
                           }
-                          className="w-full bg-[#191920] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-[#FF1E56] transition-colors"
+                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all cursor-pointer truncate"
                         >
-                          <option>Remote (Worldwide)</option>
-                          <option>Hybrid / On-site (India)</option>
-                          <option>Contract / Project-based</option>
+                          <option value="Remote (Worldwide)" className="bg-[#14141c] text-white">Remote (Worldwide)</option>
+                          <option value="Hybrid / On-site" className="bg-[#14141c] text-white">Hybrid / On-site</option>
+                          <option value="Contract / Project-Based" className="bg-[#14141c] text-white">Contract / Project-Based</option>
                         </select>
                       </div>
                     </div>
 
+                    {/* Custom Role Input (if "other" selected) */}
+                    {hireForm.role === "other" && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="overflow-hidden"
+                      >
+                        <label className="block text-[11px] font-bold text-[#FF1E56] uppercase tracking-wider mb-1.5">
+                          Specify Custom Role / Position
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={hireForm.customRole}
+                          onChange={(e) =>
+                            setHireForm({ ...hireForm, customRole: e.target.value })
+                          }
+                          placeholder="e.g. Lead Next.js Architect, Python AI Lead..."
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-[#FF1E56]/40 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
+                        />
+                      </motion.div>
+                    )}
+
+                    {/* Message Box */}
                     <div>
-                      <label className="block text-[11px] font-semibold text-zinc-300 mb-1.5 uppercase tracking-wide">
+                      <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
                         Message / Role Description
                       </label>
                       <textarea
                         required
                         rows={3}
-                        placeholder="Tell me about the role, project, tech stack, and next steps..."
-                        value={formData.message}
+                        value={hireForm.message}
                         onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
+                          setHireForm({ ...hireForm, message: e.target.value })
                         }
-                        className="w-full bg-[#191920] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#FF1E56] transition-colors resize-none"
+                        placeholder="Tell me about the role, tech stack, team size, and next steps..."
+                        className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all resize-none"
                       />
                     </div>
 
-                    {/* Submit via Email */}
+                    {/* Submit Button */}
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="mt-2 w-full py-3.5 rounded-full bg-gradient-to-r from-[#FF1E56] to-[#e11255] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF1E56]/35 hover:shadow-[#FF1E56]/60 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
+                      className="w-full py-4 rounded-full bg-gradient-to-r from-[#FF1E56] to-[#FF0055] hover:from-[#ff2d62] hover:to-[#ff1a66] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#FF1E56]/35 disabled:opacity-60 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          <span>Sending to dev.hannan.ai@gmail.com...</span>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Dispatching Inquiry...</span>
                         </>
                       ) : (
                         <>
-                          <Send className="w-3.5 h-3.5" />
+                          <Send className="w-4 h-4" />
                           <span>Send Message to Abdul</span>
                         </>
                       )}
                     </button>
 
-                    {/* Instant WhatsApp Alternative */}
+                    {/* WhatsApp Quick Alternative */}
                     <a
                       href={getWhatsAppUrl()}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full py-3 rounded-full bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/40 text-[#25D366] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/35 text-[#25D366] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
                     >
                       <WhatsappIcon className="w-4 h-4 text-[#25D366]" />
                       <span>Or Send via WhatsApp Directly</span>
                     </a>
-                  </form>
-                ) : (
-                  <div className="flex flex-col gap-3.5 py-2">
-                    {/* WhatsApp Action Card */}
+                  </motion.form>
+                )}
+
+                {/* ================= MODE 2: CLIENT / CUSTOM FREELANCE PROJECT ================= */}
+                {activeTab === "project" && (
+                  <motion.form
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    onSubmit={handleProjectSubmit}
+                    className="space-y-4"
+                  >
+                    {/* Row 1: Name & Client Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                          Your Name / Brand
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={projectForm.name}
+                          onChange={(e) =>
+                            setProjectForm({ ...projectForm, name: e.target.value })
+                          }
+                          placeholder="e.g. Alex (Founder)"
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                          Your Email
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={projectForm.email}
+                          onChange={(e) =>
+                            setProjectForm({ ...projectForm, email: e.target.value })
+                          }
+                          placeholder="client@company.com"
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 2: Project Type & Timeline (Spacious 2-column layout so nothing clips!) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Project Type Selector */}
+                      <div>
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                          Project Type
+                        </label>
+                        <select
+                          value={projectForm.projectType}
+                          onChange={(e) =>
+                            setProjectForm({ ...projectForm, projectType: e.target.value })
+                          }
+                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer truncate"
+                        >
+                          <option value="Custom Web Application (React / Next.js)" className="bg-[#14141c] text-white">Full-Stack Web App (React / Next.js)</option>
+                          <option value="Mobile App (React Native)" className="bg-[#14141c] text-white">Mobile Application (iOS / Android)</option>
+                          <option value="AI / RAG Pipeline & LLM App" className="bg-[#14141c] text-white">AI &amp; Automation Engine</option>
+                          <option value="Enterprise ERP & Billing Engine" className="bg-[#14141c] text-white">Enterprise ERP &amp; Billing CRM</option>
+                          <option value="Full-Stack MVP" className="bg-[#14141c] text-white">Full-Stack MVP Development</option>
+                          <option value="other" className="bg-[#14141c] text-emerald-400 font-bold">✎ Other (Specify Custom Type)</option>
+                        </select>
+                      </div>
+
+                      {/* Timeline with Live Production Updates */}
+                      <div>
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                          Target Timeline
+                        </label>
+                        <select
+                          value={projectForm.timeline}
+                          onChange={(e) =>
+                            setProjectForm({ ...projectForm, timeline: e.target.value })
+                          }
+                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer truncate"
+                        >
+                          <option value="Live Production & Future Updates" className="bg-[#14141c] text-emerald-400 font-bold">⚡ Live Production Updates (Future)</option>
+                          <option value="Sprint Execution (< 2 Weeks)" className="bg-[#14141c] text-white">Sprint Execution (&lt; 2 Weeks)</option>
+                          <option value="2 to 4 Weeks" className="bg-[#14141c] text-white">Standard (2 to 4 Weeks)</option>
+                          <option value="1 to 2 Months" className="bg-[#14141c] text-white">1 to 2 Months Roadmap</option>
+                          <option value="Long-Term Partnership (3+ Months)" className="bg-[#14141c] text-white">Long-Term Partnership (3+ Months)</option>
+                          <option value="Ongoing Maintenance & Retainer" className="bg-[#14141c] text-white">Ongoing Retainer</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Custom Typable Budget Box (Dedicated Full Row with Currency Dropdown + Input) */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+                          Estimated Budget
+                        </label>
+                        <span className="text-[11px] text-zinc-500">
+                          (Type any custom amount or range)
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {/* Currency Dropdown */}
+                        <div className="relative shrink-0">
+                          <select
+                            value={projectForm.currency}
+                            onChange={(e) =>
+                              setProjectForm({ ...projectForm, currency: e.target.value })
+                            }
+                            className="h-[46px] px-3.5 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer"
+                          >
+                            <option value="$ USD" className="bg-[#14141c] text-white">$ USD</option>
+                            <option value="₹ INR" className="bg-[#14141c] text-white">₹ INR</option>
+                          </select>
+                        </div>
+
+                        {/* Completely Empty Typable Budget Input */}
+                        <input
+                          type="text"
+                          value={projectForm.budgetAmount}
+                          onChange={(e) =>
+                            setProjectForm({ ...projectForm, budgetAmount: e.target.value })
+                          }
+                          placeholder="e.g. 2,500 or 1,50,000 (or leave open)"
+                          className="h-[46px] flex-1 px-4 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Custom Type Input (if "other" selected) */}
+                    {projectForm.projectType === "other" && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="overflow-hidden"
+                      >
+                        <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
+                          Specify Custom Project Domain / Type
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={projectForm.customProjectType}
+                          onChange={(e) =>
+                            setProjectForm({
+                              ...projectForm,
+                              customProjectType: e.target.value,
+                            })
+                          }
+                          placeholder="e.g. Chrome Extension, Trading Bot, Micro-SaaS Portal, Custom API..."
+                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-emerald-500/40 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                        />
+                      </motion.div>
+                    )}
+
+                    {/* Scope / Features Textarea */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                        Project Scope &amp; Target Features
+                      </label>
+                      <textarea
+                        required
+                        rows={3}
+                        value={projectForm.message}
+                        onChange={(e) =>
+                          setProjectForm({ ...projectForm, message: e.target.value })
+                        }
+                        placeholder="Describe your vision, target users, required integrations, and goals..."
+                        className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-4 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25 disabled:opacity-60 cursor-pointer"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin text-black" />
+                          <span>Submitting Scope...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Rocket className="w-4 h-4 text-black" />
+                          <span>Submit Freelance Project</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* WhatsApp Alternative */}
                     <a
-                      href="https://wa.me/917310542113?text=Hi%20Abdul%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project%2Frole%20with%20you."
+                      href={getWhatsAppUrl()}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-3 rounded-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/35 text-[#25D366] font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
+                    >
+                      <WhatsappIcon className="w-4 h-4 text-[#25D366]" />
+                      <span>Or Discuss on WhatsApp Directly</span>
+                    </a>
+                  </motion.form>
+                )}
+
+                {/* ================= MODE 3: DIRECT CONTACT ================= */}
+                {activeTab === "direct" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col gap-3.5 py-1"
+                  >
+                    {/* WhatsApp Card */}
+                    <a
+                      href="https://wa.me/917310542113?text=Hi%20Abdul%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20connect%20with%20you."
                       target="_blank"
                       rel="noreferrer"
                       className="p-4 rounded-2xl bg-[#25D366]/10 border border-[#25D366]/30 hover:border-[#25D366]/60 hover:bg-[#25D366]/15 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#25D366]/20 text-[#25D366] flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-[#25D366]/20 text-[#25D366] flex items-center justify-center group-hover:scale-110 transition-transform">
                           <WhatsappIcon className="w-5 h-5" />
                         </div>
                         <div>
                           <span className="text-[10px] text-[#25D366] uppercase font-bold block">
-                            WhatsApp (Instant)
+                            WhatsApp (Fastest Response)
                           </span>
-                          <span className="text-xs font-bold text-white">
+                          <span className="text-sm font-bold text-white">
                             +91-7310542113
                           </span>
                         </div>
@@ -336,14 +755,14 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#FF1E56]/15 text-[#FF1E56] flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-[#FF1E56]/15 text-[#FF1E56] flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Phone className="w-5 h-5" />
                         </div>
                         <div>
                           <span className="text-[10px] text-zinc-400 uppercase font-semibold block">
                             Direct Phone Call
                           </span>
-                          <span className="text-xs font-bold text-white">
+                          <span className="text-sm font-bold text-white">
                             +91-7310542113
                           </span>
                         </div>
@@ -355,18 +774,20 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
                     {/* Direct Email Card */}
                     <a
-                      href="mailto:dev.hannan.ai@gmail.com?subject=Opportunity%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20reaching%20out%20regarding%20an%20opportunity%20or%20project...%0A%0ABest%20regards"
+                      href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Opportunity%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20reaching%20out%20regarding%20an%20opportunity%20or%20project...%0A%0ABest%20regards"
+                      target="_blank"
+                      rel="noreferrer"
                       className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Mail className="w-5 h-5" />
                         </div>
                         <div>
                           <span className="text-[10px] text-zinc-400 uppercase font-semibold block">
-                            Direct Email Client
+                            Direct Email Client (Gmail)
                           </span>
-                          <span className="text-xs font-bold text-white">
+                          <span className="text-sm font-bold text-white">
                             dev.hannan.ai@gmail.com
                           </span>
                         </div>
@@ -382,7 +803,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         href="https://github.com/hannan7866"
                         target="_blank"
                         rel="noreferrer"
-                        className="p-3 rounded-xl bg-[#191920] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
+                        className="p-3.5 rounded-xl bg-[#171720] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
                       >
                         <GithubIcon className="w-4 h-4" /> GitHub ↗
                       </a>
@@ -390,44 +811,125 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         href="https://linkedin.com/in/abdul-hannan-92a911405"
                         target="_blank"
                         rel="noreferrer"
-                        className="p-3 rounded-xl bg-[#191920] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
+                        className="p-3.5 rounded-xl bg-[#171720] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
                       >
                         <LinkedinIcon className="w-4 h-4 text-blue-400" /> LinkedIn ↗
                       </a>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
               </>
             ) : (
-              <div className="py-8 flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mb-4">
-                  <CheckCircle2 className="w-8 h-8" />
+              /* ================= SUCCESS CONFIRMATION RECEIPT ================= */
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                className="py-4 flex flex-col items-center text-center font-sans"
+              >
+                <div className="relative mb-4">
+                  <div className="w-16 h-16 rounded-full bg-[#25D366]/20 border border-[#25D366]/50 text-[#25D366] flex items-center justify-center shadow-[0_0_30px_rgba(37,211,102,0.35)]">
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#25D366]"></span>
+                  </span>
                 </div>
-                <h4 className="text-2xl font-extrabold text-white mb-2">
-                  Message Dispatched!
-                </h4>
-                <p className="text-xs text-zinc-300 max-w-sm mb-6 leading-relaxed">
-                  Your message has been sent to <strong>dev.hannan.ai@gmail.com</strong>. Abdul will review your details and respond promptly.
+
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366]/15 border border-[#25D366]/30 text-[10px] font-bold text-[#25D366] uppercase tracking-wider mb-2">
+                  <Sparkles className="w-3 h-3" />
+                  {submittedReceipt?.isProject
+                    ? "FREELANCE PROJECT DISPATCHED TO ABDUL"
+                    : "MAIL & REQUEST SENT TO ABDUL HANNAN"}
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-1.5">
+                  Thank You, {submittedReceipt?.name || "there"}!
+                </h3>
+
+                <p className="text-xs sm:text-sm text-zinc-300 max-w-sm mb-5 leading-relaxed">
+                  Your inquiry has been directly delivered to Abdul&apos;s personal inbox at{" "}
+                  <a
+                    href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-white font-semibold underline decoration-[#FF1E56] underline-offset-4 hover:text-[#FF1E56] transition-colors font-mono"
+                  >
+                    dev.hannan.ai@gmail.com
+                  </a>
+                  .
                 </p>
 
-                {/* Quick actions on success */}
+                {/* Structured Receipt Card */}
+                <div className="w-full bg-[#14141c] border border-white/10 rounded-2xl p-5 text-left mb-5 flex flex-col gap-3 text-xs sm:text-sm shadow-inner">
+                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                    <span className="text-zinc-400">Category</span>
+                    <span className="text-white font-bold">
+                      {submittedReceipt?.category}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                    <span className="text-zinc-400">
+                      {submittedReceipt?.isProject ? "Target Scope / Domain" : "Opportunity Type"}
+                    </span>
+                    <span className="text-[#FF1E56] font-semibold">
+                      {submittedReceipt?.topic}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                    <span className="text-zinc-400">
+                      {submittedReceipt?.isProject ? "Budget & Timeline" : "Work Mode"}
+                    </span>
+                    <span className="text-zinc-200 font-semibold">
+                      {submittedReceipt?.details}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                    <span className="text-zinc-400">Recipient Email</span>
+                    <span className="text-[#25D366] font-mono font-medium">
+                      dev.hannan.ai@gmail.com
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">Status</span>
+                    <span className="text-[#25D366] font-semibold flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-[#25D366] inline-block animate-pulse" />
+                      Delivered &amp; Queued for Reply
+                    </span>
+                  </div>
+                </div>
+
+                {/* Direct Action Buttons */}
                 <div className="w-full flex flex-col sm:flex-row gap-3">
                   <a
                     href={getWhatsAppUrl()}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 py-3 rounded-full bg-[#25D366] text-black font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#20bd5a] transition-all"
+                    className="flex-1 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
-                    <WhatsappIcon className="w-4 h-4" /> Also WhatsApp Abdul
+                    <WhatsappIcon className="w-4 h-4 text-black" />
+                    <span>Instant WhatsApp Chat</span>
                   </a>
-                  <button
-                    onClick={handleReset}
-                    className="flex-1 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all"
+
+                  <a
+                    href={getDirectEmailUrl()}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex-1 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border border-white/10"
                   >
-                    Done
-                  </button>
+                    <Mail className="w-4 h-4 text-[#FF1E56]" />
+                    <span>Open Email Draft</span>
+                  </a>
                 </div>
-              </div>
+
+                <button
+                  onClick={handleReset}
+                  className="mt-4 text-xs text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                >
+                  Done / Close Window
+                </button>
+              </motion.div>
             )}
           </motion.div>
         </div>

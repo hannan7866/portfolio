@@ -161,10 +161,10 @@ export default function FAQ({ onOpenContact }: FAQProps) {
             <div className="mb-6">
               <div className="relative w-14 h-14 rounded-full overflow-hidden bg-black/40 border-2 border-white/30 shadow-lg">
                 <Image
-                  src="/images/avatar_3d.jpg.png"
+                  src="/images/Abdul-Image.jpeg"
                   alt="Abdul Hannan"
                   fill
-                  className="object-contain p-1"
+                  className="object-cover object-top"
                 />
               </div>
             </div>

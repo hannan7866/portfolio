@@ -102,8 +102,10 @@ export default function Footer({ onOpenContact }: FooterProps) {
             Email
           </span>
           <a
-            href="mailto:dev.hannan.ai@gmail.com?subject=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
-            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors cursor-pointer"
           >
             dev.hannan.ai@gmail.com
           </a>

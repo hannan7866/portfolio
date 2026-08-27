@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight, Mail } from "lucide-react";
+import { Menu, X, ArrowUpRight, Mail, FileText } from "lucide-react";
 
 interface NavbarProps {
   onOpenContact?: () => void;
@@ -28,9 +28,9 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`pointer-events-auto flex items-center justify-between gap-8 px-4 py-2 rounded-full transition-all duration-300 ${
+        className={`pointer-events-auto flex items-center justify-between gap-6 sm:gap-8 px-4 py-2 rounded-full transition-all duration-300 ${
           isScrolled
-            ? "bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/90"
+            ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/90"
             : "bg-black/60 backdrop-blur-lg border border-white/10"
         }`}
       >
@@ -38,10 +38,10 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         <Link href="#hero" className="flex items-center gap-2.5 group">
           <div className="relative w-7 h-7 rounded-full overflow-hidden bg-black/50 border border-white/15 group-hover:border-[#FF1E56] transition-colors">
             <Image
-              src="/images/avatar_3d.jpg.png"
+              src="/images/Abdul-Image.jpeg"
               alt="Abdul Hannan"
               fill
-              className="object-contain p-0.5 group-hover:scale-110 transition-transform duration-300"
+              className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
             />
           </div>
           <span className="text-xs font-bold text-white tracking-tight group-hover:text-white/90">
@@ -77,11 +77,23 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
           </Link>
         </div>
 
-        {/* Contact Button */}
-        <div className="hidden md:flex items-center">
+        {/* Action Buttons: View CV & Contact */}
+        <div className="hidden md:flex items-center gap-2.5">
+          {/* View CV Button */}
+          <a
+            href="/Hannan_CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+          >
+            <FileText className="w-3.5 h-3.5 text-[#FF1E56]" />
+            <span>View CV</span>
+          </a>
+
+          {/* Contact Button */}
           <button
             onClick={onOpenContact}
-            className="relative rounded-full bg-[#FF1E56] hover:bg-[#e11255] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(255,30,86,0.45)] hover:shadow-[0_0_25px_rgba(255,30,86,0.65)] hover:scale-105 active:scale-95 transition-all duration-300"
+            className="relative rounded-full bg-[#FF1E56] hover:bg-[#e11255] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(255,30,86,0.45)] hover:shadow-[0_0_25px_rgba(255,30,86,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
             Contact
           </button>
@@ -91,7 +103,7 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
-          className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white"
+          className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
         >
           {mobileMenuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
         </button>
@@ -140,13 +152,26 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
                 FAQs
                 <ArrowUpRight className="w-4 h-4 text-zinc-400" />
               </Link>
+              <a
+                href="/Hannan_CV.pdf"
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between text-white font-semibold"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-[#FF1E56]" />
+                  View CV / Resume
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+              </a>
             </div>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenContact?.();
               }}
-              className="w-full py-2.5 rounded-full bg-[#FF1E56] text-sm font-semibold text-white shadow-lg shadow-[#FF1E56]/35 flex items-center justify-center gap-2"
+              className="w-full py-2.5 rounded-full bg-[#FF1E56] text-sm font-semibold text-white shadow-lg shadow-[#FF1E56]/35 flex items-center justify-center gap-2 cursor-pointer"
             >
               <Mail className="w-4 h-4" /> Get in touch
             </button>
