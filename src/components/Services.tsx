@@ -155,23 +155,23 @@ export default function Services() {
           </motion.div>
         </div>
 
-        {/* Right Column: Scroll Reveal Capabilities Cards */}
-        <div className="lg:col-span-7 flex flex-col gap-6 overflow-hidden">
+        {/* Right Column: Tilted Scroll Reveal Capabilities Cards */}
+        <div className="lg:col-span-7 flex flex-col gap-6">
           {CAPABILITIES.map((cap, index) => (
             <motion.div
               key={cap.id}
-              initial={{ opacity: 0, y: 50, filter: "blur(4px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: false, margin: "-60px" }}
+              initial={{ opacity: 0, y: 80, rotate: -6, filter: "blur(4px)" }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0, filter: "blur(0px)" }}
+              viewport={{ once: false, margin: "-80px" }}
               transition={{
                 type: "spring",
-                stiffness: 90,
-                damping: 20,
-                mass: 0.9,
-                delay: index * 0.05,
+                stiffness: 85,
+                damping: 18,
+                mass: 0.95,
+                delay: index * 0.06,
               }}
-              whileHover={{ scale: 1.01, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
-              className={`relative rounded-3xl p-6 sm:p-9 transition-all duration-500 shadow-2xl ${
+              whileHover={{ scale: 1.02, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+              className={`relative rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-2xl ${
                 cap.isHighlighted
                   ? "bg-gradient-to-br from-[#FF1E56] via-[#e11255] to-[#c70b47] text-white shadow-[0_20px_50px_rgba(255,30,86,0.45)] border border-[#ff4785]"
                   : "bg-[#131318] border border-white/10 hover:border-white/20 text-zinc-200"

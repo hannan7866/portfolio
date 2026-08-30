@@ -194,6 +194,13 @@ export default function Footer({ onOpenContact }: FooterProps) {
           </Link>
         </div>
       </div>
+
+      {/* Giant Bottom Signature Typography */}
+      <div className="w-full pt-4 pb-0 flex justify-center items-end select-none overflow-hidden leading-none">
+        <h1 className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black tracking-[-0.06em] uppercase leading-none text-[#FF1E56] text-center font-display whitespace-nowrap m-0 p-0 transform translate-y-1">
+          MR. ABDUL
+        </h1>
+      </div>
     </footer>
   );
 }

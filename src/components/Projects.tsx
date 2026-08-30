@@ -397,8 +397,8 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* Level 1: Projects 2-Column Grid */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      {/* Level 1: Projects 3-Column Grid on Desktop */}
+      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         <AnimatePresence mode="popLayout">
           {filteredProjects.map((project, index) => (
             <motion.article
