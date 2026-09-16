@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X, ArrowUpRight, Mail, FileText } from "lucide-react";
+import { useHoverSound } from "@/utils/useSound";
 
 interface NavbarProps {
   onOpenContact?: () => void;
@@ -12,7 +13,19 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenContact }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const playHover = useHoverSound();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (latest > previous && latest > 150) {
+      setIsHidden(true);
+    } else {
+      setIsHidden(false);
+    }
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,8 +39,11 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 py-4 sm:py-5 pointer-events-none transition-all duration-300 w-full max-w-[100vw]">
       <motion.nav
         initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        animate={{
+          y: isHidden ? "-150%" : 0,
+          opacity: isHidden ? 0 : 1,
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`pointer-events-auto flex items-center justify-between gap-4 sm:gap-8 px-3.5 sm:px-4 py-2 rounded-full transition-all duration-300 max-w-[calc(100vw-1.5rem)] ${
           isScrolled
             ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/90"
@@ -35,12 +51,17 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         }`}
       >
         {/* Brand / Avatar */}
-        <Link href="#hero" className="flex items-center gap-2.5 group">
+        <Link
+          href="#hero"
+          onMouseEnter={playHover}
+          className="flex items-center gap-2.5 group"
+        >
           <div className="relative w-7 h-7 rounded-full overflow-hidden bg-black/50 border border-white/15 group-hover:border-[#FF1E56] transition-colors">
             <Image
               src="/images/Abdul-Image.jpeg"
               alt="Abdul Hannan"
               fill
+              sizes="28px"
               className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
             />
           </div>
@@ -53,38 +74,43 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         <div className="hidden md:flex items-center gap-6 text-xs font-medium text-zinc-300">
           <Link
             href="#projects"
+            onMouseEnter={playHover}
             className="hover:text-white transition-colors duration-200"
           >
             Projects
           </Link>
           <Link
             href="#skills"
+            onMouseEnter={playHover}
             className="hover:text-white transition-colors duration-200"
           >
             Skills
           </Link>
           <Link
             href="#about"
+            onMouseEnter={playHover}
             className="hover:text-white transition-colors duration-200"
           >
             Experience
           </Link>
           <Link
             href="#faq"
+            onMouseEnter={playHover}
             className="hover:text-white transition-colors duration-200"
           >
             FAQs
           </Link>
         </div>
 
-        {/* Action Buttons: View CV & Contact */}
-        <div className="hidden md:flex items-center gap-2.5">
+        {/* Action Buttons: View CV & Contact on Desktop */}
+        <div className="flex items-center gap-2.5">
           {/* View CV Button */}
           <a
             href="/Hannan_CV.pdf"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+            onMouseEnter={playHover}
+            className="hidden md:flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
           >
             <FileText className="w-3.5 h-3.5 text-[#FF1E56]" />
             <span>View CV</span>
@@ -93,23 +119,25 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
           {/* Contact Button */}
           <button
             onClick={onOpenContact}
-            className="relative rounded-full bg-[#FF1E56] hover:bg-[#e11255] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(255,30,86,0.45)] hover:shadow-[0_0_25px_rgba(255,30,86,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            onMouseEnter={playHover}
+            className="hidden md:inline-flex relative rounded-full bg-[#FF1E56] hover:bg-[#e11255] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(255,30,86,0.45)] hover:shadow-[0_0_25px_rgba(255,30,86,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
             Contact
           </button>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-          className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
-        >
-          {mobileMenuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
-        </button>
+          {/* Mobile Hamburger Button (Strictly hidden on desktop screens) */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onMouseEnter={playHover}
+            aria-label="Toggle navigation menu"
+            className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
+          >
+            {mobileMenuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
+          </button>
+        </div>
       </motion.nav>
 
-      {/* Mobile Menu Drawer */}
+      {/* Restored Simple Mobile Dropdown Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div

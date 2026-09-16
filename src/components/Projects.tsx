@@ -1,8 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useVelocity,
+  useSpring,
+  useMotionValue,
+  useMotionTemplate,
+  useMotionValueEvent,
+} from "framer-motion";
+import { useHoverSound } from "@/utils/useSound";
 import {
   ArrowUpRight,
   Sparkles,
@@ -304,14 +315,240 @@ const PROJECTS: Project[] = [
   },
 ];
 
+interface ProjectCardProps {
+  project: Project;
+  index: number;
+  onOpenLive: (e: React.MouseEvent, url?: string) => void;
+  onSelectProject: (project: Project) => void;
+  scrollYProgress: any;
+}
+
+function ProjectCard({
+  project,
+  index,
+  onOpenLive,
+  onSelectProject,
+  scrollYProgress,
+}: ProjectCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const playHover = useHoverSound();
+
+  // Scroll Parallax inside each card image (Horizontal & Vertical slide)
+  const imageX = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  // 3D Glass Tilt Physics
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const isHovered = useMotionValue(0);
+
+  // Liquid Distortion Ripple Physics
+  const distortionScale = useSpring(0, { stiffness: 100, damping: 15 });
+
+  useMotionValueEvent(distortionScale, "change", (latest) => {
+    const disp = document.getElementById("displacement-map");
+    if (disp) {
+      disp.setAttribute("scale", latest.toString());
+    }
+  });
+
+  const springConfig = { damping: 20, stiffness: 220 };
+  const springX = useSpring(0, springConfig);
+  const springY = useSpring(0, springConfig);
+
+  const rotateX = useTransform(springY, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(springX, [-0.5, 0.5], [-8, 8]);
+
+  // Glass glare radial gradient following cursor perfectly
+  const glassGlare = useMotionTemplate`radial-gradient(320px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.15), transparent 75%)`;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    mouseX.set(x);
+    mouseY.set(y);
+    springX.set(x / rect.width - 0.5);
+    springY.set(y / rect.height - 0.5);
+    isHovered.set(1);
+  };
+
+  const handleMouseEnter = () => {
+    playHover();
+    isHovered.set(1);
+    distortionScale.set(40);
+    setTimeout(() => {
+      distortionScale.set(0);
+    }, 50);
+  };
+
+  const handleMouseLeave = () => {
+    springX.set(0);
+    springY.set(0);
+    isHovered.set(0);
+  };
+
+  return (
+    <div className="[perspective:1200px] flex shrink-0">
+      <motion.article
+        ref={cardRef}
+        layout
+        data-cursor-text="EXPLORE"
+        initial={{ opacity: 0, scale: 0.92, y: 30 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{
+          duration: 0.6,
+          delay: index * 0.04,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onClick={(e) => onOpenLive(e, project.liveUrl || project.githubUrl)}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className="group cursor-pointer flex flex-col justify-between w-[85vw] sm:w-[62vw] lg:w-[48vw] h-[54vh] sm:h-[58vh] rounded-3xl bg-[#131318] border border-white/10 p-4 sm:p-6 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[#FF1E56]/50 hover:shadow-[0_0_45px_rgba(255,30,86,0.25)] select-none will-change-transform overflow-hidden relative"
+      >
+        {/* Top Half: Card Visual Container with Parallax Image, Liquid Distortion & Dynamic Glass Glare */}
+        <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-2xl bg-black border border-white/10 mb-4 sm:mb-5">
+          <motion.div
+            style={{
+              x: imageX,
+              y: imageY,
+              scale: 1.25,
+              filter: "url(#liquid-distortion)",
+            }}
+            className="absolute inset-0 w-full h-full will-change-transform"
+          >
+            <Image
+              src={project.image}
+              alt={project.title}
+              fill
+              sizes="(max-width: 768px) 85vw, (max-width: 1200px) 62vw, 48vw"
+              className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+            />
+          </motion.div>
+
+          {/* Dynamic Glass Glare Overlay Following Cursor */}
+          <motion.div
+            style={{
+              background: glassGlare,
+              opacity: isHovered,
+            }}
+            className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
+          />
+
+          {/* Dark subtle overlay fade */}
+          <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none" />
+
+          {/* Top badges */}
+          <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none gap-2 z-10">
+            <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-white truncate">
+              {project.number} — {project.categoryLabel}
+            </span>
+            {project.badge && (
+              <span className="px-3 py-1 rounded-full bg-[#FF1E56] backdrop-blur-md text-[11px] font-bold text-white shadow-lg shrink-0">
+                {project.badge}
+              </span>
+            )}
+          </div>
+
+          {/* Hover Center Indicator */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+            <div className="px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-1.5 transform group-hover:scale-105 transition-transform">
+              <span>{project.isDesktopApp ? "Open GitHub Repo" : "Open Live Website"}</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#FF1E56]" />
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Half: Project Meta Details */}
+        <div className="flex items-start justify-between gap-4 shrink-0 relative z-10">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white group-hover:text-[#FF1E56] transition-colors duration-300 truncate">
+                {project.title}
+              </h3>
+              <span className="text-xs font-mono text-zinc-500 shrink-0">{project.year}</span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal line-clamp-2 leading-relaxed">
+              {project.shortDescription}
+            </p>
+
+            {/* Tech stack tags preview */}
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
+              {project.tags.slice(0, 5).map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-400"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons: Details Modal + Live Link */}
+          <div className="flex items-center gap-2 shrink-0 self-center">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectProject(project);
+              }}
+              title="View Technical Case Study & Architecture"
+              className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors cursor-pointer"
+            >
+              <Info className="w-4 h-4" />
+            </button>
+
+            <a
+              href={project.liveUrl || project.githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 text-xs font-semibold text-zinc-300 group-hover:text-white bg-white/5 group-hover:bg-[#FF1E56] px-3.5 py-2 rounded-full border border-white/10 group-hover:border-[#FF1E56] transition-all duration-400 ease-out shadow-sm cursor-pointer"
+            >
+              <span>{project.isDesktopApp ? "GitHub" : "Live Link"}</span>
+              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+          </div>
+        </div>
+      </motion.article>
+    </div>
+  );
+}
+
 export default function Projects() {
-  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all");
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filteredProjects =
     activeCategory === "all"
       ? PROJECTS
       : PROJECTS.filter((p) => p.categoryType === activeCategory);
+
+  // Tall scroll container to drive smooth horizontal glide
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ["start start", "end end"],
+  });
+
+  // Scroll Momentum & Velocity Physics
+  const scrollVelocity = useVelocity(scrollYProgress);
+  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
+  const skewX = useTransform(smoothVelocity, [-1, 1], ["10deg", "-10deg"]);
+
+  // Calculate dynamic horizontal translation
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
   const handleOpenLive = (e: React.MouseEvent, url?: string) => {
     e.stopPropagation();
@@ -321,186 +558,104 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden w-full max-w-[100vw]">
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-        <div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FF1E56] mb-2"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Curated Software &amp; Systems
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display"
-          >
-            Featured <span className="text-[#FF1E56]">Projects</span>
-          </motion.h2>
+    <section id="projects" ref={scrollRef} className="relative h-[400vh] bg-[#0d0d0f] overflow-visible">
+      {/* Sticky Full-Screen Viewport Frame */}
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between py-8 overflow-hidden">
+        {/* Sticky Top Header & Filter Tabs */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 shrink-0 z-20">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-3 sm:mb-4 gap-3">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FF1E56] mb-1"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                Curated Software &amp; Systems
+              </motion.div>
+              <motion.h2
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white font-display"
+              >
+                Featured <span className="text-[#FF1E56]">Projects</span>
+              </motion.h2>
+            </div>
+
+            {/* Filter Tabs */}
+            <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar select-none pb-1">
+              {[
+                { id: "all", label: "All Projects", count: PROJECTS.length },
+                {
+                  id: "production",
+                  label: "🌟 Production / Real-World",
+                  count: PROJECTS.filter((p) => p.categoryType === "production").length,
+                },
+                {
+                  id: "engineering",
+                  label: "⚡ Engineering & Technical",
+                  count: PROJECTS.filter((p) => p.categoryType === "engineering").length,
+                },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveCategory(tab.id)}
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                    activeCategory === tab.id
+                      ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30 scale-105"
+                      : "bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      activeCategory === tab.id ? "bg-white/20 text-white" : "bg-white/5 text-zinc-500"
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="text-zinc-400 max-w-md text-sm sm:text-base leading-relaxed"
-        >
-          Production software processing real transactions, advanced frontend graphics engines, backend architectures, and client platforms.
-        </motion.p>
-      </div>
-
-      {/* 3-Tier Recruiter Category Filter Tabs */}
-      <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-4 mb-10 no-scrollbar select-none">
-        {[
-          { id: "all", label: "All Projects", count: PROJECTS.length },
-          {
-            id: "production",
-            label: "🌟 Production / Real-World",
-            count: PROJECTS.filter((p) => p.categoryType === "production").length,
-          },
-          {
-            id: "engineering",
-            label: "⚡ Engineering & Technical",
-            count: PROJECTS.filter((p) => p.categoryType === "engineering").length,
-          },
-          {
-            id: "client",
-            label: "🎨 Client / Creative Work",
-            count: PROJECTS.filter((p) => p.categoryType === "client").length,
-          },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveCategory(tab.id as ProjectCategory)}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
-              activeCategory === tab.id
-                ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30 scale-105"
-                : "bg-[#141418] text-zinc-400 hover:text-white border border-white/10 hover:border-white/20"
-            }`}
+        {/* Center: Massive Horizontal Sliding Row with Scroll Momentum Skew Physics */}
+        <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto">
+          <motion.div
+            style={{ x, skewX }}
+            className="flex gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-12 lg:px-20 w-max items-center will-change-transform"
           >
-            <span>{tab.label}</span>
-            <span
-              className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                activeCategory === tab.id ? "bg-white/20 text-white" : "bg-white/5 text-zinc-500"
-              }`}
-            >
-              {tab.count}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      {/* Level 1: Projects 3-Column Grid on Desktop */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-        <AnimatePresence mode="popLayout">
-          {filteredProjects.map((project, index) => (
-            <motion.article
-              layout
-              key={project.id}
-              initial={{ opacity: 0, scale: 0.95, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.05,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              onClick={(e) => handleOpenLive(e, project.liveUrl || project.githubUrl)}
-              className="group cursor-pointer flex flex-col"
-            >
-              {/* Card Visual Container */}
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-[#131316] border border-white/10 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-[#FF1E56]/50 group-hover:shadow-[0_0_40px_rgba(255,30,86,0.25)]">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110"
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={index}
+                  onOpenLive={handleOpenLive}
+                  onSelectProject={(p) => setSelectedProject(p)}
+                  scrollYProgress={scrollYProgress}
                 />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </div>
 
-                {/* Dark subtle overlay fade */}
-                <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none" />
-
-                {/* Top badges */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none gap-2">
-                  <span className="px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-white truncate">
-                    {project.number} — {project.categoryLabel}
-                  </span>
-                  {project.badge && (
-                    <span className="px-3 py-1 rounded-full bg-[#FF1E56] backdrop-blur-md text-[11px] font-bold text-white shadow-lg shrink-0">
-                      {project.badge}
-                    </span>
-                  )}
-                </div>
-
-                {/* Hover Center Indicator */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                  <div className="px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-1.5 transform group-hover:scale-105 transition-transform">
-                    <span>{project.isDesktopApp ? "Open GitHub Repo" : "Open Live Website"}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 text-[#FF1E56]" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Project Meta Details */}
-              <div className="mt-5 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-[#FF1E56] transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-medium line-clamp-2 leading-relaxed">
-                    {project.shortDescription}
-                  </p>
-
-                  {/* Tech stack tags preview */}
-                  <div className="flex flex-wrap gap-1.5 mt-3">
-                    {project.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-zinc-400"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons: Live Link + Case Study Details Modal */}
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedProject(project);
-                    }}
-                    title="View Technical Case Study & Architecture"
-                    className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors cursor-pointer"
-                  >
-                    <Info className="w-4 h-4" />
-                  </button>
-
-                  <a
-                    href={project.liveUrl || project.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-zinc-300 group-hover:text-white bg-white/5 group-hover:bg-[#FF1E56] px-3.5 py-2 rounded-full border border-white/10 group-hover:border-[#FF1E56] transition-all duration-400 ease-out shadow-sm cursor-pointer"
-                  >
-                    <span>{project.isDesktopApp ? "GitHub" : "Live Link"}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </a>
-                </div>
-              </div>
-            </motion.article>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+        {/* Bottom Status & Scroll Indicator */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 shrink-0 flex items-center justify-between text-xs text-zinc-500 font-mono pt-2">
+          <span className="hidden sm:inline">← Scroll down to slide through gallery →</span>
+          <div className="flex-1 sm:max-w-xs mx-4 h-1 bg-white/10 rounded-full overflow-hidden">
+            <motion.div
+              style={{ scaleX: scrollYProgress, transformOrigin: "left" }}
+              className="h-full bg-[#FF1E56]"
+            />
+          </div>
+          <span>{filteredProjects.length} Projects</span>
+        </div>
+      </div>
 
       {/* Level 2: Individual Technical Case Study Modal */}
       <AnimatePresence>
@@ -533,6 +688,7 @@ export default function Projects() {
                   src={selectedProject.image}
                   alt={selectedProject.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 800px"
                   className="object-cover"
                 />
               </div>
@@ -682,6 +838,21 @@ export default function Projects() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Hidden Liquid Distortion SVG Filter */}
+      <svg className="hidden pointer-events-none absolute w-0 h-0" aria-hidden="true">
+        <filter id="liquid-distortion">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="0"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            id="displacement-map"
+          />
+        </filter>
+      </svg>
     </section>
   );
 }

@@ -1,7 +1,15 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useVelocity,
+  useSpring,
+  useTransform,
+  useAnimationFrame,
+  useMotionValue,
+} from "framer-motion";
 
 const CLIENTS = [
   {
@@ -67,7 +75,7 @@ const CLIENTS = [
     subtitle: "Autonomous Mobility",
     icon: (
       <svg className="w-5 h-5 text-zinc-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <circle cx="12" cy="12" r="8" />
+        <circle cx="12" cy="8" r="8" />
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83" />
       </svg>
     ),
@@ -75,7 +83,45 @@ const CLIENTS = [
 ];
 
 export default function Marquee() {
-  const duplicatedClients = [...CLIENTS, ...CLIENTS];
+  const duplicatedClients = [...CLIENTS, ...CLIENTS, ...CLIENTS, ...CLIENTS];
+
+  const baseX = useMotionValue(0);
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400,
+  });
+
+  const directionFactor = useRef<number>(-1);
+  const baseVelocity = -4; // Constant idle speed percentage
+
+  useAnimationFrame((time, delta) => {
+    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+
+    const currentVelocity = smoothVelocity.get();
+    if (currentVelocity < -5) {
+      directionFactor.current = 1; // Reverse when scrolling up
+    } else if (currentVelocity > 5) {
+      directionFactor.current = -1; // Accelerate forward when scrolling down
+    }
+
+    if (Math.abs(currentVelocity) > 0) {
+      moveBy += directionFactor.current * Math.abs(moveBy) * Math.abs(currentVelocity) * 0.006;
+    }
+
+    let nextX = baseX.get() + moveBy;
+    // Seamless continuous wrap between -50% and 0%
+    if (nextX <= -50) {
+      nextX += 50;
+    } else if (nextX >= 0) {
+      nextX -= 50;
+    }
+
+    baseX.set(nextX);
+  });
+
+  const x = useTransform(baseX, (v) => `${v}%`);
 
   return (
     <section className="relative w-full py-12 overflow-hidden border-y border-white/[0.06] bg-[#0b0b0e]/50 backdrop-blur-sm select-none">
@@ -85,19 +131,12 @@ export default function Marquee() {
 
       <motion.div
         className="flex w-max items-center gap-12 sm:gap-20 will-change-transform"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 28,
-          ease: "linear",
-        }}
-        style={{ transform: "translate3d(0,0,0)" }}
+        style={{ x }}
       >
         {duplicatedClients.map((client, index) => (
           <div
             key={index}
-            className="flex items-center gap-3.5 group cursor-default transition-all duration-500 opacity-60 hover:opacity-100 hover:scale-105"
+            className="flex items-center gap-3.5 group cursor-default transition-all duration-500 opacity-60 hover:opacity-100 hover:scale-105 shrink-0"
           >
             <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:border-[#ff1867]/40 group-hover:bg-[#ff1867]/10 transition-colors duration-300">
               {client.icon}

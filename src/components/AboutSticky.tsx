@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   User,
   ShieldCheck,
@@ -16,6 +16,52 @@ import {
   Award,
   Zap,
 } from "lucide-react";
+
+function Word({
+  word,
+  progress,
+  range,
+}: {
+  word: string;
+  progress: any;
+  range: [number, number];
+}) {
+  const opacity = useTransform(progress, range, [0.15, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block mr-1.5 mt-1.5">
+      {word}
+    </motion.span>
+  );
+}
+
+function ScrollTypographyFill({ text }: { text: string }) {
+  const containerRef = useRef<HTMLParagraphElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 85%", "end 50%"],
+  });
+  const words = text.split(" ");
+
+  return (
+    <p
+      ref={containerRef}
+      className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug text-white flex flex-wrap my-2"
+    >
+      {words.map((word, i) => {
+        const start = i / words.length;
+        const end = start + 1 / words.length;
+        return (
+          <Word
+            key={i}
+            word={word}
+            progress={scrollYProgress}
+            range={[start, end]}
+          />
+        );
+      })}
+    </p>
+  );
+}
 
 function LinkedinIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
   return (
@@ -156,9 +202,7 @@ export default function AboutSticky({ onOpenContact }: AboutStickyProps) {
               <span className="text-[#FF1E56]">real-world problems</span>.
             </h2>
 
-            <p className="text-zinc-300 text-base sm:text-lg leading-relaxed">
-              I am Abdul Hannan, a Full-Stack Developer and Software Engineer with 1.5+ years of hands-on commercial experience. I work across the full engineering lifecycle: understanding domain constraints, architecting performant database schemas, developing responsive interfaces, building reliable REST APIs, and automating operational workflows.
-            </p>
+            <ScrollTypographyFill text="I am Abdul Hannan, a Full-Stack Developer and Software Engineer with 1.5+ years of hands-on commercial experience. I work across the full engineering lifecycle: understanding domain constraints, architecting performant database schemas, developing responsive interfaces, building reliable REST APIs, and automating operational workflows." />
 
             <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
               My foundational production work includes modernizing <strong>Lala Motors</strong>, where I developed an offline-first ERP and billing system in Python, Tkinter, SQLite, and ReportLab that has successfully processed <strong>1,000+ real-world repair and spare parts transactions</strong>, along with a full-stack automotive customer platform in JavaScript, Node.js, Express, PostgreSQL, and Supabase.

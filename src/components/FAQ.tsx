@@ -164,6 +164,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
                   src="/images/Abdul-Image.jpeg"
                   alt="Abdul Hannan"
                   fill
+                  sizes="56px"
                   className="object-cover object-top"
                 />
               </div>

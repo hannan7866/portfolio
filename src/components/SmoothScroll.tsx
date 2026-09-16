@@ -13,7 +13,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.05,
-      touchMultiplier: 1.5,
+      touchMultiplier: 2,
       infinite: false,
     });
 
@@ -35,8 +35,8 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
           if (el) {
             e.preventDefault();
             lenis.scrollTo(el as HTMLElement, {
-              offset: -40,
-              duration: 1.3,
+              offset: 0,
+              duration: 1.2,
               easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
           }

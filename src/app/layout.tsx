@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Syne, Caveat } from "next/font/google";
+import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -375,6 +376,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#0d0d0f] text-[#ffffff] antialiased selection:bg-[#FF1E56] selection:text-white relative">
+        {/* Studio Analog Film Grain Texture */}
+        <div className="bg-noise fixed inset-0 z-[80] pointer-events-none" />
+        <CustomCursor />
         {children}
       </body>
     </html>

@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import Magnetic from "@/components/Magnetic";
 
 const WORDS = ["design", "build", "create", "engineer", "ship"];
 
@@ -46,6 +47,17 @@ interface FooterProps {
 
 export default function Footer({ onOpenContact }: FooterProps) {
   const [index, setIndex] = useState(0);
+  const footerRef = useRef<HTMLElement>(null);
+
+  // Scroll-linked animation for the Curtain Reveal and Giant Typography
+  const { scrollYProgress } = useScroll({
+    target: footerRef,
+    offset: ["start end", "end end"],
+  });
+
+  const textLetterSpacing = useTransform(scrollYProgress, [0, 1], ["-0.1em", "0em"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["50px", "0px"]);
+  const textScale = useTransform(scrollYProgress, [0, 1], [0.92, 1]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -55,15 +67,18 @@ export default function Footer({ onOpenContact }: FooterProps) {
   }, []);
 
   return (
-    <footer id="contact" className="relative pt-24 pb-0 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#0d0d0f] overflow-hidden w-full max-w-[100vw]">
-      
+    <footer
+      id="contact"
+      ref={footerRef}
+      className="sticky bottom-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 pb-0 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#0d0d0f] z-0 overflow-hidden"
+    >
       {/* Top Heading: "Lets [word] / incredible work together." */}
-      <div className="relative mb-14 select-none">
+      <div className="relative mb-10 select-none">
         <div className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white font-sans leading-normal">
           {/* First Line: Lets + Handwritten Swapped Word */}
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span>Lets</span>
-            
+
             {/* Dynamic Swapped Word Container */}
             <div className="relative inline-flex items-center justify-start min-w-[140px] sm:min-w-[300px] md:min-w-[360px] h-12 sm:h-20 md:h-24 overflow-hidden sm:overflow-visible">
               <AnimatePresence mode="wait">
@@ -81,7 +96,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
               </AnimatePresence>
             </div>
           </div>
-          
+
           {/* Second Line: incredible work together. */}
           <div className="mt-1 sm:mt-2">
             <span>incredible work together.</span>
@@ -89,26 +104,30 @@ export default function Footer({ onOpenContact }: FooterProps) {
         </div>
 
         {/* Small floating pink accent dot under the text */}
-        <div className="flex justify-center mt-3 sm:mt-4">
+        <div className="flex justify-start mt-3 sm:mt-4">
           <div className="w-2.5 h-2.5 rounded-full bg-[#FF1E56]" />
         </div>
       </div>
 
-      {/* Meta Bar: Email, Call Me, Social Icons */}
+      {/* Meta Bar: Email, Call Me, Social Icons (with Magnetic pull) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-8 border-t border-white/[0.08]">
         {/* Email */}
         <div className="flex flex-col gap-1.5">
           <span className="text-xs text-zinc-500 font-medium tracking-wide">
             Email
           </span>
-          <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors cursor-pointer"
-          >
-            dev.hannan.ai@gmail.com
-          </a>
+          <div>
+            <Magnetic strength={0.2}>
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors cursor-pointer inline-block"
+              >
+                dev.hannan.ai@gmail.com
+              </a>
+            </Magnetic>
+          </div>
         </div>
 
         {/* Call Me */}
@@ -116,12 +135,16 @@ export default function Footer({ onOpenContact }: FooterProps) {
           <span className="text-xs text-zinc-500 font-medium tracking-wide">
             Call Me
           </span>
-          <a
-            href="tel:+917310542113"
-            className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors"
-          >
-            +91-7310542113
-          </a>
+          <div>
+            <Magnetic strength={0.2}>
+              <a
+                href="tel:+917310542113"
+                className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors inline-block"
+              >
+                +91-7310542113
+              </a>
+            </Magnetic>
+          </div>
         </div>
 
         {/* Social Profiles */}
@@ -129,43 +152,51 @@ export default function Footer({ onOpenContact }: FooterProps) {
           <span className="text-xs text-zinc-500 font-medium tracking-wide">
             Follow &amp; Connect
           </span>
-          <div className="flex items-center gap-2">
-            <a
-              href="https://wa.me/917310542113"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="WhatsApp"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
-            >
-              <WhatsappIcon className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://github.com/hannan7866"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
-            >
-              <GithubIcon className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://linkedin.com/in/abdul-hannan-92a911405"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all"
-            >
-              <InstagramIcon className="w-3.5 h-3.5" />
-            </a>
+          <div className="flex items-center gap-3">
+            <Magnetic strength={0.2}>
+              <a
+                href="https://wa.me/917310542113"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="WhatsApp"
+                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+              >
+                <WhatsappIcon className="w-3.5 h-3.5" />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.2}>
+              <a
+                href="https://github.com/hannan7866"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+              >
+                <GithubIcon className="w-3.5 h-3.5" />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.2}>
+              <a
+                href="https://linkedin.com/in/abdul-hannan-92a911405"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+              >
+                <LinkedinIcon className="w-3.5 h-3.5" />
+              </a>
+            </Magnetic>
+            <Magnetic strength={0.2}>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram"
+                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+              >
+                <InstagramIcon className="w-3.5 h-3.5" />
+              </a>
+            </Magnetic>
           </div>
         </div>
       </div>
@@ -195,12 +226,20 @@ export default function Footer({ onOpenContact }: FooterProps) {
         </div>
       </div>
 
-      {/* Giant Bottom Signature Typography */}
+      {/* Giant Bottom Signature Typography - Scroll-Linked Dynamic Expansion */}
       <div className="w-full pt-4 pb-0 flex justify-center items-end select-none overflow-hidden leading-none">
-        <h1 className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black tracking-[-0.06em] uppercase leading-none text-[#FF1E56] text-center font-display whitespace-nowrap m-0 p-0 transform translate-y-1">
+        <motion.h1
+          style={{
+            letterSpacing: textLetterSpacing,
+            y: textY,
+            scale: textScale,
+          }}
+          className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black uppercase leading-none text-[#FF1E56] text-center font-display whitespace-nowrap m-0 p-0 transform will-change-transform"
+        >
           MR. ABDUL
-        </h1>
+        </motion.h1>
       </div>
     </footer>
   );
 }
+
