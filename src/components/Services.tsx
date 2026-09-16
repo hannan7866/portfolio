@@ -38,6 +38,16 @@ import {
   ReduxIcon,
   OpenAIIcon,
   FigmaIcon,
+  JavaScriptIcon,
+  ExpressIcon,
+  VercelIcon,
+  FramerMotionIcon,
+  HtmlIcon,
+  CssIcon,
+  CppIcon,
+  ApiIcon,
+  WorkflowIcon,
+  BrainIcon,
 } from "./ToolIcons";
 
 interface CapabilityItem {
@@ -53,18 +63,28 @@ const TOOLS = [
   { name: "React.js", icon: <ReactIcon className="w-6 h-6" /> },
   { name: "Next.js", icon: <NextjsIcon className="w-6 h-6" /> },
   { name: "TypeScript", icon: <TypeScriptIcon className="w-6 h-6" /> },
+  { name: "JavaScript", icon: <JavaScriptIcon className="w-6 h-6" /> },
   { name: "Python", icon: <PythonIcon className="w-6 h-6" /> },
   { name: "Node.js", icon: <NodeIcon className="w-6 h-6" /> },
+  { name: "Express.js", icon: <ExpressIcon className="w-6 h-6" /> },
   { name: "PostgreSQL", icon: <PostgresIcon className="w-6 h-6" /> },
   { name: "MongoDB", icon: <MongoIcon className="w-6 h-6" /> },
   { name: "Supabase", icon: <SupabaseIcon className="w-6 h-6" /> },
   { name: "SQLite", icon: <SqliteIcon className="w-6 h-6" /> },
+  { name: "HTML5", icon: <HtmlIcon className="w-6 h-6" /> },
+  { name: "CSS3", icon: <CssIcon className="w-6 h-6" /> },
   { name: "Tailwind CSS", icon: <TailwindIcon className="w-6 h-6" /> },
+  { name: "C++", icon: <CppIcon className="w-6 h-6" /> },
+  { name: "Vercel", icon: <VercelIcon className="w-6 h-6" /> },
+  { name: "Framer Motion", icon: <FramerMotionIcon className="w-6 h-6" /> },
   { name: "Git & GitHub", icon: <GitIcon className="w-6 h-6" /> },
   { name: "Docker", icon: <DockerIcon className="w-6 h-6" /> },
   { name: "Postman", icon: <PostmanIcon className="w-6 h-6" /> },
+  { name: "REST APIs", icon: <ApiIcon className="w-6 h-6" /> },
+  { name: "CI / CD", icon: <WorkflowIcon className="w-6 h-6" /> },
   { name: "Redux", icon: <ReduxIcon className="w-6 h-6" /> },
   { name: "OpenAI / LLMs", icon: <OpenAIIcon className="w-6 h-6" /> },
+  { name: "RAG & Agents", icon: <BrainIcon className="w-6 h-6" /> },
   { name: "Figma", icon: <FigmaIcon className="w-6 h-6" /> },
 ];
 
@@ -274,7 +294,16 @@ function TechPhysicsPlayground() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sceneRef, { once: true, margin: "-100px" });
 
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     if (!sceneRef.current) return;
     if (!isInView) return;
 
@@ -284,7 +313,7 @@ function TechPhysicsPlayground() {
 
     // Create Engine with natural downward gravity
     const engine = Engine.create({
-      gravity: { x: 0, y: 0.9, scale: 0.001 },
+      gravity: { x: 0, y: 1.5, scale: 0.001 }, // Increased Y gravity for a stronger pull
     });
 
     // Create Renderer with transparent backdrop
@@ -323,34 +352,44 @@ function TechPhysicsPlayground() {
       "React.js": "#00D8FF",
       "Next.js": "#FFFFFF",
       "TypeScript": "#3178C6",
+      "JavaScript": "#F7DF1E",
       "Python": "#3776AB",
       "Node.js": "#68A063",
+      "Express.js": "#FFFFFF",
       "PostgreSQL": "#336791",
       "MongoDB": "#47A248",
       "Supabase": "#3ECF8E",
       "SQLite": "#003B57",
+      "HTML5": "#E34F26",
+      "CSS3": "#1572B6",
       "Tailwind CSS": "#38BDF8",
+      "C++": "#00599C",
+      "Vercel": "#FFFFFF",
+      "Framer Motion": "#0055FF",
       "Git & GitHub": "#F05032",
       "Docker": "#2496ED",
       "Postman": "#FF6C37",
+      "REST APIs": "#00D8FF",
+      "CI / CD": "#2088FF",
       "Redux": "#764ABC",
       "OpenAI / LLMs": "#10A37F",
+      "RAG & Agents": "#8B5CF6",
       "Figma": "#F24E1E",
     };
 
     // Spawn physics bodies high above the viewport for a dramatic cascade drop
-    const radius = 23;
+    const radius = 21;
     const bodies = TOOLS.map((tool, i) => {
-      const col = i % 4;
-      const row = Math.floor(i / 4);
-      const startX = (width / 5) * (col + 1) + (Math.random() * 16 - 8);
-      const startY = -150 - row * 60 - Math.random() * 50;
+      const col = i % 6;
+      const row = Math.floor(i / 6);
+      const startX = (width / 7) * (col + 1) + (Math.random() * 20 - 10);
+      const startY = -150 - row * 55 - Math.random() * 50;
 
       const body = Bodies.circle(startX, startY, radius, {
-        restitution: 0.95,
-        friction: 0.005,
-        frictionAir: 0.015,
-        density: 0.001,
+        restitution: 0.6, // Reduced from 0.95 so they stop bouncing forever
+        friction: 0.1,
+        frictionAir: 0.005, // Reduced air friction so they drop faster
+        density: 0.002, // Slightly heavier
         render: {
           fillStyle: "#131318",
           strokeStyle: "rgba(255, 255, 255, 0.12)",
@@ -391,7 +430,7 @@ function TechPhysicsPlayground() {
 
         // Tiny accent indicator dot
         ctx.beginPath();
-        ctx.arc(0, -9, 2.5, 0, Math.PI * 2);
+        ctx.arc(0, -8, 2.5, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
 
@@ -405,9 +444,11 @@ function TechPhysicsPlayground() {
           .replace(".js", "")
           .replace(" & GitHub", "")
           .replace(" / LLMs", "")
-          .replace(" CSS", "");
+          .replace(" CSS", "")
+          .replace(" & Agents", "")
+          .replace(" / CD", "");
 
-        ctx.fillText(shortName, 0, 4);
+        ctx.fillText(shortName, 0, 3);
 
         ctx.restore();
       });
@@ -475,8 +516,8 @@ function TechPhysicsPlayground() {
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 300 && dist > 0.1) {
           Body.applyForce(body, body.position, {
-            x: (dx / dist) * 0.2,
-            y: (dy / dist - 0.2) * 0.2,
+            x: (dx / dist) * 0.15,
+            y: (dy / dist) * 0.15, // Pure directional push, no upward anti-gravity
           });
         }
       });
@@ -503,7 +544,7 @@ function TechPhysicsPlayground() {
 
           Body.applyForce(body, body.position, {
             x: nx * strength,
-            y: (ny - 0.5) * strength,
+            y: ny * strength, // Pure directional push
           });
         }
       });
@@ -523,7 +564,28 @@ function TechPhysicsPlayground() {
       Engine.clear(engine);
       if (render.canvas) render.canvas.remove();
     };
-  }, [isInView]);
+  }, [isInView, isMobile]);
+
+  if (isMobile) {
+    return (
+      <div className="mt-8 select-none">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block">Core Tech Stack</span>
+          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">Optimized View</span>
+        </div>
+        <div className="w-full rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 p-5 shadow-2xl flex flex-wrap justify-center gap-4">
+          {TOOLS.map((tool) => (
+            <div key={tool.name} className="flex flex-col items-center gap-1.5 w-[60px]">
+              <div className="w-11 h-11 rounded-full bg-[#181820] border border-white/10 flex items-center justify-center shadow-lg">
+                {tool.icon}
+              </div>
+              <span className="text-[8px] text-zinc-300 font-bold text-center leading-tight">{tool.name.replace('.js', '').replace(' / LLMs', '')}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-10 select-none">
@@ -603,7 +665,7 @@ export default function Services() {
             >
               <TiltCard
                 isHighlighted={cap.isHighlighted}
-                className={`rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-[0_-12px_45px_rgba(0,0,0,0.85)] backdrop-blur-xl ${
+                className={`rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-[0_-12px_45px_rgba(0,0,0,0.85)] md:backdrop-blur-xl backdrop-blur-md ${
                   cap.isHighlighted
                     ? "bg-gradient-to-br from-[#FF1E56] via-[#e11255] to-[#c70b47] text-white shadow-[0_20px_50px_rgba(255,30,86,0.45)] border border-[#ff4785]"
                     : "bg-[#131318] border border-white/10 hover:border-white/20 text-zinc-200"

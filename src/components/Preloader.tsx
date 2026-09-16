@@ -1,75 +1,175 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 interface PreloaderProps {
   onComplete?: () => void;
 }
 
+const HELLO_CHARS = "hello.".split("");
+
+/* Stagger parent: orchestrates children letter-by-letter */
+const helloContainerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+  exit: {
+    transition: {
+      staggerChildren: 0.06,
+      staggerDirection: -1, // reverse — last letter fades first
+    },
+  },
+};
+
+const helloCharVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: { duration: 0.22, ease: "easeIn" },
+  },
+};
+
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [isVisible, setIsVisible] = useState(true);
+  // sequence: 0 = show 'hello', 1 = fade out 'hello', 2 = show 'Welcome'
+  const [sequence, setSequence] = useState(0);
 
   useEffect(() => {
-    // Hold greeting and trigger the slide-up exit after 2.5s
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 2500);
+    const t1 = setTimeout(() => setSequence(1), 1200); // start fading hello
+    const t2 = setTimeout(() => setSequence(2), 1800); // show welcome text
+    const t3 = setTimeout(() => setIsVisible(false), 3500); // trigger split exit
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, []);
 
   return (
     <AnimatePresence onExitComplete={onComplete}>
       {isVisible && (
         <motion.div
-          key="preloader"
-          initial={{ y: 0 }}
-          exit={{
-            y: "-100%",
-            transition: {
-              duration: 0.95,
-              ease: [0.76, 0, 0.24, 1], // cinematic cubic-bezier curve
-            },
-          }}
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0d0d0f] overflow-hidden select-none"
+          key="preloader-root"
+          className="fixed inset-0 z-[200] pointer-events-none select-none"
         >
-          {/* Subtle central ambient glow */}
-          <div className="absolute w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-[#FF1E56]/15 rounded-full blur-[140px] pointer-events-none" />
-
-          {/* Glowing Animated 'Hello' */}
+          {/* ── Top half — slides up on exit ── */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{
-              opacity: 1,
-              scale: [0.8, 1.08, 1],
-              y: 0,
-            }}
+            className="absolute top-0 left-0 w-full h-1/2 bg-[#0d0d0f] z-[100]"
+            initial={{ y: 0 }}
             exit={{
-              opacity: 0,
-              scale: 0.95,
-              y: -30,
-              transition: { duration: 0.4, ease: "easeInOut" },
+              y: "-100%",
+              transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] },
             }}
-            transition={{
-              duration: 1.2,
-              ease: [0.16, 1, 0.3, 1],
+          />
+
+          {/* ── Bottom half — slides down on exit ── */}
+          <motion.div
+            className="absolute bottom-0 left-0 w-full h-1/2 bg-[#0d0d0f] z-[100]"
+            initial={{ y: 0 }}
+            exit={{
+              y: "100%",
+              transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1] },
             }}
-            style={{
-              fontFamily: "var(--font-handwritten)",
-              textShadow:
-                "0 0 20px rgba(255, 30, 86, 0.85), 0 0 50px rgba(255, 30, 86, 0.5), 0 0 80px rgba(255, 30, 86, 0.3)",
-            }}
-            className="text-6xl sm:text-8xl md:text-9xl font-bold text-[#FF1E56] tracking-wide relative z-10 lowercase flex items-center gap-1"
+          />
+
+          {/* ── Ambient glow orb (always behind text) ── */}
+          <div className="absolute inset-0 z-[101] flex items-center justify-center pointer-events-none">
+            <div className="w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-[#FF1E56]/12 rounded-full blur-[160px]" />
+          </div>
+
+          {/* ── Text content layer — fades on exit ── */}
+          <motion.div
+            className="absolute inset-0 z-[102] flex flex-col items-center justify-center gap-6"
+            exit={{ opacity: 0, transition: { duration: 0.35, ease: "easeIn" } }}
           >
-            <span>Hello</span>
-            <motion.span
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-              className="text-white text-5xl sm:text-7xl md:text-8xl"
-            >
-              .
-            </motion.span>
+            {/* Staggered 'hello.' typewriter */}
+            <AnimatePresence mode="wait">
+              {sequence < 2 && (
+                <motion.div
+                  key="hello"
+                  variants={helloContainerVariants}
+                  initial="hidden"
+                  animate={sequence === 0 ? "visible" : "exit"}
+                  exit="exit"
+                  className="flex items-end gap-[0.05em] leading-none"
+                  style={{
+                    fontFamily: "var(--font-handwritten)",
+                    textShadow:
+                      "0 0 22px rgba(255,30,86,0.9), 0 0 60px rgba(255,30,86,0.5), 0 0 100px rgba(255,30,86,0.25)",
+                  }}
+                >
+                  {HELLO_CHARS.map((char, i) => (
+                    <motion.span
+                      key={i}
+                      variants={helloCharVariants}
+                      className={`text-7xl sm:text-9xl md:text-[10rem] font-bold tracking-tight leading-none ${
+                        char === "." ? "text-white" : "text-[#FF1E56]"
+                      }`}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* 'Welcome' blur-to-sharp reveal */}
+            <AnimatePresence>
+              {sequence >= 2 && (
+                <motion.div
+                  key="welcome"
+                  initial={{ opacity: 0, filter: "blur(14px)", scale: 0.92 }}
+                  animate={{
+                    opacity: 1,
+                    filter: "blur(0px)",
+                    scale: 1,
+                    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                  }}
+                  exit={{ opacity: 0, filter: "blur(8px)", scale: 0.96 }}
+                  className="flex flex-col items-center gap-3 text-center px-6"
+                >
+                  <p className="text-2xl sm:text-4xl text-zinc-300 font-display font-bold tracking-widest uppercase">
+                    Welcome to my portfolio
+                  </p>
+
+                  {/* Thin animated progress line */}
+                  <motion.div
+                    className="h-px bg-gradient-to-r from-transparent via-[#FF1E56] to-transparent"
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{
+                      width: "180px",
+                      opacity: 1,
+                      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 },
+                    }}
+                  />
+
+                  {/* Subtle sub-label */}
+                  <motion.span
+                    className="text-[11px] font-mono tracking-[0.35em] text-zinc-600 uppercase"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      transition: { delay: 0.4, duration: 0.5 },
+                    }}
+                  >
+                    Hannan · Full-Stack Engineer
+                  </motion.span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.div>
       )}

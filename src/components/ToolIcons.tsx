@@ -150,3 +150,106 @@ export function ReduxIcon({ className = "w-5 h-5" }: { className?: string }) {
     </svg>
   );
 }
+
+export function JavaScriptIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <rect width="24" height="24" rx="4" fill="#F7DF1E" />
+      <path
+        d="M6.5 18.5l1.8-1.1c.4.7.8 1.2 1.5 1.2.8 0 1.2-.3 1.2-1.5v-7.3h2.3v7.3c0 2.4-1.4 3.5-3.4 3.5-1.8 0-2.9-.9-3.4-2.1zm8.3-.3l1.8-1c.5.8 1.1 1.4 2.2 1.4.9 0 1.5-.4 1.5-1 0-.7-.6-1-1.7-1.5l-.6-.3c-1.7-.7-2.8-1.6-2.8-3.5 0-1.7 1.3-3.1 3.4-3.1 1.5 0 2.6.5 3.3 1.8l-1.7 1.1c-.4-.7-.8-1-1.6-1-.7 0-1.2.4-1.2.9 0 .6.5.9 1.4 1.3l.6.3c2 .9 3.1 1.7 3.1 3.7 0 2.1-1.6 3.3-3.8 3.3-2.1 0-3.3-1-3.9-2.4z"
+        fill="#000000"
+      />
+    </svg>
+  );
+}
+
+export function ExpressIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M5.5 8.5h3.2l2.3 3.6 2.3-3.6h3.2l-3.9 5.8 4.2 6.2h-3.2l-2.6-4-2.6 4H5.2l4.2-6.2L5.5 8.5z" />
+    </svg>
+  );
+}
+
+export function VercelIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 1L24 22H0L12 1Z" />
+    </svg>
+  );
+}
+
+export function FramerMotionIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" />
+    </svg>
+  );
+}
+
+export function HtmlIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <path d="M1.5 0h21l-1.9 21.3L12 24l-8.6-2.7L1.5 0z" fill="#E34F26" />
+      <path d="M12 2.2v19.7l6.7-2.1 1.6-17.6H12z" fill="#EF652A" />
+      <path d="M12 6.7H7.3l.3 3.4h4.4v-3.4zm0 6.6H9.7l-.2-2.2H7.3l.4 4.4h4.3v-2.2z" fill="#fff" />
+      <path d="M12 6.7h4.7l-.4 4.5H12V7.8zm0 5.5h2.4l-.2 2.4-2.2.6v2.3l4.2-1.2.6-6.3H12v2.2z" fill="#EBEBEB" />
+    </svg>
+  );
+}
+
+export function CssIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none">
+      <path d="M1.5 0h21l-1.9 21.3L12 24l-8.6-2.7L1.5 0z" fill="#1572B6" />
+      <path d="M12 2.2v19.7l6.7-2.1 1.6-17.6H12z" fill="#33A9DC" />
+      <path d="M12 6.7H7.3l.3 3.4h4.4v-3.4zm0 6.6H9.7l-.2-2.2H7.3l.4 4.4h4.3v-2.2z" fill="#fff" />
+      <path d="M12 6.7h4.7l-.4 4.5H12V7.8zm0 5.5h2.4l-.2 2.4-2.2.6v2.3l4.2-1.2.6-6.3H12v2.2z" fill="#EBEBEB" />
+    </svg>
+  );
+}
+
+export function CppIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="#00599C">
+      <path d="M12 2a10 10 0 0 0-9.8 8h3.1a7 7 0 1 1 0 4H2.2A10 10 0 1 0 12 2zm3.5 8.5v1h-1v1h1v1h1v-1h1v-1h-1v-1h-1zm4 0v1h-1v1h1v1h1v-1h1v-1h-1v-1h-1z" />
+    </svg>
+  );
+}
+
+export function ApiIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#00D8FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="9" width="4" height="6" rx="1" />
+      <rect x="16" y="9" width="4" height="6" rx="1" />
+      <path d="M8 12h8" />
+      <path d="M2 12h2" />
+      <path d="M20 12h2" />
+    </svg>
+  );
+}
+
+export function WorkflowIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#2088FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="6" height="6" rx="1" />
+      <rect x="15" y="3" width="6" height="6" rx="1" />
+      <rect x="9" y="15" width="6" height="6" rx="1" />
+      <path d="M6 9v3a1 1 0 0 0 1 1h5" />
+      <path d="M18 9v3a1 1 0 0 1-1 1h-5" />
+      <path d="M12 13v2" />
+    </svg>
+  );
+}
+
+export function BrainIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />
+      <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z" />
+      <path d="M12 5v13" />
+      <path d="M7 10h5" />
+      <path d="M12 14h5" />
+    </svg>
+  );
+}

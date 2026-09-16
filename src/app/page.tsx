@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, useScroll, useTransform, useVelocity, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Preloader from "@/components/Preloader";
 import SmoothScroll from "@/components/SmoothScroll";
 import Navbar from "@/components/Navbar";
@@ -20,12 +20,8 @@ export default function Home() {
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [contactMode, setContactMode] = useState<ContactMode>("hire");
 
-  // Chromatic Ambient Color Engine & Velocity Bounce on Scroll
+  // Chromatic Ambient Color Engine on Scroll
   const { scrollYProgress } = useScroll();
-  const scrollVelocity = useVelocity(scrollYProgress);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const skewY = useTransform(smoothVelocity, [-0.5, 0.5], ["-1.5deg", "1.5deg"]);
-  const scaleY = useTransform(smoothVelocity, [-0.5, 0.5], [0.97, 1.03]);
 
   const ambientColor = useTransform(
     scrollYProgress,
@@ -55,11 +51,24 @@ export default function Home() {
       <Navbar onOpenContact={() => handleOpenContact("hire")} />
 
       <SmoothScroll>
-        {/* Main Content Sections (Solid foreground layer that lifts like a curtain with velocity rubber-band distortion) */}
-        <motion.div
-          style={{ skewY, scaleY, transformOrigin: "center" }}
-          className="relative z-10 bg-[#0d0d0f] shadow-[0_40px_100px_rgba(0,0,0,0.85)] will-change-transform"
-        >
+        {/* Main Content Sections */}
+        <motion.div className="relative z-10 bg-[#0d0d0f] shadow-[0_40px_100px_rgba(0,0,0,0.85)]">
+          {/* ATS & SEO Invisible Injector */}
+          <article className="sr-only">
+            <h1>Abdul Hannan - Full-Stack Developer &amp; Software Engineer</h1>
+            <p>B.Tech CS graduate with 1.5+ years of production experience building scalable web applications, offline ERP systems, and AI-powered solutions.</p>
+            <h2>Core Skills</h2>
+            <ul>
+              <li>Frontend: React.js, Next.js, JavaScript, TypeScript, Tailwind CSS</li>
+              <li>Backend: Node.js, Express.js, Python</li>
+              <li>Database: PostgreSQL, MongoDB, SQLite, Supabase</li>
+              <li>Specialized: Generative AI, RAG Pipelines, Offline-First Architecture</li>
+            </ul>
+            <h2>Professional Experience</h2>
+            <h3>Full-Stack Developer at Lala Motors (Jan 2025 - Present)</h3>
+            <p>Built an offline-first ERP &amp; billing application processing 1,000+ real-world transactions. Developed full-stack automotive platform with PostgreSQL, Supabase, and Next.js.</p>
+          </article>
+
           <Hero onOpenContact={() => handleOpenContact("hire")} />
           <Projects />
           <TestimonialQuote />

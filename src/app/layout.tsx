@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Syne, Caveat } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
@@ -376,6 +377,15 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#0d0d0f] text-[#ffffff] antialiased selection:bg-[#FF1E56] selection:text-white relative">
+        <Script id="console-egg" strategy="afterInteractive">
+          {`
+            console.log(
+              '%c⚡ Built by Abdul Hannan %c\\n\\nStack: Next.js 16, React 19, Framer Motion, Matter.js, Tailwind CSS v4.\\nStatus: Looking for new opportunities.\\nSay hi: dev.hannan.ai@gmail.com',
+              'color: #FF1E56; font-size: 24px; font-weight: bold; font-family: monospace;',
+              'color: #a1a1aa; font-size: 14px; font-family: monospace; line-height: 1.5;'
+            );
+          `}
+        </Script>
         {/* Studio Analog Film Grain Texture */}
         <div className="bg-noise fixed inset-0 z-[80] pointer-events-none" />
         <CustomCursor />

@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
-  useVelocity,
-  useSpring,
   useMotionValue,
   useMotionTemplate,
-  useMotionValueEvent,
 } from "framer-motion";
 import { useHoverSound } from "@/utils/useSound";
 import {
@@ -23,12 +20,9 @@ import {
   Info,
   Layers,
   Terminal,
-  Cpu,
   CheckCircle2,
-  Building2,
-  Wrench,
-  Palette,
-  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 type ProjectCategory = "all" | "production" | "engineering" | "client";
@@ -315,139 +309,92 @@ const PROJECTS: Project[] = [
   },
 ];
 
-interface ProjectCardProps {
-  project: Project;
-  index: number;
-  onOpenLive: (e: React.MouseEvent, url?: string) => void;
-  onSelectProject: (project: Project) => void;
-  scrollYProgress: any;
-}
-
-function ProjectCard({
+/* ─────────────────────────────────────────────────────────────
+   Tilt Card: 3D mouse-tilt + glass-glare — NO scroll parallax
+───────────────────────────────────────────────────────────── */
+function FlipProjectCard({
   project,
-  index,
   onOpenLive,
   onSelectProject,
-  scrollYProgress,
-}: ProjectCardProps) {
+}: {
+  project: Project;
+  onOpenLive: (e: React.MouseEvent, url?: string) => void;
+  onSelectProject: (p: Project) => void;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const playHover = useHoverSound();
 
-  // Scroll Parallax inside each card image (Horizontal & Vertical slide)
-  const imageX = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
-  // 3D Glass Tilt Physics
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const isHovered = useMotionValue(0);
+  const rotateX = useMotionValue(0);
+  const rotateY = useMotionValue(0);
 
-  // Liquid Distortion Ripple Physics
-  const distortionScale = useSpring(0, { stiffness: 100, damping: 15 });
-
-  useMotionValueEvent(distortionScale, "change", (latest) => {
-    const disp = document.getElementById("displacement-map");
-    if (disp) {
-      disp.setAttribute("scale", latest.toString());
-    }
-  });
-
-  const springConfig = { damping: 20, stiffness: 220 };
-  const springX = useSpring(0, springConfig);
-  const springY = useSpring(0, springConfig);
-
-  const rotateX = useTransform(springY, [-0.5, 0.5], [8, -8]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], [-8, 8]);
-
-  // Glass glare radial gradient following cursor perfectly
-  const glassGlare = useMotionTemplate`radial-gradient(320px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.15), transparent 75%)`;
+  const glassGlare = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.13), transparent 75%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
     mouseX.set(x);
     mouseY.set(y);
-    springX.set(x / rect.width - 0.5);
-    springY.set(y / rect.height - 0.5);
+    rotateX.set(-(y / rect.height - 0.5) * 10);
+    rotateY.set((x / rect.width - 0.5) * 10);
     isHovered.set(1);
-  };
-
-  const handleMouseEnter = () => {
-    playHover();
-    isHovered.set(1);
-    distortionScale.set(40);
-    setTimeout(() => {
-      distortionScale.set(0);
-    }, 50);
   };
 
   const handleMouseLeave = () => {
-    springX.set(0);
-    springY.set(0);
+    rotateX.set(0);
+    rotateY.set(0);
     isHovered.set(0);
   };
 
   return (
-    <div className="[perspective:1200px] flex shrink-0">
+    <div className="[perspective:1200px] w-full h-full">
       <motion.article
         ref={cardRef}
-        layout
         data-cursor-text="EXPLORE"
-        initial={{ opacity: 0, scale: 0.92, y: 30 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 20 }}
-        transition={{
-          duration: 0.6,
-          delay: index * 0.04,
-          ease: [0.16, 1, 0.3, 1],
-        }}
         onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={() => playHover()}
         onMouseLeave={handleMouseLeave}
         onClick={(e) => onOpenLive(e, project.liveUrl || project.githubUrl)}
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-        }}
-        className="group cursor-pointer flex flex-col justify-between w-[85vw] sm:w-[62vw] lg:w-[48vw] h-[54vh] sm:h-[58vh] rounded-3xl bg-[#131318] border border-white/10 p-4 sm:p-6 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[#FF1E56]/50 hover:shadow-[0_0_45px_rgba(255,30,86,0.25)] select-none will-change-transform overflow-hidden relative"
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="group cursor-pointer w-full h-full flex flex-col rounded-3xl bg-[#131318] border border-white/10 p-4 sm:p-6 shadow-2xl hover:border-[#FF1E56]/50 hover:shadow-[0_0_45px_rgba(255,30,86,0.25)] select-none will-change-transform overflow-hidden relative transition-shadow duration-500"
       >
-        {/* Top Half: Card Visual Container with Parallax Image, Liquid Distortion & Dynamic Glass Glare */}
-        <div className="relative w-full flex-1 min-h-0 overflow-hidden rounded-2xl bg-black border border-white/10 mb-4 sm:mb-5">
-          <motion.div
-            style={{
-              x: imageX,
-              y: imageY,
-              scale: 1.25,
-              filter: "url(#liquid-distortion)",
-            }}
-            className="absolute inset-0 w-full h-full will-change-transform"
-          >
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              sizes="(max-width: 768px) 85vw, (max-width: 1200px) 62vw, 48vw"
-              className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
-            />
-          </motion.div>
+        {/* Image area */}
+        <div
+          className="relative w-full flex-1 min-h-0 overflow-hidden rounded-2xl bg-black border border-white/10 mb-4 sm:mb-5"
+          style={{ WebkitTransform: "translateZ(0)" }}
+        >
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(max-width: 768px) 90vw, 52vw"
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+            style={{ WebkitTransform: "translateZ(0)" }}
+          />
 
-          {/* Dynamic Glass Glare Overlay Following Cursor */}
+          {/* Glass glare */}
           <motion.div
-            style={{
-              background: glassGlare,
-              opacity: isHovered,
-            }}
+            style={{ background: glassGlare, opacity: isHovered }}
             className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300"
           />
 
-          {/* Dark subtle overlay fade */}
-          <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none" />
+          {/* Dark overlay on hover */}
+          <div className="absolute inset-0 bg-black/25 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-          {/* Top badges */}
+          {/* Badges */}
           <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between pointer-events-none gap-2 z-10">
             <span className="px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-white truncate">
               {project.number} — {project.categoryLabel}
@@ -459,16 +406,16 @@ function ProjectCard({
             )}
           </div>
 
-          {/* Hover Center Indicator */}
+          {/* Hover center CTA */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-            <div className="px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-1.5 transform group-hover:scale-105 transition-transform">
+            <div className="px-4 py-2 rounded-full bg-black/85 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-2xl flex items-center gap-1.5">
               <span>{project.isDesktopApp ? "Open GitHub Repo" : "Open Live Website"}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#FF1E56]" />
             </div>
           </div>
         </div>
 
-        {/* Bottom Half: Project Meta Details */}
+        {/* Meta row */}
         <div className="flex items-start justify-between gap-4 shrink-0 relative z-10">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
@@ -477,12 +424,9 @@ function ProjectCard({
               </h3>
               <span className="text-xs font-mono text-zinc-500 shrink-0">{project.year}</span>
             </div>
-
             <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal line-clamp-2 leading-relaxed">
               {project.shortDescription}
             </p>
-
-            {/* Tech stack tags preview */}
             <div className="flex flex-wrap gap-1.5 mt-2.5">
               {project.tags.slice(0, 5).map((tag) => (
                 <span
@@ -495,29 +439,24 @@ function ProjectCard({
             </div>
           </div>
 
-          {/* Action Buttons: Details Modal + Live Link */}
           <div className="flex items-center gap-2 shrink-0 self-center">
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectProject(project);
-              }}
-              title="View Technical Case Study & Architecture"
+              onClick={(e) => { e.stopPropagation(); onSelectProject(project); }}
+              title="View Technical Case Study"
               className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-colors cursor-pointer"
             >
               <Info className="w-4 h-4" />
             </button>
-
             <a
               href={project.liveUrl || project.githubUrl}
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 text-xs font-semibold text-zinc-300 group-hover:text-white bg-white/5 group-hover:bg-[#FF1E56] px-3.5 py-2 rounded-full border border-white/10 group-hover:border-[#FF1E56] transition-all duration-400 ease-out shadow-sm cursor-pointer"
+              className="flex items-center gap-1 text-xs font-semibold text-zinc-300 group-hover:text-white bg-white/5 group-hover:bg-[#FF1E56] px-3.5 py-2 rounded-full border border-white/10 group-hover:border-[#FF1E56] transition-all duration-300 shadow-sm cursor-pointer"
             >
               <span>{project.isDesktopApp ? "GitHub" : "Live Link"}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -526,47 +465,140 @@ function ProjectCard({
   );
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Single deck page wrapper — driven entirely by scroll
+───────────────────────────────────────────────────────────── */
+function DeckPage({
+  scrollYProgress,
+  index,
+  total,
+  children,
+}: {
+  scrollYProgress: any;
+  index: number;
+  total: number;
+  children: React.ReactNode;
+}) {
+  // Each page occupies 1/total of the scroll range
+  const start = index / total;
+  const end = (index + 1) / total;
+
+  // This page flips away (rotateX 0→-90) during its own window
+  const rotateX = useTransform(scrollYProgress, [start, end], [0, -90]);
+  const opacity = useTransform(scrollYProgress, [start, end * 0.85, end], [1, 1, 0]);
+  // Scale very subtly down as it flips off
+  const scale = useTransform(scrollYProgress, [start, end], [1, 0.96]);
+
+  // Incoming: this page starts below (rotateX 90) and arrives at 0 when the previous page leaves
+  const incomingStart = Math.max(0, (index - 1) / total);
+  const incomingEnd = index / total;
+  const rotateXIn = useTransform(scrollYProgress, [incomingStart, incomingEnd], [90, 0]);
+  const opacityIn = useTransform(scrollYProgress, [incomingStart, incomingStart + 0.01, incomingEnd], [0, 1, 1]);
+
+  // The first page starts fully visible, subsequent ones arrive from behind
+  const isFirst = index === 0;
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center backface-hidden transform-gpu"
+      style={{
+        rotateX: isFirst ? rotateX : rotateXIn,
+        opacity: isFirst ? opacity : opacityIn,
+        scale,
+        zIndex: isFirst ? total - index : index,
+        transformOrigin: "center top",
+        transformStyle: "preserve-3d",
+        willChange: "transform, opacity",
+      }}
+    >
+      {/* Apply the flip-away transform only when we're past this page */}
+      {!isFirst && (
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center backface-hidden transform-gpu"
+          style={{
+            rotateX,
+            opacity,
+            transformOrigin: "center top",
+            transformStyle: "preserve-3d",
+            willChange: "transform, opacity",
+          }}
+        >
+          {children}
+        </motion.div>
+      )}
+      {isFirst && children}
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Main Projects component
+───────────────────────────────────────────────────────────── */
 export default function Projects() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const scrollRef = useRef<HTMLElement>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const filteredProjects =
-    activeCategory === "all"
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.categoryType === activeCategory);
-
-  // Tall scroll container to drive smooth horizontal glide
   const { scrollYProgress } = useScroll({
     target: scrollRef,
     offset: ["start start", "end end"],
   });
 
-  // Scroll Momentum & Velocity Physics
-  const scrollVelocity = useVelocity(scrollYProgress);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 400 });
-  const skewX = useTransform(smoothVelocity, [-1, 1], ["10deg", "-10deg"]);
-
-  // Calculate dynamic horizontal translation
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
-
   const handleOpenLive = (e: React.MouseEvent, url?: string) => {
     e.stopPropagation();
-    if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  // 9 pages: 1 cover + 7 projects + 1 back cover
+  const TOTAL_PAGES = 9;
+
+  // Active page tracking for a11y announcement & pagination controls
+  const [activePageIndex, setActivePageIndex] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
+      const idx = Math.min(TOTAL_PAGES - 1, Math.floor(latest * TOTAL_PAGES));
+      setActivePageIndex(idx);
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress, TOTAL_PAGES]);
+
+  const handlePrevPage = () => {
+    if (!scrollRef.current) return;
+    const targetIdx = Math.max(0, activePageIndex - 1);
+    const top = scrollRef.current.offsetTop;
+    const height = scrollRef.current.offsetHeight;
+    const step = height / TOTAL_PAGES;
+    window.scrollTo({ top: top + targetIdx * step + 10, behavior: "smooth" });
+  };
+
+  const handleNextPage = () => {
+    if (!scrollRef.current) return;
+    const targetIdx = Math.min(TOTAL_PAGES - 1, activePageIndex + 1);
+    const top = scrollRef.current.offsetTop;
+    const height = scrollRef.current.offsetHeight;
+    const step = height / TOTAL_PAGES;
+    window.scrollTo({ top: top + targetIdx * step + 10, behavior: "smooth" });
+  };
+
+  // Progress bar for the deck
+  const progressBarScale = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section id="projects" ref={scrollRef} className="relative h-[400vh] bg-[#0d0d0f] overflow-visible">
-      {/* Sticky Full-Screen Viewport Frame */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between py-8 overflow-hidden">
-        {/* Sticky Top Header & Filter Tabs */}
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 shrink-0 z-20">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-3 sm:mb-4 gap-3">
+    <section
+      id="projects"
+      ref={scrollRef as React.RefObject<HTMLElement>}
+      className="relative bg-[#0d0d0f]"
+      style={{ height: `${TOTAL_PAGES * 100}vh` }}
+    >
+      {/* ── Sticky Viewport ── */}
+      <div className="sticky top-0 h-screen w-full flex flex-col overflow-hidden [perspective:2000px]">
+
+        {/* Header */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-3 shrink-0 z-30 relative">
+          <div className="flex items-end justify-between gap-4">
             <div>
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FF1E56] mb-1"
@@ -575,89 +607,145 @@ export default function Projects() {
                 Curated Software &amp; Systems
               </motion.div>
               <motion.h2
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white font-display"
               >
                 Featured <span className="text-[#FF1E56]">Projects</span>
               </motion.h2>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar select-none pb-1">
-              {[
-                { id: "all", label: "All Projects", count: PROJECTS.length },
-                {
-                  id: "production",
-                  label: "🌟 Production / Real-World",
-                  count: PROJECTS.filter((p) => p.categoryType === "production").length,
-                },
-                {
-                  id: "engineering",
-                  label: "⚡ Engineering & Technical",
-                  count: PROJECTS.filter((p) => p.categoryType === "engineering").length,
-                },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveCategory(tab.id)}
-                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-1.5 shrink-0 cursor-pointer ${
-                    activeCategory === tab.id
-                      ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30 scale-105"
-                      : "bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10"
-                  }`}
-                >
-                  <span>{tab.label}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                      activeCategory === tab.id ? "bg-white/20 text-white" : "bg-white/5 text-zinc-500"
-                    }`}
-                  >
-                    {tab.count}
-                  </span>
-                </button>
-              ))}
+            {/* Mini progress bar */}
+            <div className="hidden sm:flex flex-col items-end gap-1">
+              <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Scroll Progress</span>
+              <div className="w-40 h-1 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  style={{ width: progressBarScale }}
+                  className="h-full bg-[#FF1E56] rounded-full"
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Center: Massive Horizontal Sliding Row with Scroll Momentum Skew Physics */}
-        <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto">
-          <motion.div
-            style={{ x, skewX }}
-            className="flex gap-6 sm:gap-8 lg:gap-10 px-4 sm:px-12 lg:px-20 w-max items-center will-change-transform"
-          >
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  index={index}
-                  onOpenLive={handleOpenLive}
-                  onSelectProject={(p) => setSelectedProject(p)}
-                  scrollYProgress={scrollYProgress}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+        {/* ── Deck Stage ── */}
+        <div className="relative flex-1 w-full flex items-center justify-center px-4 sm:px-8 lg:px-16 pb-6">
+          <div className="relative w-full max-w-3xl h-[58vh] sm:h-[62vh]">
+
+            {/* ── PAGE 0: COVER ── */}
+            <FlipPageSimple scrollYProgress={scrollYProgress} index={0} total={TOTAL_PAGES}>
+              <div className="w-full h-full rounded-3xl bg-gradient-to-br from-[#1a1a22] via-[#131318] to-[#0d0d0f] border border-white/10 flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden">
+                {/* Ambient glow */}
+                <div className="absolute inset-0 bg-[#FF1E56]/5 rounded-3xl" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#FF1E56]/10 rounded-full blur-[40px] sm:blur-[80px] pointer-events-none" />
+
+                <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#FF1E56] mb-6 block">
+                  Portfolio · 2025
+                </span>
+                <h3 className="relative z-10 text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                  My<br /><span className="text-[#FF1E56]">Projects</span>
+                </h3>
+                <p className="relative z-10 text-sm sm:text-base text-zinc-400 max-w-xs leading-relaxed mb-8">
+                  7 production-grade systems & creative builds — each one a solved engineering problem.
+                </p>
+                <div className="relative z-10 flex items-center gap-2 text-xs font-mono text-zinc-500 animate-bounce">
+                  <span>↓</span>
+                  <span>Scroll to open</span>
+                  <span>↓</span>
+                </div>
+
+                <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-white/20 select-none">
+                  01 / {TOTAL_PAGES}
+                </span>
+              </div>
+            </FlipPageSimple>
+
+            {/* ── PAGES 1–7: PROJECT CARDS ── */}
+            {PROJECTS.map((project, i) => (
+              <FlipPageSimple
+                key={project.id}
+                scrollYProgress={scrollYProgress}
+                index={i + 1}
+                total={TOTAL_PAGES}
+              >
+                <div className="w-full h-full relative">
+                  <FlipProjectCard
+                    project={project}
+                    onOpenLive={handleOpenLive}
+                    onSelectProject={(p) => setSelectedProject(p)}
+                  />
+                  {/* Page counter */}
+                  <span aria-live="polite" className="absolute bottom-3 right-5 text-[10px] font-mono text-white/20 select-none pointer-events-none">
+                    {String(i + 2).padStart(2, "0")} / {TOTAL_PAGES}
+                  </span>
+                </div>
+              </FlipPageSimple>
+            ))}
+
+            {/* ── PAGE 8: BACK COVER ── */}
+            <FlipPageSimple scrollYProgress={scrollYProgress} index={8} total={TOTAL_PAGES}>
+              <div className="w-full h-full rounded-3xl bg-gradient-to-br from-[#1a1020] via-[#131318] to-[#0d0d0f] border border-[#FF1E56]/20 flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#FF1E56]/8 rounded-full blur-[50px] sm:blur-[100px] pointer-events-none" />
+
+                <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#FF1E56] mb-5">
+                  That&apos;s a wrap · 2025
+                </span>
+                <h3 className="relative z-10 text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+                  More Coming<br /><span className="text-[#FF1E56]">Soon...</span>
+                </h3>
+                <p className="relative z-10 text-sm text-zinc-400 max-w-sm leading-relaxed mb-8">
+                  New projects are always in the works. Got a problem worth solving? Let&apos;s build together.
+                </p>
+                <a
+                  href="#contact"
+                  className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#FF1E56] text-white text-sm font-bold hover:bg-[#e11255] transition-all shadow-lg shadow-[#FF1E56]/30 hover:shadow-[#FF1E56]/50 hover:scale-105 active:scale-95"
+                >
+                  <span>Get in Touch</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+
+                <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-white/20 select-none">
+                  09 / {TOTAL_PAGES}
+                </span>
+              </div>
+            </FlipPageSimple>
+
+          </div>
         </div>
 
-        {/* Bottom Status & Scroll Indicator */}
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 shrink-0 flex items-center justify-between text-xs text-zinc-500 font-mono pt-2">
-          <span className="hidden sm:inline">← Scroll down to slide through gallery →</span>
-          <div className="flex-1 sm:max-w-xs mx-4 h-1 bg-white/10 rounded-full overflow-hidden">
-            <motion.div
-              style={{ scaleX: scrollYProgress, transformOrigin: "left" }}
-              className="h-full bg-[#FF1E56]"
-            />
+        {/* Footer hint & Pagination Navigation */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pb-4 shrink-0 flex items-center justify-between text-xs text-zinc-500 font-mono">
+          <span className="hidden sm:inline">↓ Scroll down or navigate through projects</span>
+          
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={handlePrevPage}
+              aria-label="Previous Project"
+              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+            </button>
+            <span aria-live="polite" className="text-zinc-400 font-mono text-xs px-1">
+              {String(activePageIndex + 1).padStart(2, "0")} / {String(TOTAL_PAGES).padStart(2, "0")}
+            </span>
+            <button
+              type="button"
+              onClick={handleNextPage}
+              aria-label="Next Project"
+              className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <span>{filteredProjects.length} Projects</span>
+
+          <span>{PROJECTS.length} Projects</span>
         </div>
       </div>
 
-      {/* Level 2: Individual Technical Case Study Modal */}
+      {/* ── Technical Case Study Modal ── */}
       <AnimatePresence>
         {selectedProject && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
@@ -693,7 +781,6 @@ export default function Projects() {
                 />
               </div>
 
-              {/* Badges & Tags */}
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="px-3 py-1 rounded-full bg-[#FF1E56]/20 border border-[#FF1E56]/40 text-xs font-bold text-[#FF1E56]">
                   {selectedProject.badge}
@@ -711,15 +798,11 @@ export default function Projects() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-1">
                 {selectedProject.title}
               </h2>
-              <p className="text-sm font-medium text-[#FF1E56] mb-4">
-                {selectedProject.subtitle}
-              </p>
-
+              <p className="text-sm font-medium text-[#FF1E56] mb-4">{selectedProject.subtitle}</p>
               <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-6">
                 {selectedProject.shortDescription}
               </p>
 
-              {/* Architectural Story & Technical Decisions */}
               {selectedProject.architectureStory && (
                 <div className="mb-6 bg-black/40 rounded-2xl p-4 sm:p-5 border border-white/10">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#FF1E56] mb-2 flex items-center gap-1.5">
@@ -732,7 +815,6 @@ export default function Projects() {
                 </div>
               )}
 
-              {/* Key Platform Modules if available (Lala Motors Web) */}
               {selectedProject.keyModules && (
                 <div className="mb-6 bg-white/5 rounded-2xl p-4 sm:p-5 border border-white/10">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-1.5">
@@ -753,12 +835,11 @@ export default function Projects() {
                 </div>
               )}
 
-              {/* Evolution Timeline if available (Lala Motors ERP) */}
               {selectedProject.evolutionStages && (
                 <div className="mb-6 bg-white/5 rounded-2xl p-4 sm:p-5 border border-white/10">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-[#FF1E56]" />
-                    Project Evolution Story (From Tool to Operations System):
+                    Project Evolution Story:
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {selectedProject.evolutionStages.map((st, i) => (
@@ -773,7 +854,6 @@ export default function Projects() {
                 </div>
               )}
 
-              {/* Key Implementation Highlights */}
               <div className="mb-6 bg-black/40 rounded-2xl p-4 sm:p-5 border border-white/10">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3">
                   Technical Highlights &amp; Engineering Decisions:
@@ -788,7 +868,6 @@ export default function Projects() {
                 </ul>
               </div>
 
-              {/* Recruiter Takeaway */}
               <div className="mb-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-1 flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -799,7 +878,6 @@ export default function Projects() {
                 </p>
               </div>
 
-              {/* Live Links & GitHub Action Buttons */}
               <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/10">
                 <div className="flex items-center gap-3">
                   {selectedProject.liveUrl && (
@@ -813,7 +891,6 @@ export default function Projects() {
                       <span>{selectedProject.isDesktopApp ? "GitHub Repository ↗" : "Live Website ↗"}</span>
                     </a>
                   )}
-
                   {selectedProject.githubUrl && (
                     <a
                       href={selectedProject.githubUrl}
@@ -826,7 +903,6 @@ export default function Projects() {
                     </a>
                   )}
                 </div>
-
                 <button
                   onClick={() => setSelectedProject(null)}
                   className="text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer"
@@ -838,21 +914,72 @@ export default function Projects() {
           </div>
         )}
       </AnimatePresence>
-
-      {/* Hidden Liquid Distortion SVG Filter */}
-      <svg className="hidden pointer-events-none absolute w-0 h-0" aria-hidden="true">
-        <filter id="liquid-distortion">
-          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="0"
-            xChannelSelector="R"
-            yChannelSelector="G"
-            id="displacement-map"
-          />
-        </filter>
-      </svg>
     </section>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FlipPageSimple: cleaner scroll-driven flip (no double wrapping)
+   Each page:
+     • arrives  → rotateX: 90 → 0
+     • departs  → rotateX: 0 → -90
+   All driven purely by useTransform on scrollYProgress.
+───────────────────────────────────────────────────────────── */
+function FlipPageSimple({
+  scrollYProgress,
+  index,
+  total,
+  children,
+}: {
+  scrollYProgress: any;
+  index: number;
+  total: number;
+  children: React.ReactNode;
+}) {
+  const step = 1 / total;
+
+  // Arrive window: page before us departs
+  const arriveStart = Math.max(0, (index - 1) * step);
+  const arriveEnd = index * step;
+
+  // Depart window: we leave
+  const departStart = index * step;
+  const departEnd = Math.min(1, (index + 1) * step);
+
+  // Combined rotateX: 90 (below) → 0 (flat) → -90 (above)
+  const rotateX = useTransform(
+    scrollYProgress,
+    [arriveStart, arriveEnd, departStart, departEnd],
+    [index === 0 ? 0 : 90, 0, 0, -90]
+  );
+
+  // Opacity: fully visible in the flat zone, fade at edges
+  const opacity = useTransform(
+    scrollYProgress,
+    [arriveStart, arriveEnd * 0.5 + arriveStart * 0.5, departStart * 0.5 + departEnd * 0.5, departEnd],
+    [index === 0 ? 1 : 0, 1, 1, 0]
+  );
+
+  const zIndex = total - index;
+
+  return (
+    <motion.div
+      className="absolute inset-0 backface-hidden transform-gpu"
+      style={{
+        rotateX,
+        opacity,
+        zIndex,
+        transformOrigin: "50% 0%",
+        transformStyle: "preserve-3d",
+        willChange: "transform, opacity",
+      }}
+    >
+      <motion.div
+        className="w-full h-full backface-hidden transform-gpu"
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        {children}
+      </motion.div>
+    </motion.div>
   );
 }
