@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X, ArrowUpRight, Mail, FileText } from "lucide-react";
-import { useHoverSound } from "@/utils/useSound";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface NavbarProps {
   onOpenContact?: () => void;
@@ -16,7 +16,6 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
   const [isHidden, setIsHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
-  const playHover = useHoverSound();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -46,17 +45,16 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`pointer-events-auto flex items-center justify-between gap-4 sm:gap-8 px-3.5 sm:px-4 py-2 rounded-full transition-all duration-300 max-w-[calc(100vw-1.5rem)] ${
           isScrolled
-            ? "bg-black/85 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/90"
-            : "bg-black/60 backdrop-blur-lg border border-white/10"
+            ? "bg-sunken/90 backdrop-blur-xl border border-rule shadow-2xl"
+            : "bg-sunken/90 backdrop-blur-lg border border-rule"
         }`}
       >
         {/* Brand / Avatar */}
         <Link
           href="#hero"
-          onMouseEnter={playHover}
           className="flex items-center gap-2.5 group"
         >
-          <div className="relative w-7 h-7 rounded-full overflow-hidden bg-black/50 border border-white/15 group-hover:border-[#FF1E56] transition-colors">
+          <div className="relative w-7 h-7 rounded-full overflow-hidden bg-sunken border border-rule group-hover:border-signal transition-colors">
             <Image
               src="/images/Abdul-Image.jpeg"
               alt="Abdul Hannan"
@@ -65,38 +63,34 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
               className="object-cover object-top group-hover:scale-110 transition-transform duration-300"
             />
           </div>
-          <span className="text-xs font-bold text-white tracking-tight group-hover:text-white/90">
+          <span className="text-xs font-bold text-ink tracking-tight group-hover:text-ink/90">
             Abdul Hannan
           </span>
         </Link>
 
         {/* Desktop Nav Items */}
-        <div className="hidden md:flex items-center gap-6 text-xs font-medium text-zinc-300">
+        <div className="hidden md:flex items-center gap-6 text-xs font-medium text-graphite">
           <Link
             href="#projects"
-            onMouseEnter={playHover}
-            className="hover:text-white transition-colors duration-200"
+            className="hover:text-ink transition-colors duration-200"
           >
             Projects
           </Link>
           <Link
             href="#skills"
-            onMouseEnter={playHover}
-            className="hover:text-white transition-colors duration-200"
+            className="hover:text-ink transition-colors duration-200"
           >
             Skills
           </Link>
           <Link
             href="#about"
-            onMouseEnter={playHover}
-            className="hover:text-white transition-colors duration-200"
+            className="hover:text-ink transition-colors duration-200"
           >
             Experience
           </Link>
           <Link
             href="#faq"
-            onMouseEnter={playHover}
-            className="hover:text-white transition-colors duration-200"
+            className="hover:text-ink transition-colors duration-200"
           >
             FAQs
           </Link>
@@ -104,23 +98,22 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
 
         {/* Action Buttons: View CV & Contact on Desktop */}
         <div className="flex items-center gap-2.5">
+          <ThemeToggle />
           {/* View CV Button */}
           <a
             href="/Hannan_CV.pdf"
             target="_blank"
             rel="noreferrer"
-            onMouseEnter={playHover}
-            className="hidden md:flex items-center gap-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 px-3.5 py-1.5 text-xs font-semibold text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
+            className="hidden md:flex items-center gap-1.5 rounded-full bg-surface hover:bg-rule border border-rule px-3.5 py-1.5 text-xs font-semibold text-ink transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
           >
-            <FileText className="w-3.5 h-3.5 text-[#FF1E56]" />
+            <FileText className="w-3.5 h-3.5 text-signal" />
             <span>View CV</span>
           </a>
 
           {/* Contact Button */}
           <button
             onClick={onOpenContact}
-            onMouseEnter={playHover}
-            className="hidden md:inline-flex relative rounded-full bg-[#FF1E56] hover:bg-[#e11255] px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_18px_rgba(255,30,86,0.45)] hover:shadow-[0_0_25px_rgba(255,30,86,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="hidden md:inline-flex relative rounded-full bg-signal hover:bg-signal/90 px-4 py-1.5 text-xs font-semibold text-signal-ink hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
             Contact
           </button>
@@ -128,9 +121,8 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
           {/* Mobile Hamburger Button (Strictly hidden on desktop screens) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            onMouseEnter={playHover}
             aria-label="Toggle navigation menu"
-            className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-white/5 border border-white/10 text-zinc-300 hover:text-white cursor-pointer"
+            className="md:hidden flex items-center justify-center w-7 h-7 rounded-full bg-surface border border-rule text-graphite hover:text-ink cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-3.5 h-3.5" /> : <Menu className="w-3.5 h-3.5" />}
           </button>
@@ -145,61 +137,65 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="pointer-events-auto absolute top-20 left-4 right-4 bg-black/90 border border-white/15 rounded-2xl p-6 backdrop-blur-2xl shadow-2xl flex flex-col gap-4 z-50 md:hidden"
+            className="pointer-events-auto absolute top-20 left-4 right-4 bg-sunken/90 border border-rule rounded-2xl p-6 backdrop-blur-2xl shadow-2xl flex flex-col gap-4 z-50 md:hidden"
           >
-            <div className="flex flex-col gap-3 font-medium text-sm text-zinc-200">
+            <div className="flex flex-col gap-3 font-medium text-sm text-ink">
               <Link
                 href="#projects"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between"
+                className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between"
               >
                 Projects
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                <ArrowUpRight className="w-4 h-4 text-graphite" />
               </Link>
               <Link
                 href="#skills"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between"
+                className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between"
               >
                 Skills
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                <ArrowUpRight className="w-4 h-4 text-graphite" />
               </Link>
               <Link
                 href="#about"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between"
+                className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between"
               >
                 Experience &amp; About
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                <ArrowUpRight className="w-4 h-4 text-graphite" />
               </Link>
               <Link
                 href="#faq"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between"
+                className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between"
               >
                 FAQs
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                <ArrowUpRight className="w-4 h-4 text-graphite" />
               </Link>
               <a
                 href="/Hannan_CV.pdf"
                 target="_blank"
                 rel="noreferrer"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/5 rounded-lg transition-colors flex items-center justify-between text-white font-semibold"
+                className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between text-ink font-semibold"
               >
                 <span className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-[#FF1E56]" />
+                  <FileText className="w-4 h-4 text-signal" />
                   View CV / Resume
                 </span>
-                <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                <ArrowUpRight className="w-4 h-4 text-graphite" />
               </a>
+            </div>
+            <div className="flex items-center justify-between pt-1">
+              <span className="u-micro">Theme</span>
+              <ThemeToggle />
             </div>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenContact?.();
               }}
-              className="w-full py-2.5 rounded-full bg-[#FF1E56] text-sm font-semibold text-white shadow-lg shadow-[#FF1E56]/35 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 rounded-full bg-signal hover:bg-signal/90 text-sm font-semibold text-signal-ink flex items-center justify-center gap-2 cursor-pointer"
             >
               <Mail className="w-4 h-4" /> Get in touch
             </button>

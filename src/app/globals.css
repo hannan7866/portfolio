@@ -1,85 +1,136 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: #0d0d0f;
-    --foreground: #ffffff;
-    --accent: #FF1E56;
-    --accent-glow: rgba(255, 30, 86, 0.5);
-    --card-bg: #131316;
-    --card-border: rgba(255, 255, 255, 0.08);
-  }
+/* ── Workshop tokens · dark is the default ───────────── */
+:root {
+  --paper:#16191C;
+  --surface:#1F2327;
+  --sunken:#101316;
+  --ink:#E6E9EA;
+  --graphite:#939CA3;
+  --rule:#2E343A;
+  --signal:#4FC9A0;
+  --signal-ink:#0B120F;
+  --brass:#E0AE52;
+  --alarm:#E97060;
+  color-scheme: dark;
 
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+  --wdth-display:68;
+  --wdth-head:82;
+  --wdth-body:100;
+
+  --step-2xs:clamp(0.66rem,0.64rem + 0.10vw,0.70rem);
+  --step-xs: clamp(0.78rem,0.75rem + 0.12vw,0.82rem);
+  --step-sm: clamp(0.88rem,0.85rem + 0.15vw,0.92rem);
+  --step-md: clamp(1.00rem,0.97rem + 0.18vw,1.06rem);
+  --step-lg: clamp(1.20rem,1.13rem + 0.30vw,1.32rem);
+  --step-xl: clamp(1.44rem,1.32rem + 0.50vw,1.65rem);
+  --step-2xl:clamp(1.72rem,1.52rem + 0.85vw,2.06rem);
+  --step-3xl:clamp(2.05rem,1.72rem + 1.40vw,2.58rem);
+  --step-4xl:clamp(2.45rem,1.90rem + 2.30vw,3.22rem);
+  --step-5xl:clamp(2.90rem,2.00rem + 3.80vw,4.03rem);
+  --step-6xl:clamp(3.40rem,1.90rem + 6.20vw,5.04rem);
+}
+
+:root[data-theme="light"] {
+  --paper:#E9EBEC;
+  --surface:#F7F8F8;
+  --sunken:#DFE2E4;
+  --ink:#12161A;
+  --graphite:#5B636B;
+  --rule:#C7CCD0;
+  --signal:#0B5C46;
+  --signal-ink:#F4F6F5;
+  --brass:#8A6216;
+  --alarm:#8E2A1C;
+  color-scheme: light;
+}
+
+@theme inline {
+  --font-sans:    var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-mono:    var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-paper:      var(--paper);
+  --color-surface:    var(--surface);
+  --color-sunken:     var(--sunken);
+  --color-ink:        var(--ink);
+  --color-graphite:   var(--graphite);
+  --color-rule:       var(--rule);
+  --color-signal:     var(--signal);
+  --color-signal-ink: var(--signal-ink);
+  --color-brass:      var(--brass);
+  --color-alarm:      var(--alarm);
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
 
   html {
-    scroll-behavior: smooth;
-    color-scheme: dark;
-    background-color: #0d0d0f;
-    color: #ffffff;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
     overflow-x: clip;
-    width: 100%;
-    margin: 0;
-    padding: 0;
   }
 
   body {
-    background-color: #0d0d0f;
-    color: #ffffff;
-    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    overflow-x: clip;
-    width: 100%;
-    position: relative;
     margin: 0;
-    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-variation-settings: 'wdth' var(--wdth-body), 'wght' 400;
+    font-size: var(--step-md);
+    line-height: 1.62;
+    letter-spacing: -0.004em;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
   }
 
-  ::selection {
-    background: #FF1E56;
-    color: #ffffff;
+  h1, h2, h3, h4 {
+    font-variation-settings: 'wdth' var(--wdth-head), 'wght' 650;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
   }
 
-  /* Custom subtle scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
+  ::selection { background: var(--signal); color: var(--signal-ink); }
+  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--sunken); }
+  ::-webkit-scrollbar-thumb { background: var(--rule); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--graphite); }
+}
+
+@layer utilities {
+  .u-display {
+    font-variation-settings: 'wdth' var(--wdth-display), 'wght' 700;
+    letter-spacing: -0.028em;
+    line-height: 0.95;
   }
-  ::-webkit-scrollbar-track {
-    background: #0d0d0f;
+  .u-head {
+    font-variation-settings: 'wdth' var(--wdth-head), 'wght' 650;
+    letter-spacing: -0.018em;
   }
-  ::-webkit-scrollbar-thumb {
-    background: #242429;
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #383840;
+  .u-body { font-variation-settings: 'wdth' var(--wdth-body), 'wght' 400; }
+  .u-micro {
+    font-family: var(--font-mono);
+    font-size: var(--step-2xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--graphite);
   }
 }
 
-/* Studio Film Grain / Analog Texture Overlay */
+/* Grain — replaced properly in Phase 2, left working for now */
 .bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity: 0.035;
   mix-blend-mode: overlay;
   pointer-events: none;
 }
 
-/* Text outline utility for X-Ray Spotlight Hero */
-.text-outline {
-  color: transparent !important;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.22);
-}
-
-/* Glassmorphism utilities */
-.glass-nav {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-card {
-  background: #131316;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Colour-only theme transition — never animate layout properties here */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-anim, html.theme-anim * {
+    transition: background-color .22s ease, border-color .22s ease, color .22s ease;
+  }
 }

@@ -85,7 +85,7 @@ export default function CustomCursor() {
 
   return (
     <div className="hidden [@media(pointer:fine)]:block pointer-events-none fixed inset-0 z-[999] overflow-hidden">
-      {/* 1. Small White Dot (Strict Follow) */}
+      {/* 1. Small Dot (Strict Follow) */}
       <motion.div
         style={{
           x: mouseX,
@@ -98,7 +98,7 @@ export default function CustomCursor() {
           scale: isVisible && !isTextMode ? (isPointerMode ? 0.6 : 1) : 0,
         }}
         transition={{ duration: 0.15 }}
-        className="fixed top-0 left-0 w-2.5 h-2.5 rounded-full bg-white mix-blend-difference pointer-events-none"
+        className="fixed top-0 left-0 w-2.5 h-2.5 rounded-full bg-ink mix-blend-difference pointer-events-none"
       />
 
       {/* 2. Intelligent Morphing Trailing Ring / Badge */}
@@ -115,18 +115,14 @@ export default function CustomCursor() {
           height: isTextMode ? 75 : isPointerMode ? 52 : 36,
           scale: isVisible ? 1 : 0.5,
           backgroundColor: isTextMode
-            ? "rgba(255, 30, 86, 0.92)"
+            ? "var(--signal)"
             : isPointerMode
-            ? "rgba(255, 30, 86, 0.18)"
-            : "rgba(255, 30, 86, 0.08)",
+            ? "color-mix(in oklab, var(--signal) 20%, transparent)"
+            : "color-mix(in oklab, var(--signal) 10%, transparent)",
           borderColor: isTextMode
-            ? "rgba(255, 255, 255, 0.4)"
-            : "rgba(255, 30, 86, 0.8)",
-          boxShadow: isTextMode
-            ? "0 0 30px rgba(255, 30, 86, 0.6)"
-            : isPointerMode
-            ? "0 0 20px rgba(255, 30, 86, 0.35)"
-            : "0 0 10px rgba(255, 30, 86, 0.15)",
+            ? "var(--rule)"
+            : "var(--signal)",
+          boxShadow: "none",
         }}
         transition={{
           type: "spring",
@@ -145,7 +141,7 @@ export default function CustomCursor() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5, y: -3 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[10px] font-black tracking-widest text-white uppercase text-center select-none font-sans px-1"
+              className="text-[10px] font-black tracking-widest text-signal-ink uppercase text-center select-none font-sans px-1"
             >
               {cursorText}
             </motion.span>
@@ -155,4 +151,3 @@ export default function CustomCursor() {
     </div>
   );
 }
-

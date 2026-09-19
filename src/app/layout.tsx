@@ -1,32 +1,28 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Plus_Jakarta_Sans, Syne, Caveat } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import CustomCursor from "@/components/CustomCursor";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
+  axes: ["wdth"],
   display: "swap",
+  variable: "--font-archivo",
 });
 
-const syne = Syne({
+const plexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-display",
-  weight: ["700", "800"],
+  weight: ["400", "500", "600"],
   display: "swap",
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  variable: "--font-handwritten",
-  weight: ["700"],
-  display: "swap",
+  variable: "--font-plex-mono",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0d0d0f",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)",  color: "#16191C" },
+    { media: "(prefers-color-scheme: light)", color: "#E9EBEC" },
+  ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -368,20 +364,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jakarta.variable} ${syne.variable} ${caveat.variable} dark scroll-smooth`}
+      suppressHydrationWarning
+      className={`${archivo.variable} ${plexMono.variable}`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})()`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-[#0d0d0f] text-[#ffffff] antialiased selection:bg-[#FF1E56] selection:text-white relative">
+      <body className="min-h-screen bg-paper text-ink antialiased relative">
         <Script id="console-egg" strategy="afterInteractive">
           {`
             console.log(
               '%c⚡ Built by Abdul Hannan %c\\n\\nStack: Next.js 16, React 19, Framer Motion, Matter.js, Tailwind CSS v4.\\nStatus: Looking for new opportunities.\\nSay hi: dev.hannan.ai@gmail.com',
-              'color: #FF1E56; font-size: 24px; font-weight: bold; font-family: monospace;',
+              'color: #4FC9A0; font-size: 24px; font-weight: bold; font-family: monospace;',
               'color: #a1a1aa; font-size: 14px; font-family: monospace; line-height: 1.5;'
             );
           `}

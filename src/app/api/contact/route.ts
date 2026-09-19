@@ -117,26 +117,26 @@ Timestamp: ${new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })} I
           subject: subjectPrefix,
           text: formattedSummary,
           html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0f0f14; color: #ffffff; padding: 28px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #16191C; color: #E6E9EA; padding: 28px; border-radius: 16px; border: 1px solid #2E343A;">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <span style="background: #FF1E56; color: #ffffff; padding: 6px 14px; border-radius: 9999px; font-weight: bold; font-size: 12px; text-transform: uppercase;">
+                <span style="background: #4FC9A0; color: #0B120F; padding: 6px 14px; border-radius: 9999px; font-weight: bold; font-size: 12px; text-transform: uppercase;">
                   ${isHiring ? "💼 Full-Time Hiring" : "🚀 Freelance Project"}
                 </span>
-                <span style="color: #a1a1aa; font-size: 12px;">Abdul Hannan Portfolio</span>
+                <span style="color: #939CA3; font-size: 12px;">Abdul Hannan Portfolio</span>
               </div>
-              <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">New Lead from ${name}</h2>
+              <h2 style="color: #E6E9EA; margin-top: 0; font-size: 22px;">New Lead from ${name}</h2>
               <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
-                <tr><td style="padding: 8px 0; color: #a1a1aa; width: 140px;">Sender Email:</td><td style="color: #ffffff; font-weight: bold;"><a href="mailto:${email}" style="color: #FF1E56;">${email}</a></td></tr>
-                <tr><td style="padding: 8px 0; color: #a1a1aa;">${isHiring ? "Target Role:" : "Project Type:"}</td><td style="color: #ffffff; font-weight: bold;">${selectedTopic}</td></tr>
-                <tr><td style="padding: 8px 0; color: #a1a1aa;">${isHiring ? "Work Mode:" : "Budget Range:"}</td><td style="color: #25D366;">${selectedDetail}</td></tr>
-                <tr><td style="padding: 8px 0; color: #a1a1aa;">Timeline:</td><td style="color: #ffffff;">${timeline || "Flexible"}</td></tr>
+                <tr><td style="padding: 8px 0; color: #939CA3; width: 140px;">Sender Email:</td><td style="color: #E6E9EA; font-weight: bold;"><a href="mailto:${email}" style="color: #4FC9A0;">${email}</a></td></tr>
+                <tr><td style="padding: 8px 0; color: #939CA3;">${isHiring ? "Target Role:" : "Project Type:"}</td><td style="color: #E6E9EA; font-weight: bold;">${selectedTopic}</td></tr>
+                <tr><td style="padding: 8px 0; color: #939CA3;">${isHiring ? "Work Mode:" : "Budget Range:"}</td><td style="color: #4FC9A0;">${selectedDetail}</td></tr>
+                <tr><td style="padding: 8px 0; color: #939CA3;">Timeline:</td><td style="color: #E6E9EA;">${timeline || "Flexible"}</td></tr>
               </table>
-              <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
-                <div style="color: #a1a1aa; font-size: 11px; text-transform: uppercase; font-weight: bold; margin-bottom: 8px;">Message / Requirements:</div>
-                <div style="color: #f4f4f5; line-height: 1.6; white-space: pre-wrap; font-size: 14px;">${message}</div>
+              <div style="background: #1F2327; border: 1px solid #2E343A; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="color: #939CA3; font-size: 11px; text-transform: uppercase; font-weight: bold; margin-bottom: 8px;">Message / Requirements:</div>
+                <div style="color: #E6E9EA; line-height: 1.6; white-space: pre-wrap; font-size: 14px;">${message}</div>
               </div>
               <div style="text-align: center; margin-top: 24px;">
-                <a href="mailto:${email}?subject=Re:%20${encodeURIComponent(subjectPrefix)}" style="background: #FF1E56; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: bold; font-size: 13px; display: inline-block;">Reply Directly to ${name}</a>
+                <a href="mailto:${email}?subject=Re:%20${encodeURIComponent(subjectPrefix)}" style="background: #4FC9A0; color: #0B120F; text-decoration: none; padding: 12px 24px; border-radius: 9999px; font-weight: bold; font-size: 13px; display: inline-block;">Reply Directly to ${name}</a>
               </div>
             </div>
           `,
@@ -153,7 +153,7 @@ Timestamp: ${new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })} I
             html: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; background: #0c0c10; color: #ffffff; padding: 28px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
                 <div style="text-align: center; margin-bottom: 20px;">
-                  <div style="display: inline-block; background: rgba(255,30,86,0.15); border: 1px solid rgba(255,30,86,0.4); color: #FF1E56; padding: 6px 16px; border-radius: 9999px; font-weight: bold; font-size: 11px; text-transform: uppercase;">Message Received</div>
+                  <div style="display: inline-block; background: rgba(79,201,160,0.15); border: 1px solid rgba(79,201,160,0.4); color: #4FC9A0; padding: 6px 16px; border-radius: 9999px; font-weight: bold; font-size: 11px; text-transform: uppercase;">Message Received</div>
                   <h2 style="color: #ffffff; margin: 12px 0 6px 0; font-size: 22px; font-weight: 800;">Thank You, ${name}!</h2>
                   <p style="color: #a1a1aa; font-size: 13px; margin: 0;">Your transmission has been delivered to Abdul Hannan's personal inbox.</p>
                 </div>
@@ -242,6 +242,7 @@ Timestamp: ${new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })} I
     return NextResponse.json(
       {
         success: true,
+        emailDispatched,
         recipient: "dev.hannan.ai@gmail.com",
         senderName: name,
         senderEmail: email,

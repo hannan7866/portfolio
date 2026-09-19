@@ -103,9 +103,9 @@ export function FigmaIcon({ className = "w-5 h-5" }: { className?: string }) {
 
 export function OpenAIIcon({ className = "w-5 h-5" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#FF1E56" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2a10 10 0 0 0-3.16 19.49l.16-.9a9 9 0 0 1-4.83-4.83l.9-.16A10 10 0 0 0 12 22a10 10 0 0 0 3.16-19.49l-.16.9a9 9 0 0 1 4.83 4.83l-.9.16A10 10 0 0 0 12 2z"/>
-      <circle cx="12" cy="12" r="3" fill="#FF1E56" fillOpacity="0.2" />
+      <circle cx="12" cy="12" r="3" fill="currentColor" fillOpacity="0.2" />
     </svg>
   );
 }
@@ -250,6 +250,41 @@ export function BrainIcon({ className = "w-5 h-5" }: { className?: string }) {
       <path d="M12 5v13" />
       <path d="M7 10h5" />
       <path d="M12 14h5" />
+    </svg>
+  );
+}
+
+export function ArchitectureIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+      <line x1="3" y1="9" x2="21" y2="9" />
+      <line x1="9" y1="21" x2="9" y2="9" />
+    </svg>
+  );
+}
+
+export function CodeBracketsIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  );
+}
+
+export function CloudComputingIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+    </svg>
+  );
+}
+
+export function AgileIcon({ className = "w-5 h-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-8.36l5.67-5.67" />
     </svg>
   );
 }

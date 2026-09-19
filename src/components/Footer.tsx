@@ -46,6 +46,7 @@ interface FooterProps {
 }
 
 export default function Footer({ onOpenContact }: FooterProps) {
+  void onOpenContact;
   const [index, setIndex] = useState(0);
   const footerRef = useRef<HTMLElement>(null);
 
@@ -70,12 +71,12 @@ export default function Footer({ onOpenContact }: FooterProps) {
     <footer
       id="contact"
       ref={footerRef}
-      className="sticky bottom-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 pb-0 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#0d0d0f] z-0 overflow-hidden"
+      className="sticky bottom-0 h-screen w-full flex flex-col justify-between pt-16 sm:pt-20 pb-0 px-4 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-paper z-0 overflow-hidden"
     >
       {/* Top Heading: "Lets [word] / incredible work together." */}
       <div className="relative mb-10 select-none">
-        <div className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white font-sans leading-normal">
-          {/* First Line: Lets + Handwritten Swapped Word */}
+        <div className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-ink font-sans leading-normal">
+          {/* First Line: Lets + Swapped Word */}
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <span>Lets</span>
 
@@ -88,8 +89,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -25, opacity: 0 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ fontFamily: "var(--font-handwritten)" }}
-                  className="text-[#FF1E56] text-4xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-1 sm:py-2"
+                  className="text-signal text-4xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-1 sm:py-2 u-display"
                 >
                   {WORDS[index]}
                 </motion.span>
@@ -103,17 +103,17 @@ export default function Footer({ onOpenContact }: FooterProps) {
           </div>
         </div>
 
-        {/* Small floating pink accent dot under the text */}
+        {/* Small floating signal accent dot under the text */}
         <div className="flex justify-start mt-3 sm:mt-4">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#FF1E56]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-signal" />
         </div>
       </div>
 
       {/* Meta Bar: Email, Call Me, Social Icons (with Magnetic pull) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-8 border-t border-white/[0.08]">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 py-8 border-t border-rule">
         {/* Email */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-xs text-zinc-500 font-medium tracking-wide">
+          <span className="text-xs text-graphite font-medium tracking-wide">
             Email
           </span>
           <div>
@@ -122,7 +122,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors cursor-pointer inline-block"
+                className="text-sm sm:text-base font-bold text-ink hover:text-signal transition-colors cursor-pointer inline-block"
               >
                 dev.hannan.ai@gmail.com
               </a>
@@ -132,14 +132,14 @@ export default function Footer({ onOpenContact }: FooterProps) {
 
         {/* Call Me */}
         <div className="flex flex-col gap-1.5">
-          <span className="text-xs text-zinc-500 font-medium tracking-wide">
+          <span className="text-xs text-graphite font-medium tracking-wide">
             Call Me
           </span>
           <div>
             <Magnetic strength={0.2}>
               <a
                 href="tel:+917310542113"
-                className="text-sm sm:text-base font-bold text-white hover:text-[#FF1E56] transition-colors inline-block"
+                className="text-sm sm:text-base font-bold text-ink hover:text-signal transition-colors inline-block"
               >
                 +91-7310542113
               </a>
@@ -149,7 +149,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
 
         {/* Social Profiles */}
         <div className="flex flex-col gap-2 sm:items-end">
-          <span className="text-xs text-zinc-500 font-medium tracking-wide">
+          <span className="text-xs text-graphite font-medium tracking-wide">
             Follow &amp; Connect
           </span>
           <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
               >
                 <WhatsappIcon className="w-3.5 h-3.5" />
               </a>
@@ -170,7 +170,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
               </a>
@@ -181,7 +181,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
               >
                 <LinkedinIcon className="w-3.5 h-3.5" />
               </a>
@@ -192,7 +192,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#FF1E56] hover:border-[#FF1E56] transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
               >
                 <InstagramIcon className="w-3.5 h-3.5" />
               </a>
@@ -202,25 +202,25 @@ export default function Footer({ onOpenContact }: FooterProps) {
       </div>
 
       {/* Bottom Bar: Copyright & Navigation */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 border-t border-white/[0.08] text-xs text-zinc-500 font-medium">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 border-t border-rule text-xs text-graphite font-medium">
         <div>
           © {new Date().getFullYear()} Abdul Hannan. All rights reserved.
         </div>
 
         <div className="flex items-center gap-6">
-          <Link href="#hero" className="hover:text-white transition-colors">
+          <Link href="#hero" className="hover:text-ink transition-colors">
             Home
           </Link>
-          <Link href="#projects" className="hover:text-white transition-colors">
+          <Link href="#projects" className="hover:text-ink transition-colors">
             Projects
           </Link>
-          <Link href="#skills" className="hover:text-white transition-colors">
+          <Link href="#skills" className="hover:text-ink transition-colors">
             Skills
           </Link>
-          <Link href="#about" className="hover:text-white transition-colors">
+          <Link href="#about" className="hover:text-ink transition-colors">
             About
           </Link>
-          <Link href="#faq" className="hover:text-white transition-colors">
+          <Link href="#faq" className="hover:text-ink transition-colors">
             FAQ
           </Link>
         </div>
@@ -234,7 +234,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
             y: textY,
             scale: textScale,
           }}
-          className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black uppercase leading-none text-[#FF1E56] text-center font-display whitespace-nowrap m-0 p-0 transform will-change-transform"
+          className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black uppercase leading-none text-signal text-center u-display whitespace-nowrap m-0 p-0 transform will-change-transform"
         >
           MR. ABDUL
         </motion.h1>
@@ -242,4 +242,3 @@ export default function Footer({ onOpenContact }: FooterProps) {
     </footer>
   );
 }
-

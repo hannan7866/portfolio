@@ -62,9 +62,9 @@ export default function FAQ({ onOpenContact }: FAQProps) {
   };
 
   return (
-    <section id="faq" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/[0.06] overflow-hidden w-full max-w-[100vw]">
+    <section id="faq" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-rule overflow-hidden w-full max-w-[100vw]">
       {/* Ambient background glow */}
-      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#FF1E56]/[0.08] rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-signal/[0.08] rounded-full blur-[150px] pointer-events-none" />
 
       {/* Header */}
       <div className="mb-14">
@@ -72,7 +72,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FF1E56] mb-2"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-signal mb-2"
         >
           <HelpCircle className="w-3.5 h-3.5" />
           Common Questions
@@ -82,13 +82,13 @@ export default function FAQ({ onOpenContact }: FAQProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display"
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink u-head"
         >
           FAQs
         </motion.h2>
       </div>
 
-      {/* Two-Column Grid: Left Accordion, Right Magenta Callout Card */}
+      {/* Two-Column Grid: Left Accordion, Right Signal Callout Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left Column: Accordion List */}
         <div className="lg:col-span-7 flex flex-col gap-3.5">
@@ -103,8 +103,8 @@ export default function FAQ({ onOpenContact }: FAQProps) {
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? "bg-[#141418] border-white/20 shadow-xl"
-                    : "bg-[#131316] border-white/[0.08] hover:border-white/15"
+                    ? "bg-surface border-rule shadow-xl"
+                    : "bg-surface border-rule hover:border-ink"
                 }`}
               >
                 {/* Accordion Trigger */}
@@ -114,15 +114,15 @@ export default function FAQ({ onOpenContact }: FAQProps) {
                   className="w-full p-5 sm:p-6 flex items-center justify-between text-left gap-4 transition-colors"
                 >
                   <div className="flex items-center gap-3.5">
-                    <span className="text-xs font-mono font-bold text-zinc-400 shrink-0">
+                    <span className="text-xs font-mono font-bold text-graphite shrink-0">
                       {faq.number}
                     </span>
-                    <span className="text-sm sm:text-base font-bold text-white tracking-tight">
+                    <span className="text-sm sm:text-base font-bold text-ink tracking-tight">
                       {faq.question}
                     </span>
                   </div>
 
-                  <div className="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-zinc-300 shrink-0 transition-transform">
+                  <div className="w-7 h-7 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite shrink-0 transition-transform">
                     {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                   </div>
                 </button>
@@ -137,7 +137,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <div className="px-5 sm:px-6 pb-6 pt-1 pl-12 text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-white/5">
+                      <div className="px-5 sm:px-6 pb-6 pt-1 pl-12 text-xs sm:text-sm text-graphite leading-relaxed border-t border-rule">
                         {faq.answer}
                       </div>
                     </motion.div>
@@ -148,18 +148,18 @@ export default function FAQ({ onOpenContact }: FAQProps) {
           })}
         </div>
 
-        {/* Right Column: Vivid Hot Magenta Sticky CTA Card */}
+        {/* Right Column: Signal Sticky CTA Card */}
         <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-3xl bg-gradient-to-br from-[#FF1E56] via-[#e11255] to-[#c70b47] text-white p-8 sm:p-9 shadow-[0_20px_50px_rgba(255,30,86,0.45)] border border-[#ff4785] flex flex-col justify-between"
+            className="rounded-3xl bg-signal text-signal-ink p-8 sm:p-9 border border-rule flex flex-col justify-between shadow-2xl"
           >
             {/* Top Avatar Thumbnail */}
             <div className="mb-6">
-              <div className="relative w-14 h-14 rounded-full overflow-hidden bg-black/40 border-2 border-white/30 shadow-lg">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden bg-sunken border-2 border-rule shadow-lg">
                 <Image
                   src="/images/Abdul-Image.jpeg"
                   alt="Abdul Hannan"
@@ -171,17 +171,17 @@ export default function FAQ({ onOpenContact }: FAQProps) {
             </div>
 
             {/* Headline */}
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-4 leading-tight font-display">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-signal-ink mb-4 leading-tight u-head">
               Still not sure?<br />
               Book a free discovery call.
             </h3>
 
             {/* Subtext */}
-            <div className="text-xs sm:text-sm text-white/95 leading-relaxed space-y-3 mb-8">
+            <div className="text-xs sm:text-sm text-signal-ink/90 leading-relaxed space-y-3 mb-8">
               <p>
                 Your software should be reliable, scalable, and engineered to solve real business bottlenecks.
               </p>
-              <p className="font-semibold text-white">
+              <p className="font-semibold text-signal-ink">
                 If that’s what you’re aiming for, we should talk.
               </p>
             </div>
@@ -190,12 +190,12 @@ export default function FAQ({ onOpenContact }: FAQProps) {
             <div className="flex items-center gap-4 pt-2">
               <button
                 onClick={onOpenContact}
-                className="px-5 py-3 rounded-full bg-black text-white text-xs font-bold hover:bg-black/80 hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2"
+                className="px-5 py-3 rounded-full bg-sunken text-ink text-xs font-bold hover:bg-paper hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 cursor-pointer"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#FF1E56]" />
+                <Calendar className="w-3.5 h-3.5 text-signal" />
                 <span>Schedule Now</span>
               </button>
-              <span className="text-xs font-bold text-white tracking-wide">
+              <span className="text-xs font-bold text-signal-ink tracking-wide">
                 Cal.com
               </span>
             </div>

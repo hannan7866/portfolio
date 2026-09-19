@@ -23,16 +23,16 @@ export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
         initial={{ y: 50, opacity: 0, scale: 0.9 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-black/85 backdrop-blur-2xl border border-white/15 shadow-[0_8px_30px_rgb(0,0,0,0.8)] hover:border-white/30 transition-all group"
+        className="pointer-events-auto flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-sunken/90 backdrop-blur-2xl border border-rule shadow-2xl hover:border-ink transition-all group"
       >
         <button
           onClick={onOpenContact}
           className="flex flex-col text-left pr-1 sm:pr-2 cursor-pointer"
         >
-          <span className="text-xs font-bold text-white tracking-tight group-hover:text-white/90">
+          <span className="text-xs font-bold text-ink tracking-tight group-hover:text-ink/90">
             Speak to Abdul
           </span>
-          <span className="text-[10px] text-zinc-400 font-medium hidden sm:inline-block">
+          <span className="text-[10px] text-graphite font-medium hidden sm:inline-block">
             WhatsApp, Call or Email
           </span>
         </button>
@@ -46,7 +46,7 @@ export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
             rel="noreferrer"
             aria-label="Chat on WhatsApp"
             title="Chat on WhatsApp"
-            className="w-8 h-8 rounded-full bg-[#25D366] text-black flex items-center justify-center shadow-lg shadow-[#25D366]/30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-[#25D366] text-black flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
           >
             <WhatsappIcon className="w-4 h-4" />
           </a>
@@ -56,7 +56,7 @@ export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
             href="tel:+917310542113"
             aria-label="Call Abdul"
             title="Call +91-7310542113"
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center border border-white/15 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-surface hover:bg-rule text-ink flex items-center justify-center border border-rule hover:scale-110 active:scale-95 transition-all cursor-pointer"
           >
             <Phone className="w-3.5 h-3.5" />
           </a>
@@ -66,7 +66,7 @@ export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
             onClick={onOpenContact}
             aria-label="Send Message"
             title="Send Message to dev.hannan.ai@gmail.com"
-            className="w-8 h-8 rounded-full bg-[#FF1E56] hover:bg-[#e11255] text-white flex items-center justify-center shadow-lg shadow-[#FF1E56]/30 hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-signal hover:bg-signal/90 text-signal-ink flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
           >
             <Mail className="w-3.5 h-3.5" />
           </button>

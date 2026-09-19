@@ -12,10 +12,6 @@ import {
   Loader2,
   Briefcase,
   Rocket,
-  DollarSign,
-  Calendar,
-  Layers,
-  ChevronDown,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -150,7 +146,7 @@ export default function ContactModal({
         particleCount: 70,
         spread: 60,
         origin: { y: 0.6 },
-        colors: ["#FF1E56", "#ffffff", "#25D366"],
+        colors: ["#4FC9A0", "#E0AE52", "#E6E9EA"],
       });
     } catch (err) {
       console.error("Submission error:", err);
@@ -205,7 +201,7 @@ export default function ContactModal({
         particleCount: 85,
         spread: 70,
         origin: { y: 0.6 },
-        colors: ["#25D366", "#FF1E56", "#ffffff"],
+        colors: ["#4FC9A0", "#E0AE52", "#E6E9EA"],
       });
     } catch (err) {
       console.error("Submission error:", err);
@@ -302,8 +298,8 @@ export default function ContactModal({
               <>
                 {/* Header Badge & Title */}
                 <div className="mb-6">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FF1E56] uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-[#FF1E56]" />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-signal uppercase tracking-wider mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-signal" />
                     <span>GET IN TOUCH</span>
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
@@ -322,7 +318,7 @@ export default function ContactModal({
                     onClick={() => setActiveTab("hire")}
                     className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "hire"
-                        ? "bg-[#FF1E56] text-white shadow-lg shadow-[#FF1E56]/30"
+                        ? "bg-signal text-signal-ink shadow-lg"
                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
@@ -382,7 +378,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, name: e.target.value })
                           }
                           placeholder="Hiring Manager / Team"
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
                         />
                       </div>
                       <div>
@@ -397,7 +393,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, email: e.target.value })
                           }
                           placeholder="recruiter@company.com"
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
                         />
                       </div>
                     </div>
@@ -413,14 +409,14 @@ export default function ContactModal({
                           onChange={(e) =>
                             setHireForm({ ...hireForm, role: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all cursor-pointer truncate"
                         >
-                          <option value="Full-Stack Developer" className="bg-[#14141c] text-white">Full-Stack Developer</option>
-                          <option value="Frontend Developer (React/Next.js)" className="bg-[#14141c] text-white">Frontend Developer (React/Next.js)</option>
-                          <option value="Backend Developer (Node/Python)" className="bg-[#14141c] text-white">Backend Developer (Node/Python)</option>
-                          <option value="Software Engineer" className="bg-[#14141c] text-white">Software Engineer</option>
-                          <option value="Contract Engineer" className="bg-[#14141c] text-white">Contract Engineer</option>
-                          <option value="other" className="bg-[#14141c] text-[#FF1E56] font-bold">✎ Other / Custom Role (Type below)</option>
+                          <option value="Full-Stack Developer" className="bg-surface text-ink">Full-Stack Developer</option>
+                          <option value="Frontend Developer (React/Next.js)" className="bg-surface text-ink">Frontend Developer (React/Next.js)</option>
+                          <option value="Backend Developer (Node/Python)" className="bg-surface text-ink">Backend Developer (Node/Python)</option>
+                          <option value="Software Engineer" className="bg-surface text-ink">Software Engineer</option>
+                          <option value="Contract Engineer" className="bg-surface text-ink">Contract Engineer</option>
+                          <option value="other" className="bg-surface text-signal font-bold">✎ Other / Custom Role (Type below)</option>
                         </select>
                       </div>
 
@@ -433,11 +429,11 @@ export default function ContactModal({
                           onChange={(e) =>
                             setHireForm({ ...hireForm, workMode: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all cursor-pointer truncate"
                         >
-                          <option value="Remote (Worldwide)" className="bg-[#14141c] text-white">Remote (Worldwide)</option>
-                          <option value="Hybrid / On-site" className="bg-[#14141c] text-white">Hybrid / On-site</option>
-                          <option value="Contract / Project-Based" className="bg-[#14141c] text-white">Contract / Project-Based</option>
+                          <option value="Remote (Worldwide)" className="bg-surface text-ink">Remote (Worldwide)</option>
+                          <option value="Hybrid / On-site" className="bg-surface text-ink">Hybrid / On-site</option>
+                          <option value="Contract / Project-Based" className="bg-surface text-ink">Contract / Project-Based</option>
                         </select>
                       </div>
                     </div>
@@ -449,7 +445,7 @@ export default function ContactModal({
                         animate={{ opacity: 1, height: "auto" }}
                         className="overflow-hidden"
                       >
-                        <label className="block text-[11px] font-bold text-[#FF1E56] uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-signal uppercase tracking-wider mb-1.5">
                           Specify Custom Role / Position
                         </label>
                         <input
@@ -460,7 +456,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, customRole: e.target.value })
                           }
                           placeholder="e.g. Lead Next.js Architect, Python AI Lead..."
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-[#FF1E56]/40 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-signal/40 text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
                         />
                       </motion.div>
                     )}
@@ -478,7 +474,7 @@ export default function ContactModal({
                           setHireForm({ ...hireForm, message: e.target.value })
                         }
                         placeholder="Tell me about the role, tech stack, team size, and next steps..."
-                        className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-[#FF1E56] focus:ring-1 focus:ring-[#FF1E56] transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all resize-none"
                       />
                     </div>
 
@@ -486,7 +482,7 @@ export default function ContactModal({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 rounded-full bg-gradient-to-r from-[#FF1E56] to-[#FF0055] hover:from-[#ff2d62] hover:to-[#ff1a66] text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#FF1E56]/35 disabled:opacity-60 cursor-pointer"
+                      className="w-full py-4 rounded-full bg-signal text-signal-ink font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 hover:brightness-105 disabled:opacity-60 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <>
@@ -755,7 +751,7 @@ export default function ContactModal({
                       className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-xl bg-[#FF1E56]/15 text-[#FF1E56] flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-signal/15 text-signal flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Phone className="w-5 h-5" />
                         </div>
                         <div>
@@ -854,7 +850,7 @@ export default function ContactModal({
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-white font-semibold underline decoration-[#FF1E56] underline-offset-4 hover:text-[#FF1E56] transition-colors font-mono"
+                    className="text-white font-semibold underline decoration-signal underline-offset-4 hover:text-signal transition-colors font-mono"
                   >
                     dev.hannan.ai@gmail.com
                   </a>
@@ -862,7 +858,7 @@ export default function ContactModal({
                 </p>
 
                 {/* Structured Receipt Card */}
-                <div className="w-full bg-[#14141c] border border-white/10 rounded-2xl p-5 text-left mb-5 flex flex-col gap-3 text-xs sm:text-sm shadow-inner">
+                <div className="w-full bg-sunken border border-white/10 rounded-2xl p-5 text-left mb-5 flex flex-col gap-3 text-xs sm:text-sm shadow-inner">
                   <div className="flex items-center justify-between pb-2 border-b border-white/5">
                     <span className="text-zinc-400">Category</span>
                     <span className="text-white font-bold">
@@ -873,7 +869,7 @@ export default function ContactModal({
                     <span className="text-zinc-400">
                       {submittedReceipt?.isProject ? "Target Scope / Domain" : "Opportunity Type"}
                     </span>
-                    <span className="text-[#FF1E56] font-semibold">
+                    <span className="text-signal font-semibold">
                       {submittedReceipt?.topic}
                     </span>
                   </div>
@@ -918,7 +914,7 @@ export default function ContactModal({
                     rel="noreferrer"
                     className="flex-1 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border border-white/10"
                   >
-                    <Mail className="w-4 h-4 text-[#FF1E56]" />
+                    <Mail className="w-4 h-4 text-signal" />
                     <span>Open Email Draft</span>
                   </a>
                 </div>

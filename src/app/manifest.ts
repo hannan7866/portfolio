@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Full-Stack Developer & Software Engineer building production web apps, offline ERP systems, and AI-powered solutions.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0d0d0f",
-    theme_color: "#0d0d0f",
+    background_color: "#16191C",
+    theme_color: "#16191C",
     icons: [
       {
         src: "/images/Abdul-Image.jpeg",

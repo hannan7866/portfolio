@@ -16,7 +16,6 @@ import FloatingDock from "@/components/FloatingDock";
 import ContactModal, { ContactMode } from "@/components/ContactModal";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [contactMode, setContactMode] = useState<ContactMode>("hire");
 
@@ -26,7 +25,7 @@ export default function Home() {
   const ambientColor = useTransform(
     scrollYProgress,
     [0, 0.25, 0.5, 0.75, 1],
-    ["#FF1E56", "#00E5FF", "#8B5CF6", "#10B981", "#FF1E56"]
+    ["#4FC9A0", "#E0AE52", "#4FC9A0", "#E0AE52", "#4FC9A0"]
   );
 
   const handleOpenContact = (mode: ContactMode = "hire") => {
@@ -40,7 +39,7 @@ export default function Home() {
 
   return (
     <>
-      <Preloader onComplete={() => setIsLoading(false)} />
+      <Preloader />
 
       {/* Chromatic Ambient Color Shift Engine - Floating Fixed Blur Orb */}
       <motion.div
@@ -52,23 +51,7 @@ export default function Home() {
 
       <SmoothScroll>
         {/* Main Content Sections */}
-        <motion.div className="relative z-10 bg-[#0d0d0f] shadow-[0_40px_100px_rgba(0,0,0,0.85)]">
-          {/* ATS & SEO Invisible Injector */}
-          <article className="sr-only">
-            <h1>Abdul Hannan - Full-Stack Developer &amp; Software Engineer</h1>
-            <p>B.Tech CS graduate with 1.5+ years of production experience building scalable web applications, offline ERP systems, and AI-powered solutions.</p>
-            <h2>Core Skills</h2>
-            <ul>
-              <li>Frontend: React.js, Next.js, JavaScript, TypeScript, Tailwind CSS</li>
-              <li>Backend: Node.js, Express.js, Python</li>
-              <li>Database: PostgreSQL, MongoDB, SQLite, Supabase</li>
-              <li>Specialized: Generative AI, RAG Pipelines, Offline-First Architecture</li>
-            </ul>
-            <h2>Professional Experience</h2>
-            <h3>Full-Stack Developer at Lala Motors (Jan 2025 - Present)</h3>
-            <p>Built an offline-first ERP &amp; billing application processing 1,000+ real-world transactions. Developed full-stack automotive platform with PostgreSQL, Supabase, and Next.js.</p>
-          </article>
-
+        <motion.div className="relative z-10 bg-paper shadow-[0_40px_100px_rgba(0,0,0,0.85)]">
           <Hero onOpenContact={() => handleOpenContact("hire")} />
           <Projects />
           <TestimonialQuote />

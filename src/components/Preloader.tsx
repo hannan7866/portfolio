@@ -66,7 +66,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         >
           {/* ── Top half — slides up on exit ── */}
           <motion.div
-            className="absolute top-0 left-0 w-full h-1/2 bg-[#0d0d0f] z-[100]"
+            className="absolute top-0 left-0 w-full h-1/2 bg-paper z-[100]"
             initial={{ y: 0 }}
             exit={{
               y: "-100%",
@@ -76,7 +76,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
           {/* ── Bottom half — slides down on exit ── */}
           <motion.div
-            className="absolute bottom-0 left-0 w-full h-1/2 bg-[#0d0d0f] z-[100]"
+            className="absolute bottom-0 left-0 w-full h-1/2 bg-paper z-[100]"
             initial={{ y: 0 }}
             exit={{
               y: "100%",
@@ -86,7 +86,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
           {/* ── Ambient glow orb (always behind text) ── */}
           <div className="absolute inset-0 z-[101] flex items-center justify-center pointer-events-none">
-            <div className="w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-[#FF1E56]/12 rounded-full blur-[160px]" />
+            <div className="w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-signal/12 rounded-full blur-[160px]" />
           </div>
 
           {/* ── Text content layer — fades on exit ── */}
@@ -103,19 +103,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                   initial="hidden"
                   animate={sequence === 0 ? "visible" : "exit"}
                   exit="exit"
-                  className="flex items-end gap-[0.05em] leading-none"
-                  style={{
-                    fontFamily: "var(--font-handwritten)",
-                    textShadow:
-                      "0 0 22px rgba(255,30,86,0.9), 0 0 60px rgba(255,30,86,0.5), 0 0 100px rgba(255,30,86,0.25)",
-                  }}
+                  className="flex items-end gap-[0.05em] leading-none u-display"
                 >
                   {HELLO_CHARS.map((char, i) => (
                     <motion.span
                       key={i}
                       variants={helloCharVariants}
                       className={`text-7xl sm:text-9xl md:text-[10rem] font-bold tracking-tight leading-none ${
-                        char === "." ? "text-white" : "text-[#FF1E56]"
+                        char === "." ? "text-ink" : "text-signal"
                       }`}
                     >
                       {char}
@@ -140,13 +135,13 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                   exit={{ opacity: 0, filter: "blur(8px)", scale: 0.96 }}
                   className="flex flex-col items-center gap-3 text-center px-6"
                 >
-                  <p className="text-2xl sm:text-4xl text-zinc-300 font-display font-bold tracking-widest uppercase">
+                  <p className="text-2xl sm:text-4xl text-ink u-display font-bold tracking-widest uppercase">
                     Welcome to my portfolio
                   </p>
 
                   {/* Thin animated progress line */}
                   <motion.div
-                    className="h-px bg-gradient-to-r from-transparent via-[#FF1E56] to-transparent"
+                    className="h-px bg-gradient-to-r from-transparent via-signal to-transparent"
                     initial={{ width: 0, opacity: 0 }}
                     animate={{
                       width: "180px",
@@ -157,7 +152,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
                   {/* Subtle sub-label */}
                   <motion.span
-                    className="text-[11px] font-mono tracking-[0.35em] text-zinc-600 uppercase"
+                    className="text-[11px] font-mono tracking-[0.35em] text-graphite uppercase"
                     initial={{ opacity: 0, y: 4 }}
                     animate={{
                       opacity: 1,

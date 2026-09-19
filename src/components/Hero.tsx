@@ -10,10 +10,10 @@ import {
   useScroll,
   Variants,
 } from "framer-motion";
-import { Star } from "lucide-react";
+
 import confetti from "canvas-confetti";
 import Magnetic from "@/components/Magnetic";
-import { useHoverSound } from "@/utils/useSound";
+
 
 interface HeroProps {
   onOpenContact?: () => void;
@@ -121,16 +121,14 @@ export default function Hero({ onOpenContact }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isGlitching, setIsGlitching] = useState(false);
-  const playHover = useHoverSound();
 
   const handleAvatarClick = () => {
-    playHover();
     setIsGlitching(true);
     confetti({
       particleCount: 60,
       spread: 100,
       origin: { y: 0.5 },
-      colors: ["#FF1E56", "#00E5FF", "#8B5CF6"],
+      colors: ["#4FC9A0", "#E0AE52", "#E6E9EA"],
       shapes: ["square"],
       gravity: 1.2,
       scalar: 1.2,
@@ -218,10 +216,10 @@ export default function Hero({ onOpenContact }: HeroProps) {
     <section
       ref={heroRef}
       id="hero"
-      className="relative min-h-[85vh] sm:min-h-[92vh] flex flex-col justify-between pt-16 sm:pt-24 pb-4 sm:pb-8 px-4 sm:px-10 lg:px-16 overflow-hidden select-none bg-[#0d0d0f] w-full max-w-[100vw]"
+      className="relative min-h-[85vh] sm:min-h-[92vh] flex flex-col justify-between pt-16 sm:pt-24 pb-4 sm:pb-8 px-4 sm:px-10 lg:px-16 overflow-hidden select-none bg-paper w-full max-w-[100vw]"
     >
       {/* Subtle ambient central warmth behind typography */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[600px] h-[260px] sm:h-[350px] bg-[#FF1E56]/[0.08] rounded-full blur-[60px] sm:blur-[160px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[600px] h-[260px] sm:h-[350px] bg-signal/[0.08] rounded-full blur-[60px] sm:blur-[160px] pointer-events-none" />
 
       {/* Main Center Typography & Overlapping 3D Head with Scroll Parallax */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex-1 flex flex-col items-center justify-center my-auto">
@@ -234,7 +232,7 @@ export default function Hero({ onOpenContact }: HeroProps) {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="absolute left-[4%] sm:left-[12%] md:left-[16%] top-[42%] w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#FF1E56] shadow-[0_0_12px_#FF1E56] z-30"
+            className="absolute left-[4%] sm:left-[12%] md:left-[16%] top-[42%] w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-signal z-30"
           />
 
           {/* =========================================================================
@@ -253,7 +251,7 @@ export default function Hero({ onOpenContact }: HeroProps) {
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              className="text-[28vw] sm:text-[22vw] md:text-[20vw] lg:text-[260px] xl:text-[290px] font-black tracking-tighter uppercase leading-[0.85] text-center font-display whitespace-nowrap flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
+              className="text-[28vw] sm:text-[22vw] md:text-[20vw] lg:text-[260px] xl:text-[290px] font-black tracking-tighter uppercase leading-[0.85] text-center u-display whitespace-nowrap flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
             >
               {"THINK".split("").map((char, index) => (
                 <motion.span
@@ -262,12 +260,11 @@ export default function Hero({ onOpenContact }: HeroProps) {
                   whileHover={{
                     scale: 1.3,
                     y: -15,
-                    color: "#ffffff",
-                    textShadow: "0 20px 40px rgba(255, 255, 255, 0.4)",
+                    color: "var(--ink)",
                   }}
                   style={{
-                    WebkitTextStroke: "2.5px rgba(255, 255, 255, 0.5)",
-                    color: "rgba(255, 255, 255, 0)",
+                    WebkitTextStroke: "2.5px var(--rule)",
+                    color: "transparent",
                     transformOrigin: "bottom",
                     position: "relative",
                     WebkitTransform: "translateZ(0)",
@@ -286,7 +283,7 @@ export default function Hero({ onOpenContact }: HeroProps) {
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
-              className="text-[20.5vw] sm:text-[18vw] md:text-[16vw] lg:text-[210px] xl:text-[240px] font-black tracking-tighter uppercase leading-[0.85] text-center font-display whitespace-nowrap -mt-2 sm:-mt-6 md:-mt-10 lg:-mt-16 xl:-mt-20 flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
+              className="text-[20.5vw] sm:text-[18vw] md:text-[16vw] lg:text-[210px] xl:text-[240px] font-black tracking-tighter uppercase leading-[0.85] text-center u-display whitespace-nowrap -mt-2 sm:-mt-6 md:-mt-10 lg:-mt-16 xl:-mt-20 flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
             >
               {"CREATIVELY".split("").map((char, index) => (
                 <motion.span
@@ -295,12 +292,11 @@ export default function Hero({ onOpenContact }: HeroProps) {
                   whileHover={{
                     scale: 1.3,
                     y: -15,
-                    color: "#FF1E56",
-                    textShadow: "0 20px 40px rgba(255, 30, 86, 0.6)",
+                    color: "var(--signal)",
                   }}
                   style={{
-                    WebkitTextStroke: "2.5px rgba(255, 30, 86, 0.8)",
-                    color: "rgba(255, 30, 86, 0)",
+                    WebkitTextStroke: "2.5px var(--signal)",
+                    color: "transparent",
                     transformOrigin: "bottom",
                     position: "relative",
                     WebkitTransform: "translateZ(0)",
@@ -382,13 +378,13 @@ export default function Hero({ onOpenContact }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-zinc-300 text-[11px] sm:text-sm md:text-base font-normal leading-tight sm:leading-relaxed text-left max-w-[170px] sm:max-w-md cursor-default"
+            className="text-graphite text-[11px] sm:text-sm md:text-base font-normal leading-tight sm:leading-relaxed text-left max-w-[170px] sm:max-w-md cursor-default"
           >
-            <strong className="text-white font-semibold block sm:inline">
+            <strong className="text-ink font-semibold block sm:inline">
               <ScrambleText text="Full-Stack Developer & Software Engineer" />
             </strong>{" "}
             <span className="hidden sm:inline">building real-world products, business systems, and interactive web experiences.</span>
-            <span className="inline sm:hidden text-zinc-400">building real-world products &amp; systems.</span>
+            <span className="inline sm:hidden text-graphite">building real-world products &amp; systems.</span>
           </motion.p>
 
           {/* Right: Magnetic Pill CTA Button */}
@@ -400,8 +396,7 @@ export default function Hero({ onOpenContact }: HeroProps) {
             <Magnetic strength={0.4}>
               <button
                 onClick={onOpenContact}
-                onMouseEnter={playHover}
-                className="px-4 sm:px-7 py-2.5 sm:py-3 rounded-full bg-[#FF1E56] hover:bg-[#e11255] text-white text-xs sm:text-sm font-semibold shadow-[0_0_25px_rgba(255,30,86,0.5)] hover:shadow-[0_0_35px_rgba(255,30,86,0.75)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap block"
+                className="px-4 sm:px-7 py-2.5 sm:py-3 rounded-full bg-signal hover:bg-signal/90 text-signal-ink text-xs sm:text-sm font-semibold hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer whitespace-nowrap block"
               >
                 Book a call with me
               </button>
@@ -410,44 +405,25 @@ export default function Hero({ onOpenContact }: HeroProps) {
         </div>
       </div>
 
-      {/* Hero Social Proof & Tech Marquee Row */}
-      <div className="w-full max-w-7xl mx-auto pt-4 sm:pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 z-30 overflow-hidden">
-        {/* Social Proof Stack */}
-        <div className="flex items-center gap-3 shrink-0">
-          {/* Avatar stack */}
-          <div className="flex -space-x-2 overflow-hidden">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#0d0d0f] bg-rose-950 flex items-center justify-center text-xs font-bold text-rose-300">
-              AH
-            </div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#0d0d0f] bg-indigo-950 flex items-center justify-center text-xs font-bold text-indigo-300">
-              LM
-            </div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#0d0d0f] bg-emerald-950 flex items-center justify-center text-xs font-bold text-emerald-300">
-              CS
-            </div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-[#0d0d0f] bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-300">
-              AI
+      {/* Hero Social Proof & Tech Strip Row */}
+      <div className="w-full max-w-7xl mx-auto pt-4 sm:pt-8 border-t border-rule flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6 z-30 overflow-hidden">
+          <div className="flex shrink-0 flex-col gap-1">
+            <span className="u-micro">Production record</span>
+            <div className="flex items-baseline gap-2">
+              <span className="font-mono text-lg font-semibold text-brass">
+                1,000+
+              </span>
+              <span className="text-sm text-graphite">
+                invoices processed · live since Jan 2025
+              </span>
             </div>
           </div>
 
-          {/* Rating */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-0.5 text-[#FF1E56]">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-[#FF1E56]" />
-              ))}
-            </div>
-            <span className="text-xs sm:text-sm font-bold text-zinc-200 mt-1">
-              1.5+ Years Exp · 1,000+ Transactions
-            </span>
-          </div>
-        </div>
-
-        {/* Tech Stack Marquee Strip */}
+        {/* Tech Stack Ticker Strip */}
         <div className="w-full flex-1 overflow-hidden relative max-w-2xl">
           {/* Edge fade masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-[#0d0d0f] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-[#0d0d0f] to-transparent z-10 pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-paper to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-paper to-transparent z-10 pointer-events-none" />
 
           <motion.div
             className="flex w-max items-center gap-8 sm:gap-14 will-change-transform opacity-75"
@@ -462,7 +438,7 @@ export default function Hero({ onOpenContact }: HeroProps) {
             {[...TECH_STACK, ...TECH_STACK].map((tech, idx) => (
               <div key={idx} className="flex items-center gap-2 hover:opacity-100 transition-opacity">
                 {tech.icon}
-                <span className="text-xs font-bold tracking-wider text-zinc-300 uppercase whitespace-nowrap">
+                <span className="text-xs font-bold tracking-wider text-graphite uppercase whitespace-nowrap">
                   {tech.name}
                 </span>
               </div>
@@ -478,7 +454,7 @@ const TECH_STACK = [
   {
     name: "Lala Motors Desktop ERP",
     icon: (
-      <span className="text-[10px] font-bold tracking-widest text-[#FF1E56]">
+      <span className="text-[10px] font-bold tracking-widest text-signal">
         1,000+ TRANSACTIONS
       </span>
     ),

@@ -48,6 +48,10 @@ import {
   ApiIcon,
   WorkflowIcon,
   BrainIcon,
+  ArchitectureIcon,
+  CodeBracketsIcon,
+  CloudComputingIcon,
+  AgileIcon,
 } from "./ToolIcons";
 
 interface CapabilityItem {
@@ -86,6 +90,20 @@ const TOOLS = [
   { name: "OpenAI / LLMs", icon: <OpenAIIcon className="w-6 h-6" /> },
   { name: "RAG & Agents", icon: <BrainIcon className="w-6 h-6" /> },
   { name: "Figma", icon: <FigmaIcon className="w-6 h-6" /> },
+  { name: "System Arch", icon: <ArchitectureIcon className="w-6 h-6 text-indigo-400" /> },
+  { name: "Microservices", icon: <ArchitectureIcon className="w-6 h-6 text-cyan-400" /> },
+  { name: "Serverless", icon: <CloudComputingIcon className="w-6 h-6 text-amber-400" /> },
+  { name: "Cloud Arch", icon: <CloudComputingIcon className="w-6 h-6 text-blue-400" /> },
+  { name: "SQL & DBMS", icon: <Database className="w-6 h-6 text-emerald-400" /> },
+  { name: "Data Design", icon: <Database className="w-6 h-6 text-rose-400" /> },
+  { name: "Algorithms", icon: <CodeBracketsIcon className="w-6 h-6 text-yellow-400" /> },
+  { name: "Data Structs", icon: <CodeBracketsIcon className="w-6 h-6 text-fuchsia-400" /> },
+  { name: "OOP", icon: <CodeBracketsIcon className="w-6 h-6 text-orange-400" /> },
+  { name: "UI / UX", icon: <FigmaIcon className="w-6 h-6" /> },
+  { name: "SPA & SSR", icon: <ReactIcon className="w-6 h-6" /> },
+  { name: "Agile & SDLC", icon: <AgileIcon className="w-6 h-6 text-green-400" /> },
+  { name: "ERP Systems", icon: <Server className="w-6 h-6 text-blue-500" /> },
+  { name: "Automation", icon: <WorkflowIcon className="w-6 h-6 text-teal-400" /> },
 ];
 
 const CAPABILITIES: CapabilityItem[] = [
@@ -95,7 +113,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Crafting performant, pixel-perfect user interfaces with React.js, Next.js (App Router & SSR), Tailwind CSS, and state management via Redux & React Hooks.",
     tags: ["React.js", "Next.js (SSR)", "JavaScript", "Tailwind CSS", "HTML5/CSS3", "Responsive UI"],
-    icon: <Code2 className="w-5 h-5 text-[#FF1E56]" />,
+    icon: <Code2 className="w-5 h-5 text-signal" />,
   },
   {
     id: "backend-apis",
@@ -103,24 +121,33 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Designing resilient RESTful microservices, business automation logic, and high-throughput server backends using Node.js, Express.js, and Python.",
     tags: ["Node.js", "Express.js", "Python", "REST APIs", "API Integration", "Business Logic"],
-    icon: <Server className="w-5 h-5 text-white" />,
+    icon: <Server className="w-5 h-5 text-signal-ink" />,
     isHighlighted: true, // Vivid hot magenta card
   },
   {
-    id: "databases",
-    title: "Database Architecture",
+    id: "fullstack",
+    title: "Full-Stack Web Architectures",
     description:
-      "Architecting relational and document databases with normalized schemas, index optimization, and offline-first persistence supporting 1,000+ live transactions.",
-    tags: ["PostgreSQL", "MongoDB", "SQLite", "SQL", "Supabase", "Schema Design"],
-    icon: <Database className="w-5 h-5 text-[#FF1E56]" />,
+      "Engineering robust web applications from intuitive frontends to scalable backend services. Proficient in Next.js SSR/SSG, React 19, TypeScript, Express, and high-concurrency Node.js microservices.",
+    tags: ["Next.js (App Router)", "React 19", "Node.js", "TypeScript", "Tailwind CSS"],
+    icon: <Code2 className="w-5 h-5 text-signal" />,
   },
   {
-    id: "ai-automation",
-    title: "Generative AI & Automation",
+    id: "offline-erp",
+    title: "Offline-First Enterprise ERP Systems",
     description:
-      "Developing LLM-powered applications, Retrieval-Augmented Generation (RAG) pipelines, and custom business automation tools that eliminate manual workflows.",
-    tags: ["Generative AI", "LLMs", "RAG Pipelines", "Git / GitHub", "Postman", "ERP Automation"],
-    icon: <BrainCircuit className="w-5 h-5 text-[#FF1E56]" />,
+      "Architecting highly reliable desktop ERP engines and billing platforms built for uninterrupted business continuity. Tested in real-world retail with local SQLite persistence and automated invoice generation.",
+    tags: ["Python", "SQLite", "ReportLab PDF Engine", "Tkinter", "Offline Sync"],
+    icon: <Database className="w-5 h-5 text-signal" />,
+    isHighlighted: true,
+  },
+  {
+    id: "ai-rag",
+    title: "AI & RAG Knowledge Pipelines",
+    description:
+      "Developing domain-specific AI agents, semantic retrieval pipelines, and autonomous workflow tooling. Integrating vector embeddings with contextual document ingestion.",
+    tags: ["OpenAI API", "Vector Embeddings", "Retrieval Augmented Gen", "Agent Workflows"],
+    icon: <BrainCircuit className="w-5 h-5 text-signal" />,
   },
 ];
 
@@ -196,7 +223,7 @@ function TerminalWindow() {
         {currentLine && (
           <p className="text-zinc-300">
             {currentLine}
-            <span className="inline-block w-2 h-4 bg-[#FF1E56] ml-1 animate-pulse align-middle" />
+            <span className="inline-block w-2 h-4 bg-signal ml-1 animate-pulse align-middle" />
           </p>
         )}
         {textLines.length === 4 && !currentLine && (
@@ -236,7 +263,7 @@ function TiltCard({
 
   // Flashlight radial glow gradient locked to cursor
   const glow = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, ${
-    isHighlighted ? "rgba(255,255,255,0.22)" : "rgba(255,30,86,0.18)"
+    isHighlighted ? "color-mix(in oklab, var(--ink) 22%, transparent)" : "color-mix(in oklab, var(--signal) 18%, transparent)"
   }, transparent 80%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -294,20 +321,17 @@ function TechPhysicsPlayground() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sceneRef, { once: true, margin: "-100px" });
 
-  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    if (isMobile) return;
     if (!sceneRef.current) return;
     if (!isInView) return;
 
     const container = sceneRef.current;
+    // Note: this canvas does not currently respond to theme changes; Phase 2 will redraw it on theme switch.
+    const css = getComputedStyle(document.documentElement);
+    const surface = css.getPropertyValue("--surface").trim();
+    const ruleCol = css.getPropertyValue("--rule").trim();
+    const inkCol = css.getPropertyValue("--ink").trim();
+
     const width = container.clientWidth || 360;
     const height = 300;
 
@@ -325,7 +349,7 @@ function TechPhysicsPlayground() {
         height,
         background: "transparent",
         wireframes: false,
-        pixelRatio: typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1,
+        pixelRatio: window.innerWidth < 768 ? 1 : window.devicePixelRatio || 1,
       },
     });
 
@@ -375,15 +399,30 @@ function TechPhysicsPlayground() {
       "OpenAI / LLMs": "#10A37F",
       "RAG & Agents": "#8B5CF6",
       "Figma": "#F24E1E",
+      "System Arch": "#818CF8",
+      "Microservices": "#22D3EE",
+      "Serverless": "#FBBF24",
+      "Cloud Arch": "#60A5FA",
+      "SQL & DBMS": "#34D399",
+      "Data Design": "#FB7185",
+      "Algorithms": "#FACC15",
+      "Data Structs": "#E879F9",
+      "OOP": "#FB923C",
+      "UI / UX": "#F24E1E",
+      "SPA & SSR": "#61DAFB",
+      "Agile & SDLC": "#4ADE80",
+      "ERP Systems": "#3B82F6",
+      "Automation": "#2DD4BF",
     };
 
     // Spawn physics bodies high above the viewport for a dramatic cascade drop
-    const radius = 21;
+    const radius = window.innerWidth < 768 ? 16 : 21;
+    const cols = window.innerWidth < 768 ? 6 : 9;
     const bodies = TOOLS.map((tool, i) => {
-      const col = i % 6;
-      const row = Math.floor(i / 6);
-      const startX = (width / 7) * (col + 1) + (Math.random() * 20 - 10);
-      const startY = -150 - row * 55 - Math.random() * 50;
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const startX = (width / (cols + 1)) * (col + 1) + (Math.random() * 10 - 5);
+      const startY = -100 - row * 45 - Math.random() * 20;
 
       const body = Bodies.circle(startX, startY, radius, {
         restitution: 0.6, // Reduced from 0.95 so they stop bouncing forever
@@ -391,14 +430,14 @@ function TechPhysicsPlayground() {
         frictionAir: 0.005, // Reduced air friction so they drop faster
         density: 0.002, // Slightly heavier
         render: {
-          fillStyle: "#131318",
-          strokeStyle: "rgba(255, 255, 255, 0.12)",
+          fillStyle: surface,
+          strokeStyle: ruleCol,
           lineWidth: 1.5,
         },
       });
 
       (body as any).toolName = tool.name;
-      (body as any).toolColor = toolColors[tool.name] || "#FF1E56";
+      (body as any).toolColor = toolColors[tool.name] || ruleCol;
       return body;
     });
 
@@ -420,7 +459,7 @@ function TechPhysicsPlayground() {
         // Dark glass bubble interior
         ctx.beginPath();
         ctx.arc(0, 0, radius - 1, 0, Math.PI * 2);
-        ctx.fillStyle = "#181820";
+        ctx.fillStyle = surface;
         ctx.fill();
 
         // Accent rim stroke
@@ -430,13 +469,14 @@ function TechPhysicsPlayground() {
 
         // Tiny accent indicator dot
         ctx.beginPath();
-        ctx.arc(0, -8, 2.5, 0, Math.PI * 2);
+        ctx.arc(0, radius < 20 ? -6 : -8, radius < 20 ? 1.5 : 2.5, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
 
         // High-contrast clean sans-serif typography
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 9px 'Plus Jakarta Sans', system-ui, sans-serif";
+        const fontSize = radius < 20 ? 7 : 9;
+        ctx.fillStyle = inkCol;
+        ctx.font = `bold ${fontSize}px var(--font-sans), system-ui, sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
@@ -446,9 +486,12 @@ function TechPhysicsPlayground() {
           .replace(" / LLMs", "")
           .replace(" CSS", "")
           .replace(" & Agents", "")
-          .replace(" / CD", "");
+          .replace(" & SDLC", "")
+          .replace(" & DBMS", "")
+          .replace(" / CD", "")
+          .replace(" / UX", "");
 
-        ctx.fillText(shortName, 0, 3);
+        ctx.fillText(shortName, 0, radius < 20 ? 2.5 : 3);
 
         ctx.restore();
       });
@@ -564,28 +607,7 @@ function TechPhysicsPlayground() {
       Engine.clear(engine);
       if (render.canvas) render.canvas.remove();
     };
-  }, [isInView, isMobile]);
-
-  if (isMobile) {
-    return (
-      <div className="mt-8 select-none">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block">Core Tech Stack</span>
-          <span className="text-[10px] font-mono text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 px-2 py-0.5 rounded-full">Optimized View</span>
-        </div>
-        <div className="w-full rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 p-5 shadow-2xl flex flex-wrap justify-center gap-4">
-          {TOOLS.map((tool) => (
-            <div key={tool.name} className="flex flex-col items-center gap-1.5 w-[60px]">
-              <div className="w-11 h-11 rounded-full bg-[#181820] border border-white/10 flex items-center justify-center shadow-lg">
-                {tool.icon}
-              </div>
-              <span className="text-[8px] text-zinc-300 font-bold text-center leading-tight">{tool.name.replace('.js', '').replace(' / LLMs', '')}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  }, [isInView]);
 
   return (
     <div className="mt-10 select-none">
@@ -593,7 +615,7 @@ function TechPhysicsPlayground() {
         <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block">
           Interactive Physics Sandbox
         </span>
-        <span className="text-[10px] font-mono text-[#FF1E56] bg-[#FF1E56]/10 border border-[#FF1E56]/30 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-mono text-signal bg-signal/10 border border-signal/30 px-2 py-0.5 rounded-full">
           Click &amp; Toss
         </span>
       </div>
@@ -610,7 +632,7 @@ export default function Services() {
   return (
     <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full max-w-[100vw] pb-44">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/2 right-10 w-96 h-96 bg-[#FF1E56]/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 right-10 w-96 h-96 bg-signal/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column: Title, Live Terminal & Interactive Physics Playground */}
@@ -619,7 +641,7 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-[#FF1E56] mb-3"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-signal mb-3"
           >
             <Terminal className="w-3.5 h-3.5" />
             Core Stack &amp; Skills
@@ -630,9 +652,9 @@ export default function Services() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.1]"
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink u-head leading-[1.1]"
           >
-            What I build &amp; <span className="text-[#FF1E56]">Engineer...</span>
+            What I build &amp; <span className="text-signal">Engineer...</span>
           </motion.h2>
 
           {/* Live Terminal Typewriter Window */}
@@ -665,10 +687,10 @@ export default function Services() {
             >
               <TiltCard
                 isHighlighted={cap.isHighlighted}
-                className={`rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-[0_-12px_45px_rgba(0,0,0,0.85)] md:backdrop-blur-xl backdrop-blur-md ${
+                className={`rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-2xl md:backdrop-blur-xl backdrop-blur-md ${
                   cap.isHighlighted
-                    ? "bg-gradient-to-br from-[#FF1E56] via-[#e11255] to-[#c70b47] text-white shadow-[0_20px_50px_rgba(255,30,86,0.45)] border border-[#ff4785]"
-                    : "bg-[#131318] border border-white/10 hover:border-white/20 text-zinc-200"
+                    ? "bg-signal text-signal-ink border border-rule"
+                    : "bg-surface border border-rule hover:border-ink text-ink"
                 }`}
               >
                 {/* Card Header */}
@@ -676,13 +698,13 @@ export default function Services() {
                   <div
                     className={`p-2.5 rounded-xl ${
                       cap.isHighlighted
-                        ? "bg-black/20 text-white"
-                        : "bg-white/5 border border-white/10 text-[#FF1E56]"
+                        ? "bg-sunken/40 text-signal-ink"
+                        : "bg-surface border border-rule text-signal"
                     }`}
                   >
                     {cap.icon}
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+                  <h3 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${cap.isHighlighted ? "text-signal-ink" : "text-ink"}`}>
                     {cap.title}
                   </h3>
                 </div>
@@ -690,7 +712,7 @@ export default function Services() {
                 {/* Description */}
                 <p
                   className={`text-sm sm:text-base leading-relaxed mb-6 font-normal relative z-20 ${
-                    cap.isHighlighted ? "text-white/95" : "text-zinc-400"
+                    cap.isHighlighted ? "text-signal-ink/90" : "text-graphite"
                   }`}
                 >
                   {cap.description}
@@ -703,8 +725,8 @@ export default function Services() {
                       key={tag}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-tight transition-all duration-300 ${
                         cap.isHighlighted
-                          ? "bg-black/25 text-white border border-white/30 backdrop-blur-sm"
-                          : "bg-white/5 border border-white/10 text-zinc-300 hover:border-white/25 hover:text-white"
+                          ? "bg-sunken/30 text-signal-ink border border-rule backdrop-blur-sm"
+                          : "bg-surface border border-rule text-graphite hover:border-ink hover:text-ink"
                       }`}
                     >
                       {tag}
