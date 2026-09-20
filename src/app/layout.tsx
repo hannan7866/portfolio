@@ -389,7 +389,7 @@ export default function RootLayout({
           `}
         </Script>
         {/* Studio Analog Film Grain Texture */}
-        <div className="bg-noise fixed inset-0 z-[80] pointer-events-none" />
+        <div className="bg-noise-tile" />
         <CustomCursor />
         {children}
       </body>

@@ -64,7 +64,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
   return (
     <section id="faq" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-rule overflow-hidden w-full max-w-[100vw]">
       {/* Ambient background glow */}
-      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-signal/[0.08] rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-arc/[0.08] rounded-full blur-[150px] pointer-events-none" />
 
       {/* Header */}
       <div className="mb-14">
@@ -72,7 +72,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-signal mb-2"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-2"
         >
           <HelpCircle className="w-3.5 h-3.5" />
           Common Questions
@@ -155,7 +155,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-3xl bg-signal text-signal-ink p-8 sm:p-9 border border-rule flex flex-col justify-between shadow-2xl"
+            className="rounded-3xl bg-arc text-arc-ink p-8 sm:p-9 border border-rule flex flex-col justify-between shadow-2xl"
           >
             {/* Top Avatar Thumbnail */}
             <div className="mb-6">
@@ -171,17 +171,17 @@ export default function FAQ({ onOpenContact }: FAQProps) {
             </div>
 
             {/* Headline */}
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-signal-ink mb-4 leading-tight u-head">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-arc-ink mb-4 leading-tight u-head">
               Still not sure?<br />
               Book a free discovery call.
             </h3>
 
             {/* Subtext */}
-            <div className="text-xs sm:text-sm text-signal-ink/90 leading-relaxed space-y-3 mb-8">
+            <div className="text-xs sm:text-sm text-arc-ink/90 leading-relaxed space-y-3 mb-8">
               <p>
                 Your software should be reliable, scalable, and engineered to solve real business bottlenecks.
               </p>
-              <p className="font-semibold text-signal-ink">
+              <p className="font-semibold text-arc-ink">
                 If that’s what you’re aiming for, we should talk.
               </p>
             </div>
@@ -192,10 +192,10 @@ export default function FAQ({ onOpenContact }: FAQProps) {
                 onClick={onOpenContact}
                 className="px-5 py-3 rounded-full bg-sunken text-ink text-xs font-bold hover:bg-paper hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 cursor-pointer"
               >
-                <Calendar className="w-3.5 h-3.5 text-signal" />
+                <Calendar className="w-3.5 h-3.5 text-arc" />
                 <span>Schedule Now</span>
               </button>
-              <span className="text-xs font-bold text-signal-ink tracking-wide">
+              <span className="text-xs font-bold text-arc-ink tracking-wide">
                 Cal.com
               </span>
             </div>

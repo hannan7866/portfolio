@@ -24,6 +24,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { cn } from "@/utils/cn";
 
 export type ProjectCategory = "all" | "production" | "engineering" | "client";
 
@@ -316,10 +317,12 @@ function FlipProjectCard({
   project,
   onOpenLive,
   onSelectProject,
+  isTransitioning = false,
 }: {
   project: Project;
   onOpenLive: (e: React.MouseEvent, url?: string) => void;
   onSelectProject: (p: Project) => void;
+  isTransitioning?: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -367,7 +370,10 @@ function FlipProjectCard({
         onMouseLeave={handleMouseLeave}
         onClick={(e) => onOpenLive(e, project.liveUrl || project.githubUrl)}
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group cursor-pointer w-full h-full flex flex-col rounded-3xl bg-surface border border-rule p-4 sm:p-6 shadow-2xl hover:border-signal/50 select-none will-change-transform overflow-hidden relative transition-colors duration-300"
+        className={cn(
+          "group cursor-pointer w-full h-full flex flex-col rounded-3xl bg-surface border border-rule p-4 sm:p-6 shadow-2xl hover:border-arc/50 select-none [contain:layout_paint_style] overflow-hidden relative transition-colors duration-300",
+          isTransitioning && "will-change-transform"
+        )}
       >
         {/* Image area */}
         <div
@@ -398,7 +404,7 @@ function FlipProjectCard({
               {project.number} — {project.categoryLabel}
             </span>
             {project.badge && (
-              <span className="px-3 py-1 rounded-full bg-signal backdrop-blur-md text-[11px] font-bold text-signal-ink shrink-0">
+              <span className="px-3 py-1 rounded-full bg-arc backdrop-blur-md text-[11px] font-bold text-arc-ink shrink-0">
                 {project.badge}
               </span>
             )}
@@ -408,7 +414,7 @@ function FlipProjectCard({
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
             <div className="px-4 py-2 rounded-full bg-sunken/90 backdrop-blur-md border border-rule text-xs font-bold text-ink shadow-2xl flex items-center gap-1.5">
               <span>{project.isDesktopApp ? "Open GitHub Repo" : "Open Live Website"}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-signal" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-arc" />
             </div>
           </div>
         </div>
@@ -417,7 +423,7 @@ function FlipProjectCard({
         <div className="flex items-start justify-between gap-4 shrink-0 relative z-10">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-ink group-hover:text-signal transition-colors duration-300 truncate">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-ink group-hover:text-arc transition-colors duration-300 truncate">
                 {project.title}
               </h3>
               <span className="text-xs font-mono text-graphite shrink-0">{project.year}</span>
@@ -451,7 +457,7 @@ function FlipProjectCard({
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 text-xs font-semibold text-ink hover:text-signal-ink bg-surface hover:bg-signal px-3.5 py-2 rounded-full border border-rule hover:border-signal transition-all duration-300 shadow-sm cursor-pointer"
+              className="flex items-center gap-1 text-xs font-semibold text-ink hover:text-arc-ink bg-surface hover:bg-arc px-3.5 py-2 rounded-full border border-rule hover:border-arc transition-all duration-300 shadow-sm cursor-pointer"
             >
               <span>{project.isDesktopApp ? "GitHub" : "Live Link"}</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -485,17 +491,38 @@ export default function Projects() {
 
   // Active page tracking for a11y announcement & pagination controls
   const [activePageIndex, setActivePageIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const prevIndexRef = useRef(0);
+
+  const triggerTransition = () => {
+    setIsTransitioning(true);
+    if (transitionTimerRef.current) {
+      clearTimeout(transitionTimerRef.current);
+    }
+    transitionTimerRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 350);
+  };
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
       const idx = Math.min(TOTAL_PAGES - 1, Math.floor(latest * TOTAL_PAGES));
+      if (idx !== prevIndexRef.current) {
+        prevIndexRef.current = idx;
+        triggerTransition();
+      }
       setActivePageIndex(idx);
     });
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    };
   }, [scrollYProgress, TOTAL_PAGES]);
 
   const handlePrevPage = () => {
     if (!scrollRef.current) return;
+    triggerTransition();
     const targetIdx = Math.max(0, activePageIndex - 1);
     const top = scrollRef.current.offsetTop;
     const height = scrollRef.current.offsetHeight;
@@ -505,6 +532,7 @@ export default function Projects() {
 
   const handleNextPage = () => {
     if (!scrollRef.current) return;
+    triggerTransition();
     const targetIdx = Math.min(TOTAL_PAGES - 1, activePageIndex + 1);
     const top = scrollRef.current.offsetTop;
     const height = scrollRef.current.offsetHeight;
@@ -533,7 +561,7 @@ export default function Projects() {
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-signal mb-1"
+                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-1"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 Curated Software &amp; Systems
@@ -545,7 +573,7 @@ export default function Projects() {
                 transition={{ delay: 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink u-head"
               >
-                Featured <span className="text-signal">Projects</span>
+                Featured <span className="text-arc">Projects</span>
               </motion.h2>
             </div>
 
@@ -555,7 +583,7 @@ export default function Projects() {
               <div className="w-40 h-1 bg-rule rounded-full overflow-hidden">
                 <motion.div
                   style={{ width: progressBarScale }}
-                  className="h-full bg-signal rounded-full"
+                  className="h-full bg-arc rounded-full"
                 />
               </div>
             </div>
@@ -563,86 +591,130 @@ export default function Projects() {
         </div>
 
         {/* ── Deck Stage ── */}
-        <div className="relative flex-1 w-full flex items-center justify-center px-4 sm:px-8 lg:px-16 pb-6">
+        <div
+          onTouchStart={triggerTransition}
+          className="relative flex-1 w-full flex items-center justify-center px-4 sm:px-8 lg:px-16 pb-6"
+        >
+          {/* Prefetch next-to-mount image (active + 2) */}
+          {(() => {
+            const nextIdx = activePageIndex + 2;
+            const nextProject =
+              nextIdx >= 1 && nextIdx <= PROJECTS.length
+                ? PROJECTS[nextIdx - 1]
+                : null;
+            if (!nextProject?.image) return null;
+            return <link rel="prefetch" href={nextProject.image} as="image" />;
+          })()}
+
           <div className="relative w-full max-w-3xl h-[58vh] sm:h-[62vh]">
 
-            {/* ── PAGE 0: COVER ── */}
-            <FlipPageSimple scrollYProgress={scrollYProgress} index={0} total={TOTAL_PAGES}>
-              <div className="w-full h-full rounded-3xl bg-surface border border-rule flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden">
-                {/* Ambient glow */}
-                <div className="absolute inset-0 bg-signal/5 rounded-3xl" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-signal/10 rounded-full blur-[40px] sm:blur-[80px] pointer-events-none" />
-
-                <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-signal mb-6 block">
-                  Portfolio · 2025
-                </span>
-                <h3 className="relative z-10 text-4xl sm:text-6xl font-extrabold tracking-tight text-ink mb-4 leading-tight">
-                  My<br /><span className="text-signal">Projects</span>
-                </h3>
-                <p className="relative z-10 text-sm sm:text-base text-graphite max-w-xs leading-relaxed mb-8">
-                  7 production-grade systems & creative builds — each one a solved engineering problem.
-                </p>
-                <div className="relative z-10 flex items-center gap-2 text-xs font-mono text-graphite animate-bounce">
-                  <span>↓</span>
-                  <span>Scroll to open</span>
-                  <span>↓</span>
-                </div>
-
-                <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-graphite/40 select-none">
-                  01 / {TOTAL_PAGES}
-                </span>
-              </div>
-            </FlipPageSimple>
-
-            {/* ── PAGES 1–7: PROJECT CARDS ── */}
-            {PROJECTS.map((project, i) => (
+            {/* ── PAGE 0: COVER (Virtual: active ± 1) ── */}
+            {Math.abs(0 - activePageIndex) <= 1 && (
               <FlipPageSimple
-                key={project.id}
                 scrollYProgress={scrollYProgress}
-                index={i + 1}
+                index={0}
                 total={TOTAL_PAGES}
+                isTransitioning={isTransitioning}
               >
-                <div className="w-full h-full relative">
-                  <FlipProjectCard
-                    project={project}
-                    onOpenLive={handleOpenLive}
-                    onSelectProject={(p) => setSelectedProject(p)}
-                  />
-                  {/* Page counter */}
-                  <span aria-live="polite" className="absolute bottom-3 right-5 text-[10px] font-mono text-graphite/40 select-none pointer-events-none">
-                    {String(i + 2).padStart(2, "0")} / {TOTAL_PAGES}
+                <div
+                  className={cn(
+                    "w-full h-full rounded-3xl bg-surface border border-rule flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden [contain:layout_paint_style]",
+                    isTransitioning && "will-change-transform"
+                  )}
+                >
+                  {/* Ambient glow */}
+                  <div className="absolute inset-0 bg-arc/5 rounded-3xl" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-arc/10 rounded-full blur-[40px] sm:blur-[80px] pointer-events-none" />
+
+                  <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-arc mb-6 block">
+                    Portfolio · 2025
+                  </span>
+                  <h3 className="relative z-10 text-4xl sm:text-6xl font-extrabold tracking-tight text-ink mb-4 leading-tight">
+                    My<br /><span className="text-arc">Projects</span>
+                  </h3>
+                  <p className="relative z-10 text-sm sm:text-base text-graphite max-w-xs leading-relaxed mb-8">
+                    7 production-grade systems &amp; creative builds — each one a solved engineering problem.
+                  </p>
+                  <div className="relative z-10 flex items-center gap-2 text-xs font-mono text-graphite animate-bounce">
+                    <span>↓</span>
+                    <span>Scroll to open</span>
+                    <span>↓</span>
+                  </div>
+
+                  <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-graphite/40 select-none">
+                    01 / {TOTAL_PAGES}
                   </span>
                 </div>
               </FlipPageSimple>
-            ))}
+            )}
 
-            {/* ── PAGE 8: BACK COVER ── */}
-            <FlipPageSimple scrollYProgress={scrollYProgress} index={8} total={TOTAL_PAGES}>
-              <div className="w-full h-full rounded-3xl bg-surface border border-rule flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-signal/8 rounded-full blur-[50px] sm:blur-[100px] pointer-events-none" />
-
-                <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-signal mb-5">
-                  That&apos;s a wrap · 2025
-                </span>
-                <h3 className="relative z-10 text-3xl sm:text-5xl font-extrabold tracking-tight text-ink mb-3 leading-tight">
-                  More Coming<br /><span className="text-signal">Soon...</span>
-                </h3>
-                <p className="relative z-10 text-sm text-graphite max-w-sm leading-relaxed mb-8">
-                  New projects are always in the works. Got a problem worth solving? Let&apos;s build together.
-                </p>
-                <a
-                  href="#contact"
-                  className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-signal text-signal-ink text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            {/* ── PAGES 1–7: PROJECT CARDS (Virtual: active ± 1) ── */}
+            {PROJECTS.map((project, i) => {
+              const pageIndex = i + 1;
+              if (Math.abs(pageIndex - activePageIndex) > 1) return null;
+              return (
+                <FlipPageSimple
+                  key={project.id}
+                  scrollYProgress={scrollYProgress}
+                  index={pageIndex}
+                  total={TOTAL_PAGES}
+                  isTransitioning={isTransitioning}
                 >
-                  <span>Get in Touch</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                  <div className="w-full h-full relative">
+                    <FlipProjectCard
+                      project={project}
+                      onOpenLive={handleOpenLive}
+                      onSelectProject={(p) => setSelectedProject(p)}
+                      isTransitioning={isTransitioning}
+                    />
+                    {/* Page counter */}
+                    <span aria-live="polite" className="absolute bottom-3 right-5 text-[10px] font-mono text-graphite/40 select-none pointer-events-none">
+                      {String(i + 2).padStart(2, "0")} / {TOTAL_PAGES}
+                    </span>
+                  </div>
+                </FlipPageSimple>
+              );
+            })}
 
-                <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-graphite/40 select-none">
-                  09 / {TOTAL_PAGES}
-                </span>
-              </div>
-            </FlipPageSimple>
+            {/* ── PAGE 8: BACK COVER (Virtual: active ± 1) ── */}
+            {Math.abs(8 - activePageIndex) <= 1 && (
+              <FlipPageSimple
+                scrollYProgress={scrollYProgress}
+                index={8}
+                total={TOTAL_PAGES}
+                isTransitioning={isTransitioning}
+              >
+                <div
+                  className={cn(
+                    "w-full h-full rounded-3xl bg-surface border border-rule flex flex-col items-center justify-center text-center p-8 shadow-2xl select-none relative overflow-hidden [contain:layout_paint_style]",
+                    isTransitioning && "will-change-transform"
+                  )}
+                >
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-arc/8 rounded-full blur-[50px] sm:blur-[100px] pointer-events-none" />
+
+                  <span className="relative z-10 text-[11px] font-semibold uppercase tracking-[0.3em] text-arc mb-5">
+                    That&apos;s a wrap · 2025
+                  </span>
+                  <h3 className="relative z-10 text-3xl sm:text-5xl font-extrabold tracking-tight text-ink mb-3 leading-tight">
+                    More Coming<br /><span className="text-arc">Soon...</span>
+                  </h3>
+                  <p className="relative z-10 text-sm text-graphite max-w-sm leading-relaxed mb-8">
+                    New projects are always in the works. Got a problem worth solving? Let&apos;s build together.
+                  </p>
+                  <a
+                    href="#contact"
+                    className="relative z-10 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-arc text-arc-ink text-sm font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  >
+                    <span>Get in Touch</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+
+                  <span aria-live="polite" className="absolute bottom-5 right-6 text-[10px] font-mono text-graphite/40 select-none">
+                    09 / {TOTAL_PAGES}
+                  </span>
+                </div>
+              </FlipPageSimple>
+            )}
 
           </div>
         </div>
@@ -698,7 +770,7 @@ export default function Projects() {
             >
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-sunken border border-rule flex items-center justify-center text-ink hover:bg-signal hover:text-signal-ink transition-colors cursor-pointer"
+                className="absolute top-5 right-5 w-9 h-9 rounded-full bg-sunken border border-rule flex items-center justify-center text-ink hover:bg-arc hover:text-arc-ink transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -714,7 +786,7 @@ export default function Projects() {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-3">
-                <span className="px-3 py-1 rounded-full bg-signal/15 border border-signal/30 text-xs font-bold text-signal">
+                <span className="px-3 py-1 rounded-full bg-arc/15 border border-arc/30 text-xs font-bold text-arc">
                   {selectedProject.badge}
                 </span>
                 {selectedProject.tags.map((tag) => (
@@ -730,14 +802,14 @@ export default function Projects() {
               <h2 className="text-2xl sm:text-3xl font-extrabold text-ink mb-1">
                 {selectedProject.title}
               </h2>
-              <p className="text-sm font-medium text-signal mb-4">{selectedProject.subtitle}</p>
+              <p className="text-sm font-medium text-arc mb-4">{selectedProject.subtitle}</p>
               <p className="text-graphite text-sm sm:text-base leading-relaxed mb-6">
                 {selectedProject.shortDescription}
               </p>
 
               {selectedProject.architectureStory && (
                 <div className="mb-6 bg-sunken/60 rounded-2xl p-4 sm:p-5 border border-rule">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-signal mb-2 flex items-center gap-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-arc mb-2 flex items-center gap-1.5">
                     <Terminal className="w-3.5 h-3.5" />
                     Architecture &amp; Technical Decisions:
                   </h4>
@@ -750,14 +822,14 @@ export default function Projects() {
               {selectedProject.keyModules && (
                 <div className="mb-6 bg-surface rounded-2xl p-4 sm:p-5 border border-rule">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-ink mb-3 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-signal" />
+                    <Layers className="w-3.5 h-3.5 text-arc" />
                     Core Platform Modules &amp; Subsystems:
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {selectedProject.keyModules.map((mod, i) => (
                       <div key={i} className="p-3 rounded-xl bg-sunken/60 border border-rule flex flex-col">
                         <span className="text-xs font-bold text-ink mb-1 flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-signal" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-arc" />
                           {mod.title}
                         </span>
                         <p className="text-[11px] text-graphite leading-snug">{mod.desc}</p>
@@ -770,13 +842,13 @@ export default function Projects() {
               {selectedProject.evolutionStages && (
                 <div className="mb-6 bg-surface rounded-2xl p-4 sm:p-5 border border-rule">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-ink mb-3 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-signal" />
+                    <Layers className="w-3.5 h-3.5 text-arc" />
                     Project Evolution Story:
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {selectedProject.evolutionStages.map((st, i) => (
                       <div key={i} className="p-2.5 rounded-xl bg-sunken/60 border border-rule">
-                        <span className="text-[11px] font-mono font-bold text-signal block mb-0.5">
+                        <span className="text-[11px] font-mono font-bold text-arc block mb-0.5">
                           {st.stage}
                         </span>
                         <p className="text-[11px] text-graphite leading-snug">{st.desc}</p>
@@ -793,15 +865,15 @@ export default function Projects() {
                 <ul className="flex flex-col gap-2">
                   {selectedProject.technicalHighlights.map((h, i) => (
                     <li key={i} className="text-xs sm:text-sm text-graphite flex items-start gap-2">
-                      <span className="text-signal font-bold mt-0.5">▹</span>
+                      <span className="text-arc font-bold mt-0.5">▹</span>
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="mb-6 p-4 rounded-2xl bg-signal/10 border border-signal/20">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-signal mb-1 flex items-center gap-1.5">
+              <div className="mb-6 p-4 rounded-2xl bg-arc/10 border border-arc/20">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-arc mb-1 flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Recruiter &amp; Engineering Takeaway:
                 </h4>
@@ -817,7 +889,7 @@ export default function Projects() {
                       href={selectedProject.liveUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-5 py-2.5 rounded-full bg-signal text-signal-ink text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2.5 rounded-full bg-arc text-arc-ink text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                     >
                       <Globe className="w-3.5 h-3.5" />
                       <span>{selectedProject.isDesktopApp ? "GitHub Repository ↗" : "Live Website ↗"}</span>
@@ -861,11 +933,13 @@ function FlipPageSimple({
   scrollYProgress,
   index,
   total,
+  isTransitioning = false,
   children,
 }: {
   scrollYProgress: any;
   index: number;
   total: number;
+  isTransitioning?: boolean;
   children: React.ReactNode;
 }) {
   const step = 1 / total;
@@ -896,14 +970,17 @@ function FlipPageSimple({
 
   return (
     <motion.div
-      className="absolute inset-0 backface-hidden transform-gpu"
+      className={cn(
+        "absolute inset-0 backface-hidden transform-gpu",
+        isTransitioning && "will-change-transform"
+      )}
       style={{
         rotateX,
         opacity,
         zIndex,
         transformOrigin: "50% 0%",
         transformStyle: "preserve-3d",
-        willChange: "transform, opacity",
+        willChange: isTransitioning ? "transform, opacity" : "auto",
       }}
     >
       <motion.div

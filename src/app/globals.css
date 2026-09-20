@@ -2,16 +2,19 @@
 
 /* ── Workshop tokens · dark is the default ───────────── */
 :root {
-  --paper:#16191C;
-  --surface:#1F2327;
-  --sunken:#101316;
-  --ink:#E6E9EA;
-  --graphite:#939CA3;
-  --rule:#2E343A;
-  --signal:#4FC9A0;
-  --signal-ink:#0B120F;
-  --brass:#E0AE52;
-  --alarm:#E97060;
+  --void:#08040F;
+  --paper:#120C24;
+  --surface:#1B1235;
+  --surface-2:#261748;
+  --sunken:#08040F;
+  --ink:#EDE9FA;
+  --graphite:#9A8FC0;
+  --rule:#2E2154;
+  --arc:#38E8FF;
+  --arc-ink:#04141A;
+  --plasma:#E9279B;
+  --ember:#F39F5A;
+  --alarm:#FF5C72;
   color-scheme: dark;
 
   --wdth-display:68;
@@ -32,16 +35,19 @@
 }
 
 :root[data-theme="light"] {
-  --paper:#E9EBEC;
-  --surface:#F7F8F8;
-  --sunken:#DFE2E4;
-  --ink:#12161A;
-  --graphite:#5B636B;
-  --rule:#C7CCD0;
-  --signal:#0B5C46;
-  --signal-ink:#F4F6F5;
-  --brass:#8A6216;
-  --alarm:#8E2A1C;
+  --void:#E4DFF2;
+  --paper:#F2EFF8;
+  --surface:#FBFAFE;
+  --surface-2:#FFFFFF;
+  --sunken:#E4DFF2;
+  --ink:#15102A;
+  --graphite:#5C5280;
+  --rule:#DDD6EC;
+  --arc:#0A6E86;
+  --arc-ink:#F2FBFD;
+  --plasma:#A8126F;
+  --ember:#8A5210;
+  --alarm:#B02233;
   color-scheme: light;
 }
 
@@ -50,16 +56,19 @@
   --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono:    var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --color-paper:      var(--paper);
-  --color-surface:    var(--surface);
-  --color-sunken:     var(--sunken);
-  --color-ink:        var(--ink);
-  --color-graphite:   var(--graphite);
-  --color-rule:       var(--rule);
-  --color-signal:     var(--signal);
-  --color-signal-ink: var(--signal-ink);
-  --color-brass:      var(--brass);
-  --color-alarm:      var(--alarm);
+  --color-void:      var(--void);
+  --color-paper:     var(--paper);
+  --color-surface:   var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-sunken:    var(--sunken);
+  --color-ink:       var(--ink);
+  --color-graphite:  var(--graphite);
+  --color-rule:      var(--rule);
+  --color-arc:       var(--arc);
+  --color-arc-ink:   var(--arc-ink);
+  --color-plasma:    var(--plasma);
+  --color-ember:     var(--ember);
+  --color-alarm:     var(--alarm);
 }
 
 @layer base {
@@ -91,8 +100,8 @@
     line-height: 1.05;
   }
 
-  ::selection { background: var(--signal); color: var(--signal-ink); }
-  :focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+  ::selection { background: var(--arc); color: var(--arc-ink); }
+  :focus-visible { outline: 2px solid var(--arc); outline-offset: 3px; }
 
   ::-webkit-scrollbar { width: 10px; }
   ::-webkit-scrollbar-track { background: var(--sunken); }
@@ -120,12 +129,19 @@
   }
 }
 
-/* Grain — replaced properly in Phase 2, left working for now */
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity: 0.035;
-  mix-blend-mode: overlay;
+.bg-noise-tile {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
   pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+}
+
+@media (pointer: coarse) {
+  .bg-noise-tile { display: none; }
 }
 
 /* Colour-only theme transition — never animate layout properties here */
@@ -134,3 +150,60 @@
     transition: background-color .22s ease, border-color .22s ease, color .22s ease;
   }
 }
+
+/* ── Voltage fracture field ─────────────────────────── */
+.vf { --vf-play: running; }
+
+.vf-field {
+  -webkit-mask-size: cover;  mask-size: cover;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  opacity: 0.85;
+  contain: strict;
+}
+
+.vf-grad {
+  background: conic-gradient(from 0deg,
+    var(--arc), #6D4BFF, var(--plasma), var(--ember),
+    var(--plasma), #6D4BFF, var(--arc));
+  transform: translateZ(0);
+  animation: vf-spin 34s linear infinite;
+  animation-play-state: var(--vf-play);
+}
+
+@keyframes vf-spin { to { transform: rotate(360deg) translateZ(0); } }
+
+.vf-vignette {
+  background: radial-gradient(120% 90% at 50% 45%,
+    transparent 0%,
+    color-mix(in oklab, var(--void) 62%, transparent) 62%,
+    var(--void) 100%);
+}
+
+:root[data-theme="light"] .vf-field { opacity: 0.32; }
+:root[data-theme="light"] .vf-grad  { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vf-grad { animation: none; }
+}
+
+/* ── Bolt ───────────────────────────────────────────── */
+.bolt-glow { filter: blur(7px); opacity: 0; }
+.bolt-core { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bolt-glow, .bolt-core { animation: bolt-flash 9s ease-out infinite; }
+}
+
+@keyframes bolt-flash {
+  0%, 84% { opacity: 0; }
+  85%     { opacity: 1; }
+  87%     { opacity: .25; }
+  89%     { opacity: .95; }
+  93%     { opacity: .18; }
+  100%    { opacity: 0; }
+}
+
+:root[data-theme="light"] .bolt-glow,
+:root[data-theme="light"] .bolt-core { display: none; }
+

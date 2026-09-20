@@ -89,7 +89,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -25, opacity: 0 }}
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-signal text-4xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-1 sm:py-2 u-display"
+                  className="text-arc text-4xl sm:text-7xl md:text-8xl font-bold lowercase tracking-normal whitespace-nowrap leading-none py-1 sm:py-2 u-display"
                 >
                   {WORDS[index]}
                 </motion.span>
@@ -103,9 +103,9 @@ export default function Footer({ onOpenContact }: FooterProps) {
           </div>
         </div>
 
-        {/* Small floating signal accent dot under the text */}
+        {/* Small floating arc accent dot under the text */}
         <div className="flex justify-start mt-3 sm:mt-4">
-          <div className="w-2.5 h-2.5 rounded-full bg-signal" />
+          <div className="w-2.5 h-2.5 rounded-full bg-arc" />
         </div>
       </div>
 
@@ -122,7 +122,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Project%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20interested%20in%20discussing%20a%20project%20or%20role%20with%20you."
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm sm:text-base font-bold text-ink hover:text-signal transition-colors cursor-pointer inline-block"
+                className="text-sm sm:text-base font-bold text-ink hover:text-arc transition-colors cursor-pointer inline-block"
               >
                 dev.hannan.ai@gmail.com
               </a>
@@ -139,7 +139,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
             <Magnetic strength={0.2}>
               <a
                 href="tel:+917310542113"
-                className="text-sm sm:text-base font-bold text-ink hover:text-signal transition-colors inline-block"
+                className="text-sm sm:text-base font-bold text-ink hover:text-arc transition-colors inline-block"
               >
                 +91-7310542113
               </a>
@@ -159,7 +159,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
-                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-arc-ink hover:bg-arc hover:border-arc transition-all cursor-pointer"
               >
                 <WhatsappIcon className="w-3.5 h-3.5" />
               </a>
@@ -170,7 +170,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
-                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-arc-ink hover:bg-arc hover:border-arc transition-all cursor-pointer"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
               </a>
@@ -181,7 +181,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
-                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-arc-ink hover:bg-arc hover:border-arc transition-all cursor-pointer"
               >
                 <LinkedinIcon className="w-3.5 h-3.5" />
               </a>
@@ -192,7 +192,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-signal-ink hover:bg-signal hover:border-signal transition-all cursor-pointer"
+                className="w-9 h-9 rounded-full bg-surface border border-rule flex items-center justify-center text-graphite hover:text-arc-ink hover:bg-arc hover:border-arc transition-all cursor-pointer"
               >
                 <InstagramIcon className="w-3.5 h-3.5" />
               </a>
@@ -234,7 +234,7 @@ export default function Footer({ onOpenContact }: FooterProps) {
             y: textY,
             scale: textScale,
           }}
-          className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black uppercase leading-none text-signal text-center u-display whitespace-nowrap m-0 p-0 transform will-change-transform"
+          className="text-[20vw] sm:text-[18vw] md:text-[17vw] lg:text-[195px] font-black uppercase leading-none text-arc text-center u-display whitespace-nowrap m-0 p-0 transform will-change-transform"
         >
           MR. ABDUL
         </motion.h1>

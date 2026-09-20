@@ -15,11 +15,11 @@ export default function TestimonialQuote() {
         className="relative"
       >
         {/* Glow backdrop */}
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-signal/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-arc/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* Ambient quote icon */}
         <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-surface border border-rule flex items-center justify-center text-signal shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-surface border border-rule flex items-center justify-center text-arc shadow-md">
             <Quote className="w-5 h-5" />
           </div>
         </div>

@@ -66,7 +66,7 @@ export default function FloatingDock({ onOpenContact }: FloatingDockProps) {
             onClick={onOpenContact}
             aria-label="Send Message"
             title="Send Message to dev.hannan.ai@gmail.com"
-            className="w-8 h-8 rounded-full bg-signal hover:bg-signal/90 text-signal-ink flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full bg-arc hover:bg-arc/90 text-arc-ink flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer"
           >
             <Mail className="w-3.5 h-3.5" />
           </button>

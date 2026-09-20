@@ -19,6 +19,7 @@ import {
   Composite,
   Events,
   Body,
+  Sleeping,
 } from "matter-js";
 import { Code2, Server, Database, BrainCircuit, Terminal } from "lucide-react";
 import {
@@ -113,7 +114,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Crafting performant, pixel-perfect user interfaces with React.js, Next.js (App Router & SSR), Tailwind CSS, and state management via Redux & React Hooks.",
     tags: ["React.js", "Next.js (SSR)", "JavaScript", "Tailwind CSS", "HTML5/CSS3", "Responsive UI"],
-    icon: <Code2 className="w-5 h-5 text-signal" />,
+    icon: <Code2 className="w-5 h-5 text-arc" />,
   },
   {
     id: "backend-apis",
@@ -121,7 +122,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Designing resilient RESTful microservices, business automation logic, and high-throughput server backends using Node.js, Express.js, and Python.",
     tags: ["Node.js", "Express.js", "Python", "REST APIs", "API Integration", "Business Logic"],
-    icon: <Server className="w-5 h-5 text-signal-ink" />,
+    icon: <Server className="w-5 h-5 text-arc-ink" />,
     isHighlighted: true, // Vivid hot magenta card
   },
   {
@@ -130,7 +131,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Engineering robust web applications from intuitive frontends to scalable backend services. Proficient in Next.js SSR/SSG, React 19, TypeScript, Express, and high-concurrency Node.js microservices.",
     tags: ["Next.js (App Router)", "React 19", "Node.js", "TypeScript", "Tailwind CSS"],
-    icon: <Code2 className="w-5 h-5 text-signal" />,
+    icon: <Code2 className="w-5 h-5 text-arc" />,
   },
   {
     id: "offline-erp",
@@ -138,7 +139,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Architecting highly reliable desktop ERP engines and billing platforms built for uninterrupted business continuity. Tested in real-world retail with local SQLite persistence and automated invoice generation.",
     tags: ["Python", "SQLite", "ReportLab PDF Engine", "Tkinter", "Offline Sync"],
-    icon: <Database className="w-5 h-5 text-signal" />,
+    icon: <Database className="w-5 h-5 text-arc" />,
     isHighlighted: true,
   },
   {
@@ -147,7 +148,7 @@ const CAPABILITIES: CapabilityItem[] = [
     description:
       "Developing domain-specific AI agents, semantic retrieval pipelines, and autonomous workflow tooling. Integrating vector embeddings with contextual document ingestion.",
     tags: ["OpenAI API", "Vector Embeddings", "Retrieval Augmented Gen", "Agent Workflows"],
-    icon: <BrainCircuit className="w-5 h-5 text-signal" />,
+    icon: <BrainCircuit className="w-5 h-5 text-arc" />,
   },
 ];
 
@@ -211,7 +212,7 @@ function TerminalWindow() {
             key={i}
             className={
               line.includes("operational")
-                ? "text-emerald-400 font-semibold"
+                ? "text-arc font-semibold"
                 : line.includes("mapping")
                 ? "text-cyan-300"
                 : "text-zinc-300"
@@ -223,13 +224,13 @@ function TerminalWindow() {
         {currentLine && (
           <p className="text-zinc-300">
             {currentLine}
-            <span className="inline-block w-2 h-4 bg-signal ml-1 animate-pulse align-middle" />
+            <span className="inline-block w-2 h-4 bg-arc ml-1 animate-pulse align-middle" />
           </p>
         )}
         {textLines.length === 4 && !currentLine && (
-          <p className="text-emerald-400 font-semibold flex items-center">
+          <p className="text-arc font-semibold flex items-center">
             <span>&gt; status: online &amp; ready</span>
-            <span className="inline-block w-2 h-4 bg-emerald-400 ml-1.5 animate-pulse align-middle" />
+            <span className="inline-block w-2 h-4 bg-arc ml-1.5 animate-pulse align-middle" />
           </p>
         )}
       </div>
@@ -263,7 +264,7 @@ function TiltCard({
 
   // Flashlight radial glow gradient locked to cursor
   const glow = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, ${
-    isHighlighted ? "color-mix(in oklab, var(--ink) 22%, transparent)" : "color-mix(in oklab, var(--signal) 18%, transparent)"
+    isHighlighted ? "color-mix(in oklab, var(--ink) 22%, transparent)" : "color-mix(in oklab, var(--arc) 18%, transparent)"
   }, transparent 80%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -335,10 +336,17 @@ function TechPhysicsPlayground() {
     const width = container.clientWidth || 360;
     const height = 300;
 
-    // Create Engine with natural downward gravity
+    // Create Engine with natural downward gravity and sleep detection
     const engine = Engine.create({
+      enableSleeping: true,
       gravity: { x: 0, y: 1.5, scale: 0.001 }, // Increased Y gravity for a stronger pull
     });
+
+    const isMobile = window.innerWidth < 768;
+    const radius = isMobile ? 16 : 21;
+    const cols = isMobile ? 6 : 9;
+    const activeTools = isMobile ? TOOLS.slice(0, 18) : TOOLS;
+    const dpr = Math.max(1, isMobile ? 1 : window.devicePixelRatio || 1);
 
     // Create Renderer with transparent backdrop
     const render = Render.create({
@@ -349,7 +357,7 @@ function TechPhysicsPlayground() {
         height,
         background: "transparent",
         wireframes: false,
-        pixelRatio: window.innerWidth < 768 ? 1 : window.devicePixelRatio || 1,
+        pixelRatio: isMobile ? 1 : window.devicePixelRatio || 1,
       },
     });
 
@@ -415,10 +423,64 @@ function TechPhysicsPlayground() {
       "Automation": "#2DD4BF",
     };
 
+    // Pre-render sprites once into offscreen canvases (cached in a Map)
+    const spriteSize = radius * 2;
+    const spriteMap = new Map<string, HTMLCanvasElement>();
+
+    activeTools.forEach((tool) => {
+      if (spriteMap.has(tool.name)) return;
+      const sCanvas = document.createElement("canvas");
+      sCanvas.width = spriteSize * dpr;
+      sCanvas.height = spriteSize * dpr;
+      const sCtx = sCanvas.getContext("2d");
+      if (!sCtx) return;
+
+      sCtx.scale(dpr, dpr);
+      sCtx.translate(radius, radius);
+
+      const color = toolColors[tool.name] || ruleCol;
+
+      // Dark glass bubble interior
+      sCtx.beginPath();
+      sCtx.arc(0, 0, radius - 1, 0, Math.PI * 2);
+      sCtx.fillStyle = surface;
+      sCtx.fill();
+
+      // Accent rim stroke
+      sCtx.lineWidth = 1.5;
+      sCtx.strokeStyle = color;
+      sCtx.stroke();
+
+      // Tiny accent indicator dot
+      sCtx.beginPath();
+      sCtx.arc(0, radius < 20 ? -6 : -8, radius < 20 ? 1.5 : 2.5, 0, Math.PI * 2);
+      sCtx.fillStyle = color;
+      sCtx.fill();
+
+      // High-contrast clean sans-serif typography
+      const fontSize = radius < 20 ? 7 : 9;
+      sCtx.fillStyle = inkCol;
+      sCtx.font = `bold ${fontSize}px var(--font-sans), system-ui, sans-serif`;
+      sCtx.textAlign = "center";
+      sCtx.textBaseline = "middle";
+
+      const shortName = tool.name
+        .replace(".js", "")
+        .replace(" & GitHub", "")
+        .replace(" / LLMs", "")
+        .replace(" CSS", "")
+        .replace(" & Agents", "")
+        .replace(" & SDLC", "")
+        .replace(" & DBMS", "")
+        .replace(" / CD", "")
+        .replace(" / UX", "");
+
+      sCtx.fillText(shortName, 0, radius < 20 ? 2.5 : 3);
+      spriteMap.set(tool.name, sCanvas);
+    });
+
     // Spawn physics bodies high above the viewport for a dramatic cascade drop
-    const radius = window.innerWidth < 768 ? 16 : 21;
-    const cols = window.innerWidth < 768 ? 6 : 9;
-    const bodies = TOOLS.map((tool, i) => {
+    const bodies = activeTools.map((tool, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const startX = (width / (cols + 1)) * (col + 1) + (Math.random() * 10 - 5);
@@ -441,7 +503,7 @@ function TechPhysicsPlayground() {
       return body;
     });
 
-    // High-DPI Canvas overlay rendering for labels & icons
+    // High-DPI Canvas overlay rendering for labels & icons using pre-rendered sprites
     Events.on(render, "afterRender", () => {
       const ctx = render.context;
       if (!ctx) return;
@@ -449,50 +511,14 @@ function TechPhysicsPlayground() {
       const allBodies = Composite.allBodies(engine.world);
       allBodies.forEach((b) => {
         const name = (b as any).toolName;
-        const color = (b as any).toolColor;
         if (!name) return;
+        const sprite = spriteMap.get(name);
+        if (!sprite) return;
 
         ctx.save();
         ctx.translate(b.position.x, b.position.y);
         ctx.rotate(b.angle);
-
-        // Dark glass bubble interior
-        ctx.beginPath();
-        ctx.arc(0, 0, radius - 1, 0, Math.PI * 2);
-        ctx.fillStyle = surface;
-        ctx.fill();
-
-        // Accent rim stroke
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = color;
-        ctx.stroke();
-
-        // Tiny accent indicator dot
-        ctx.beginPath();
-        ctx.arc(0, radius < 20 ? -6 : -8, radius < 20 ? 1.5 : 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
-
-        // High-contrast clean sans-serif typography
-        const fontSize = radius < 20 ? 7 : 9;
-        ctx.fillStyle = inkCol;
-        ctx.font = `bold ${fontSize}px var(--font-sans), system-ui, sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        const shortName = name
-          .replace(".js", "")
-          .replace(" & GitHub", "")
-          .replace(" / LLMs", "")
-          .replace(" CSS", "")
-          .replace(" & Agents", "")
-          .replace(" & SDLC", "")
-          .replace(" & DBMS", "")
-          .replace(" / CD", "")
-          .replace(" / UX", "");
-
-        ctx.fillText(shortName, 0, radius < 20 ? 2.5 : 3);
-
+        ctx.drawImage(sprite, -radius, -radius, spriteSize, spriteSize);
         ctx.restore();
       });
     });
@@ -534,6 +560,44 @@ function TechPhysicsPlayground() {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
+    // Pause physics when scrolled out of view or tab is hidden
+    let isRunning = true;
+    const onVis = () => {
+      if (document.hidden) {
+        if (isRunning) {
+          Runner.stop(runner);
+          isRunning = false;
+        }
+      } else {
+        const rect = container.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          if (!isRunning) {
+            Runner.run(runner, engine);
+            isRunning = true;
+          }
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !document.hidden) {
+          if (!isRunning) {
+            Runner.run(runner, engine);
+            isRunning = true;
+          }
+        } else {
+          if (isRunning) {
+            Runner.stop(runner);
+            isRunning = false;
+          }
+        }
+      },
+      { threshold: 0 }
+    );
+    io.observe(container);
+
     // Tactile Cursor Repulsion Forcefield
     let mousePos = { x: -1000, y: -1000 };
 
@@ -558,6 +622,7 @@ function TechPhysicsPlayground() {
         const dy = body.position.y - clickY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 300 && dist > 0.1) {
+          Sleeping.set(body, false);
           Body.applyForce(body, body.position, {
             x: (dx / dist) * 0.15,
             y: (dy / dist) * 0.15, // Pure directional push, no upward anti-gravity
@@ -580,6 +645,7 @@ function TechPhysicsPlayground() {
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < hitRadius && dist > 0.1) {
+          Sleeping.set(body, false);
           const nx = dx / dist;
           const ny = dy / dist;
           // Force scales smoothly: closer cursor = massive kick
@@ -597,6 +663,8 @@ function TechPhysicsPlayground() {
 
     // Clean teardown on unmount
     return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
       render.canvas.removeEventListener("mousemove", handleCanvasMouseMove);
       render.canvas.removeEventListener("mouseleave", handleCanvasMouseLeave);
       render.canvas.removeEventListener("mousedown", handleCanvasMouseDown);
@@ -615,7 +683,7 @@ function TechPhysicsPlayground() {
         <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400 block">
           Interactive Physics Sandbox
         </span>
-        <span className="text-[10px] font-mono text-signal bg-signal/10 border border-signal/30 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-mono text-arc bg-arc/10 border border-arc/30 px-2 py-0.5 rounded-full">
           Click &amp; Toss
         </span>
       </div>
@@ -632,7 +700,7 @@ export default function Services() {
   return (
     <section id="skills" className="relative py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full max-w-[100vw] pb-44">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/2 right-10 w-96 h-96 bg-signal/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 right-10 w-96 h-96 bg-arc/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column: Title, Live Terminal & Interactive Physics Playground */}
@@ -641,7 +709,7 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-signal mb-3"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-3"
           >
             <Terminal className="w-3.5 h-3.5" />
             Core Stack &amp; Skills
@@ -654,7 +722,7 @@ export default function Services() {
             transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink u-head leading-[1.1]"
           >
-            What I build &amp; <span className="text-signal">Engineer...</span>
+            What I build &amp; <span className="text-arc">Engineer...</span>
           </motion.h2>
 
           {/* Live Terminal Typewriter Window */}
@@ -689,7 +757,7 @@ export default function Services() {
                 isHighlighted={cap.isHighlighted}
                 className={`rounded-3xl p-7 sm:p-9 transition-all duration-500 shadow-2xl md:backdrop-blur-xl backdrop-blur-md ${
                   cap.isHighlighted
-                    ? "bg-signal text-signal-ink border border-rule"
+                    ? "bg-arc text-arc-ink border border-rule"
                     : "bg-surface border border-rule hover:border-ink text-ink"
                 }`}
               >
@@ -698,13 +766,13 @@ export default function Services() {
                   <div
                     className={`p-2.5 rounded-xl ${
                       cap.isHighlighted
-                        ? "bg-sunken/40 text-signal-ink"
-                        : "bg-surface border border-rule text-signal"
+                        ? "bg-sunken/40 text-arc-ink"
+                        : "bg-surface border border-rule text-arc"
                     }`}
                   >
                     {cap.icon}
                   </div>
-                  <h3 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${cap.isHighlighted ? "text-signal-ink" : "text-ink"}`}>
+                  <h3 className={`text-2xl sm:text-3xl font-extrabold tracking-tight ${cap.isHighlighted ? "text-arc-ink" : "text-ink"}`}>
                     {cap.title}
                   </h3>
                 </div>
@@ -712,7 +780,7 @@ export default function Services() {
                 {/* Description */}
                 <p
                   className={`text-sm sm:text-base leading-relaxed mb-6 font-normal relative z-20 ${
-                    cap.isHighlighted ? "text-signal-ink/90" : "text-graphite"
+                    cap.isHighlighted ? "text-arc-ink/90" : "text-graphite"
                   }`}
                 >
                   {cap.description}
@@ -725,7 +793,7 @@ export default function Services() {
                       key={tag}
                       className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-tight transition-all duration-300 ${
                         cap.isHighlighted
-                          ? "bg-sunken/30 text-signal-ink border border-rule backdrop-blur-sm"
+                          ? "bg-sunken/30 text-arc-ink border border-rule backdrop-blur-sm"
                           : "bg-surface border border-rule text-graphite hover:border-ink hover:text-ink"
                       }`}
                     >

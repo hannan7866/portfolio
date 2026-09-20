@@ -54,7 +54,7 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
           href="#hero"
           className="flex items-center gap-2.5 group"
         >
-          <div className="relative w-7 h-7 rounded-full overflow-hidden bg-sunken border border-rule group-hover:border-signal transition-colors">
+          <div className="relative w-7 h-7 rounded-full overflow-hidden bg-sunken border border-rule group-hover:border-arc transition-colors">
             <Image
               src="/images/Abdul-Image.jpeg"
               alt="Abdul Hannan"
@@ -106,14 +106,14 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
             rel="noreferrer"
             className="hidden md:flex items-center gap-1.5 rounded-full bg-surface hover:bg-rule border border-rule px-3.5 py-1.5 text-xs font-semibold text-ink transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
           >
-            <FileText className="w-3.5 h-3.5 text-signal" />
+            <FileText className="w-3.5 h-3.5 text-arc" />
             <span>View CV</span>
           </a>
 
           {/* Contact Button */}
           <button
             onClick={onOpenContact}
-            className="hidden md:inline-flex relative rounded-full bg-signal hover:bg-signal/90 px-4 py-1.5 text-xs font-semibold text-signal-ink hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            className="hidden md:inline-flex relative rounded-full bg-arc hover:bg-arc/90 px-4 py-1.5 text-xs font-semibold text-arc-ink hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
           >
             Contact
           </button>
@@ -180,7 +180,7 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
                 className="p-2 hover:bg-surface rounded-lg transition-colors flex items-center justify-between text-ink font-semibold"
               >
                 <span className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-signal" />
+                  <FileText className="w-4 h-4 text-arc" />
                   View CV / Resume
                 </span>
                 <ArrowUpRight className="w-4 h-4 text-graphite" />
@@ -195,7 +195,7 @@ export default function Navbar({ onOpenContact }: NavbarProps) {
                 setMobileMenuOpen(false);
                 onOpenContact?.();
               }}
-              className="w-full py-2.5 rounded-full bg-signal hover:bg-signal/90 text-sm font-semibold text-signal-ink flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 rounded-full bg-arc hover:bg-arc/90 text-sm font-semibold text-arc-ink flex items-center justify-center gap-2 cursor-pointer"
             >
               <Mail className="w-4 h-4" /> Get in touch
             </button>

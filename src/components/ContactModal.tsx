@@ -283,12 +283,12 @@ export default function ContactModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 15 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="relative w-full max-w-2xl bg-[#0f0f14] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 my-auto text-white max-h-[94vh] overflow-y-auto custom-scrollbar"
+            className="relative w-full max-w-2xl bg-surface border border-rule rounded-3xl p-6 sm:p-8 shadow-2xl z-10 my-auto text-ink max-h-[94vh] overflow-y-auto custom-scrollbar"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-5 right-5 p-2.5 rounded-full bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white transition-all cursor-pointer"
+              className="absolute top-5 right-5 p-2.5 rounded-full bg-surface hover:bg-surface-2 text-graphite hover:text-ink transition-all cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-4 h-4" />
@@ -298,28 +298,28 @@ export default function ContactModal({
               <>
                 {/* Header Badge & Title */}
                 <div className="mb-6">
-                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-signal uppercase tracking-wider mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-signal" />
+                  <div className="inline-flex items-center gap-1.5 text-xs font-bold text-arc uppercase tracking-wider mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-arc" />
                     <span>GET IN TOUCH</span>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
                     Connect with Abdul Hannan
                   </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                  <p className="text-xs sm:text-sm text-graphite mt-1">
                     Select how you&apos;d like to collaborate:
                   </p>
                 </div>
 
                 {/* 3-Way Intent Switcher Tab Bar */}
-                <div className="grid grid-cols-3 p-1 sm:p-1.5 rounded-2xl bg-[#171720] border border-white/5 mb-6 gap-1 sm:gap-1.5">
+                <div className="grid grid-cols-3 p-1 sm:p-1.5 rounded-2xl bg-sunken border border-rule mb-6 gap-1 sm:gap-1.5">
                   {/* Tab 1: Hire for Company */}
                   <button
                     type="button"
                     onClick={() => setActiveTab("hire")}
                     className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "hire"
-                        ? "bg-signal text-signal-ink shadow-lg"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                        ? "bg-arc text-arc-ink shadow-lg"
+                        : "text-graphite hover:text-ink hover:bg-surface"
                     }`}
                   >
                     <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -332,8 +332,8 @@ export default function ContactModal({
                     onClick={() => setActiveTab("project")}
                     className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "project"
-                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/30"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                        ? "bg-arc text-arc-ink shadow-lg"
+                        : "text-graphite hover:text-ink hover:bg-surface"
                     }`}
                   >
                     <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -346,8 +346,8 @@ export default function ContactModal({
                     onClick={() => setActiveTab("direct")}
                     className={`py-2.5 sm:py-3 px-1.5 sm:px-3 rounded-xl text-[11px] sm:text-xs md:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer text-center ${
                       activeTab === "direct"
-                        ? "bg-white/20 text-white shadow-md"
-                        : "text-zinc-400 hover:text-white hover:bg-white/5"
+                        ? "bg-surface-2 text-ink shadow-md"
+                        : "text-graphite hover:text-ink hover:bg-surface"
                     }`}
                   >
                     <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -378,7 +378,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, name: e.target.value })
                           }
                           placeholder="Hiring Manager / Team"
-                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </div>
                       <div>
@@ -393,7 +393,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, email: e.target.value })
                           }
                           placeholder="recruiter@company.com"
-                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </div>
                     </div>
@@ -409,14 +409,14 @@ export default function ContactModal({
                           onChange={(e) =>
                             setHireForm({ ...hireForm, role: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all cursor-pointer truncate"
                         >
                           <option value="Full-Stack Developer" className="bg-surface text-ink">Full-Stack Developer</option>
                           <option value="Frontend Developer (React/Next.js)" className="bg-surface text-ink">Frontend Developer (React/Next.js)</option>
                           <option value="Backend Developer (Node/Python)" className="bg-surface text-ink">Backend Developer (Node/Python)</option>
                           <option value="Software Engineer" className="bg-surface text-ink">Software Engineer</option>
                           <option value="Contract Engineer" className="bg-surface text-ink">Contract Engineer</option>
-                          <option value="other" className="bg-surface text-signal font-bold">✎ Other / Custom Role (Type below)</option>
+                          <option value="other" className="bg-surface text-arc font-bold">✎ Other / Custom Role (Type below)</option>
                         </select>
                       </div>
 
@@ -429,7 +429,7 @@ export default function ContactModal({
                           onChange={(e) =>
                             setHireForm({ ...hireForm, workMode: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all cursor-pointer truncate"
                         >
                           <option value="Remote (Worldwide)" className="bg-surface text-ink">Remote (Worldwide)</option>
                           <option value="Hybrid / On-site" className="bg-surface text-ink">Hybrid / On-site</option>
@@ -445,7 +445,7 @@ export default function ContactModal({
                         animate={{ opacity: 1, height: "auto" }}
                         className="overflow-hidden"
                       >
-                        <label className="block text-[11px] font-bold text-signal uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-arc uppercase tracking-wider mb-1.5">
                           Specify Custom Role / Position
                         </label>
                         <input
@@ -456,7 +456,7 @@ export default function ContactModal({
                             setHireForm({ ...hireForm, customRole: e.target.value })
                           }
                           placeholder="e.g. Lead Next.js Architect, Python AI Lead..."
-                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-signal/40 text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-arc/40 text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </motion.div>
                     )}
@@ -474,7 +474,7 @@ export default function ContactModal({
                           setHireForm({ ...hireForm, message: e.target.value })
                         }
                         placeholder="Tell me about the role, tech stack, team size, and next steps..."
-                        className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-signal focus:ring-1 focus:ring-signal transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all resize-none"
                       />
                     </div>
 
@@ -482,7 +482,7 @@ export default function ContactModal({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 rounded-full bg-signal text-signal-ink font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 hover:brightness-105 disabled:opacity-60 cursor-pointer"
+                      className="w-full py-4 rounded-full bg-arc text-arc-ink font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 hover:brightness-105 disabled:opacity-60 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <>
@@ -522,7 +522,7 @@ export default function ContactModal({
                     {/* Row 1: Name & Client Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider mb-1.5">
                           Your Name / Brand
                         </label>
                         <input
@@ -533,11 +533,11 @@ export default function ContactModal({
                             setProjectForm({ ...projectForm, name: e.target.value })
                           }
                           placeholder="e.g. Alex (Founder)"
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider mb-1.5">
                           Your Email
                         </label>
                         <input
@@ -548,7 +548,7 @@ export default function ContactModal({
                             setProjectForm({ ...projectForm, email: e.target.value })
                           }
                           placeholder="client@company.com"
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </div>
                     </div>
@@ -557,7 +557,7 @@ export default function ContactModal({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Project Type Selector */}
                       <div>
-                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider mb-1.5">
                           Project Type
                         </label>
                         <select
@@ -565,20 +565,20 @@ export default function ContactModal({
                           onChange={(e) =>
                             setProjectForm({ ...projectForm, projectType: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all cursor-pointer truncate"
                         >
-                          <option value="Custom Web Application (React / Next.js)" className="bg-[#14141c] text-white">Full-Stack Web App (React / Next.js)</option>
-                          <option value="Mobile App (React Native)" className="bg-[#14141c] text-white">Mobile Application (iOS / Android)</option>
-                          <option value="AI / RAG Pipeline & LLM App" className="bg-[#14141c] text-white">AI &amp; Automation Engine</option>
-                          <option value="Enterprise ERP & Billing Engine" className="bg-[#14141c] text-white">Enterprise ERP &amp; Billing CRM</option>
-                          <option value="Full-Stack MVP" className="bg-[#14141c] text-white">Full-Stack MVP Development</option>
-                          <option value="other" className="bg-[#14141c] text-emerald-400 font-bold">✎ Other (Specify Custom Type)</option>
+                          <option value="Custom Web Application (React / Next.js)" className="bg-surface text-ink">Full-Stack Web App (React / Next.js)</option>
+                          <option value="Mobile App (React Native)" className="bg-surface text-ink">Mobile Application (iOS / Android)</option>
+                          <option value="AI / RAG Pipeline & LLM App" className="bg-surface text-ink">AI &amp; Automation Engine</option>
+                          <option value="Enterprise ERP & Billing Engine" className="bg-surface text-ink">Enterprise ERP &amp; Billing CRM</option>
+                          <option value="Full-Stack MVP" className="bg-surface text-ink">Full-Stack MVP Development</option>
+                          <option value="other" className="bg-surface text-arc font-bold">✎ Other (Specify Custom Type)</option>
                         </select>
                       </div>
 
                       {/* Timeline with Live Production Updates */}
                       <div>
-                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider mb-1.5">
                           Target Timeline
                         </label>
                         <select
@@ -586,14 +586,14 @@ export default function ContactModal({
                           onChange={(e) =>
                             setProjectForm({ ...projectForm, timeline: e.target.value })
                           }
-                          className="w-full px-3.5 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer truncate"
+                          className="w-full px-3.5 py-3 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all cursor-pointer truncate"
                         >
-                          <option value="Live Production & Future Updates" className="bg-[#14141c] text-emerald-400 font-bold">⚡ Live Production Updates (Future)</option>
-                          <option value="Sprint Execution (< 2 Weeks)" className="bg-[#14141c] text-white">Sprint Execution (&lt; 2 Weeks)</option>
-                          <option value="2 to 4 Weeks" className="bg-[#14141c] text-white">Standard (2 to 4 Weeks)</option>
-                          <option value="1 to 2 Months" className="bg-[#14141c] text-white">1 to 2 Months Roadmap</option>
-                          <option value="Long-Term Partnership (3+ Months)" className="bg-[#14141c] text-white">Long-Term Partnership (3+ Months)</option>
-                          <option value="Ongoing Maintenance & Retainer" className="bg-[#14141c] text-white">Ongoing Retainer</option>
+                          <option value="Live Production & Future Updates" className="bg-surface text-arc font-bold">⚡ Live Production Updates (Future)</option>
+                          <option value="Sprint Execution (< 2 Weeks)" className="bg-surface text-ink">Sprint Execution (&lt; 2 Weeks)</option>
+                          <option value="2 to 4 Weeks" className="bg-surface text-ink">Standard (2 to 4 Weeks)</option>
+                          <option value="1 to 2 Months" className="bg-surface text-ink">1 to 2 Months Roadmap</option>
+                          <option value="Long-Term Partnership (3+ Months)" className="bg-surface text-ink">Long-Term Partnership (3+ Months)</option>
+                          <option value="Ongoing Maintenance & Retainer" className="bg-surface text-ink">Ongoing Retainer</option>
                         </select>
                       </div>
                     </div>
@@ -601,10 +601,10 @@ export default function ContactModal({
                     {/* Row 3: Custom Typable Budget Box (Dedicated Full Row with Currency Dropdown + Input) */}
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
-                        <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+                        <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider">
                           Estimated Budget
                         </label>
-                        <span className="text-[11px] text-zinc-500">
+                        <span className="text-[11px] text-graphite">
                           (Type any custom amount or range)
                         </span>
                       </div>
@@ -617,10 +617,10 @@ export default function ContactModal({
                             onChange={(e) =>
                               setProjectForm({ ...projectForm, currency: e.target.value })
                             }
-                            className="h-[46px] px-3.5 rounded-xl bg-[#14141c] border border-white/10 text-white text-xs sm:text-sm font-bold focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer"
+                            className="h-[46px] px-3.5 rounded-xl bg-sunken border border-rule text-ink text-xs sm:text-sm font-bold focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all cursor-pointer"
                           >
-                            <option value="$ USD" className="bg-[#14141c] text-white">$ USD</option>
-                            <option value="₹ INR" className="bg-[#14141c] text-white">₹ INR</option>
+                            <option value="$ USD" className="bg-surface text-ink">$ USD</option>
+                            <option value="₹ INR" className="bg-surface text-ink">₹ INR</option>
                           </select>
                         </div>
 
@@ -632,7 +632,7 @@ export default function ContactModal({
                             setProjectForm({ ...projectForm, budgetAmount: e.target.value })
                           }
                           placeholder="e.g. 2,500 or 1,50,000 (or leave open)"
-                          className="h-[46px] flex-1 px-4 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                          className="h-[46px] flex-1 px-4 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </div>
                     </div>
@@ -644,7 +644,7 @@ export default function ContactModal({
                         animate={{ opacity: 1, height: "auto" }}
                         className="overflow-hidden"
                       >
-                        <label className="block text-[11px] font-bold text-emerald-400 uppercase tracking-wider mb-1.5">
+                        <label className="block text-[11px] font-bold text-arc uppercase tracking-wider mb-1.5">
                           Specify Custom Project Domain / Type
                         </label>
                         <input
@@ -658,14 +658,14 @@ export default function ContactModal({
                             })
                           }
                           placeholder="e.g. Chrome Extension, Trading Bot, Micro-SaaS Portal, Custom API..."
-                          className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-emerald-500/40 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                          className="w-full px-4 py-3 rounded-xl bg-sunken border border-arc/40 text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all"
                         />
                       </motion.div>
                     )}
 
                     {/* Scope / Features Textarea */}
                     <div>
-                      <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1.5">
+                      <label className="block text-[11px] font-bold text-graphite uppercase tracking-wider mb-1.5">
                         Project Scope &amp; Target Features
                       </label>
                       <textarea
@@ -676,7 +676,7 @@ export default function ContactModal({
                           setProjectForm({ ...projectForm, message: e.target.value })
                         }
                         placeholder="Describe your vision, target users, required integrations, and goals..."
-                        className="w-full px-4 py-3 rounded-xl bg-[#14141c] border border-white/10 text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none"
+                        className="w-full px-4 py-3 rounded-xl bg-sunken border border-rule text-ink placeholder-graphite text-xs sm:text-sm focus:outline-none focus:border-arc focus:ring-1 focus:ring-arc transition-all resize-none"
                       />
                     </div>
 
@@ -684,16 +684,16 @@ export default function ContactModal({
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25 disabled:opacity-60 cursor-pointer"
+                      className="w-full py-4 rounded-full bg-arc text-arc-ink font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 hover:brightness-105 disabled:opacity-60 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="w-4 h-4 animate-spin text-black" />
+                          <Loader2 className="w-4 h-4 animate-spin text-arc-ink" />
                           <span>Submitting Scope...</span>
                         </>
                       ) : (
                         <>
-                          <Rocket className="w-4 h-4 text-black" />
+                          <Rocket className="w-4 h-4 text-arc-ink" />
                           <span>Submit Freelance Project</span>
                         </>
                       )}
@@ -735,7 +735,7 @@ export default function ContactModal({
                           <span className="text-[10px] text-[#25D366] uppercase font-bold block">
                             WhatsApp (Fastest Response)
                           </span>
-                          <span className="text-sm font-bold text-white">
+                          <span className="text-sm font-bold text-ink">
                             +91-7310542113
                           </span>
                         </div>
@@ -748,22 +748,22 @@ export default function ContactModal({
                     {/* Direct Call Card */}
                     <a
                       href="tel:+917310542113"
-                      className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all flex items-center justify-between group cursor-pointer"
+                      className="p-4 rounded-2xl bg-surface border border-rule hover:border-graphite/40 hover:bg-surface-2 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-xl bg-signal/15 text-signal flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-arc/15 text-arc flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Phone className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] text-zinc-400 uppercase font-semibold block">
+                          <span className="text-[10px] text-graphite uppercase font-semibold block">
                             Direct Phone Call
                           </span>
-                          <span className="text-sm font-bold text-white">
+                          <span className="text-sm font-bold text-ink">
                             +91-7310542113
                           </span>
                         </div>
                       </div>
-                      <span className="text-xs font-semibold text-zinc-300 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span className="text-xs font-semibold text-graphite group-hover:text-ink flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                         Call Now ↗
                       </span>
                     </a>
@@ -773,22 +773,22 @@ export default function ContactModal({
                       href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com&su=Opportunity%20Inquiry%20-%20Abdul%20Hannan%20Portfolio&body=Hi%20Abdul%2C%0A%0AI%20am%20reaching%20out%20regarding%20an%20opportunity%20or%20project...%0A%0ABest%20regards"
                       target="_blank"
                       rel="noreferrer"
-                      className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all flex items-center justify-between group cursor-pointer"
+                      className="p-4 rounded-2xl bg-surface border border-rule hover:border-graphite/40 hover:bg-surface-2 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-11 h-11 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <div className="w-11 h-11 rounded-xl bg-arc/15 text-arc flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Mail className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] text-zinc-400 uppercase font-semibold block">
+                          <span className="text-[10px] text-graphite uppercase font-semibold block">
                             Direct Email Client (Gmail)
                           </span>
-                          <span className="text-sm font-bold text-white">
+                          <span className="text-sm font-bold text-ink">
                             dev.hannan.ai@gmail.com
                           </span>
                         </div>
                       </div>
-                      <span className="text-xs font-semibold text-zinc-300 group-hover:text-white flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span className="text-xs font-semibold text-graphite group-hover:text-ink flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                         Compose ↗
                       </span>
                     </a>
@@ -799,7 +799,7 @@ export default function ContactModal({
                         href="https://github.com/hannan7866"
                         target="_blank"
                         rel="noreferrer"
-                        className="p-3.5 rounded-xl bg-[#171720] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
+                        className="p-3.5 rounded-xl bg-sunken border border-rule hover:border-graphite/40 flex items-center justify-center gap-2 text-xs font-semibold text-ink transition-all cursor-pointer"
                       >
                         <GithubIcon className="w-4 h-4" /> GitHub ↗
                       </a>
@@ -807,7 +807,7 @@ export default function ContactModal({
                         href="https://linkedin.com/in/abdul-hannan-92a911405"
                         target="_blank"
                         rel="noreferrer"
-                        className="p-3.5 rounded-xl bg-[#171720] border border-white/10 hover:border-white/25 flex items-center justify-center gap-2 text-xs font-semibold text-white transition-all cursor-pointer"
+                        className="p-3.5 rounded-xl bg-sunken border border-rule hover:border-graphite/40 flex items-center justify-center gap-2 text-xs font-semibold text-ink transition-all cursor-pointer"
                       >
                         <LinkedinIcon className="w-4 h-4 text-blue-400" /> LinkedIn ↗
                       </a>
@@ -840,17 +840,17 @@ export default function ContactModal({
                     : "MAIL & REQUEST SENT TO ABDUL HANNAN"}
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-1.5">
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-ink mb-1.5">
                   Thank You, {submittedReceipt?.name || "there"}!
                 </h3>
 
-                <p className="text-xs sm:text-sm text-zinc-300 max-w-sm mb-5 leading-relaxed">
+                <p className="text-xs sm:text-sm text-graphite max-w-sm mb-5 leading-relaxed">
                   Your inquiry has been directly delivered to Abdul&apos;s personal inbox at{" "}
                   <a
                     href="https://mail.google.com/mail/?view=cm&fs=1&to=dev.hannan.ai@gmail.com"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-white font-semibold underline decoration-signal underline-offset-4 hover:text-signal transition-colors font-mono"
+                    className="text-ink font-semibold underline decoration-arc underline-offset-4 hover:text-arc transition-colors font-mono"
                   >
                     dev.hannan.ai@gmail.com
                   </a>
@@ -858,37 +858,37 @@ export default function ContactModal({
                 </p>
 
                 {/* Structured Receipt Card */}
-                <div className="w-full bg-sunken border border-white/10 rounded-2xl p-5 text-left mb-5 flex flex-col gap-3 text-xs sm:text-sm shadow-inner">
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <span className="text-zinc-400">Category</span>
-                    <span className="text-white font-bold">
+                <div className="w-full bg-sunken border border-rule rounded-2xl p-5 text-left mb-5 flex flex-col gap-3 text-xs sm:text-sm shadow-inner">
+                  <div className="flex items-center justify-between pb-2 border-b border-rule">
+                    <span className="text-graphite">Category</span>
+                    <span className="text-ink font-bold">
                       {submittedReceipt?.category}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <span className="text-zinc-400">
+                  <div className="flex items-center justify-between pb-2 border-b border-rule">
+                    <span className="text-graphite">
                       {submittedReceipt?.isProject ? "Target Scope / Domain" : "Opportunity Type"}
                     </span>
-                    <span className="text-signal font-semibold">
+                    <span className="text-arc font-semibold">
                       {submittedReceipt?.topic}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <span className="text-zinc-400">
+                  <div className="flex items-center justify-between pb-2 border-b border-rule">
+                    <span className="text-graphite">
                       {submittedReceipt?.isProject ? "Budget & Timeline" : "Work Mode"}
                     </span>
-                    <span className="text-zinc-200 font-semibold">
+                    <span className="text-ink font-semibold">
                       {submittedReceipt?.details}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between pb-2 border-b border-white/5">
-                    <span className="text-zinc-400">Recipient Email</span>
+                  <div className="flex items-center justify-between pb-2 border-b border-rule">
+                    <span className="text-graphite">Recipient Email</span>
                     <span className="text-[#25D366] font-mono font-medium">
                       dev.hannan.ai@gmail.com
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-zinc-400">Status</span>
+                    <span className="text-graphite">Status</span>
                     <span className="text-[#25D366] font-semibold flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-[#25D366] inline-block animate-pulse" />
                       Delivered &amp; Queued for Reply
@@ -912,16 +912,16 @@ export default function ContactModal({
                     href={getDirectEmailUrl()}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border border-white/10"
+                    className="flex-1 py-3.5 rounded-full bg-surface hover:bg-surface-2 text-ink font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border border-rule"
                   >
-                    <Mail className="w-4 h-4 text-signal" />
+                    <Mail className="w-4 h-4 text-arc" />
                     <span>Open Email Draft</span>
                   </a>
                 </div>
 
                 <button
                   onClick={handleReset}
-                  className="mt-4 text-xs text-zinc-500 hover:text-white transition-colors cursor-pointer"
+                  className="mt-4 text-xs text-graphite hover:text-ink transition-colors cursor-pointer"
                 >
                   Done / Close Window
                 </button>

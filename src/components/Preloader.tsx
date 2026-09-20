@@ -86,7 +86,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
           {/* ── Ambient glow orb (always behind text) ── */}
           <div className="absolute inset-0 z-[101] flex items-center justify-center pointer-events-none">
-            <div className="w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-signal/12 rounded-full blur-[160px]" />
+            <div className="w-[350px] sm:w-[550px] h-[350px] sm:h-[550px] bg-arc/12 rounded-full blur-[160px]" />
           </div>
 
           {/* ── Text content layer — fades on exit ── */}
@@ -110,7 +110,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                       key={i}
                       variants={helloCharVariants}
                       className={`text-7xl sm:text-9xl md:text-[10rem] font-bold tracking-tight leading-none ${
-                        char === "." ? "text-ink" : "text-signal"
+                        char === "." ? "text-ink" : "text-arc"
                       }`}
                     >
                       {char}
@@ -141,7 +141,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
                   {/* Thin animated progress line */}
                   <motion.div
-                    className="h-px bg-gradient-to-r from-transparent via-signal to-transparent"
+                    className="h-px bg-gradient-to-r from-transparent via-arc to-transparent"
                     initial={{ width: 0, opacity: 0 }}
                     animate={{
                       width: "180px",

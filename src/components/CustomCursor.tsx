@@ -5,7 +5,8 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 
 export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
-  const [cursorType, setCursorType] = useState<"default" | "pointer" | "text">("default");
+  const [isPointerMode, setIsPointerMode] = useState(false);
+  const [isTextMode, setIsTextMode] = useState(false);
   const [cursorText, setCursorText] = useState<string>("");
 
   // Exact mouse coordinates
@@ -17,6 +18,22 @@ export default function CustomCursor() {
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
+  // Delegated hover detection — triggers on element entry/exit, never per pixel
+  useEffect(() => {
+    const onOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest?.(
+        "a, button, [role='button'], input, textarea, select, [data-cursor], [data-cursor-text]"
+      );
+      const isText = !!(target?.matches("[data-cursor='text'], [data-cursor-text]"));
+      setIsPointerMode(!!target && !isText);
+      setIsTextMode(isText);
+      setCursorText(target?.getAttribute("data-cursor-text") || "");
+    };
+    document.addEventListener("mouseover", onOver, { passive: true });
+    return () => document.removeEventListener("mouseover", onOver);
+  }, []);
+
+  // Position updates only — purely updates motion values with zero layout flush
   useEffect(() => {
     // Only enable if device supports fine pointer (mouse/trackpad)
     const isPointerFine = window.matchMedia("(pointer: fine)").matches;
@@ -25,39 +42,7 @@ export default function CustomCursor() {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
-
-      // Bulletproof element detection using exact screen coordinates
-      const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-      if (!target) {
-        setCursorType("default");
-        setCursorText("");
-        return;
-      }
-
-      // 1. Check for data-cursor-text first (Highest priority: Text Badge)
-      const textElement = target.closest("[data-cursor-text]") as HTMLElement | null;
-      if (textElement) {
-        const text = textElement.getAttribute("data-cursor-text") || "";
-        setCursorType("text");
-        setCursorText(text);
-        return;
-      }
-
-      // 2. Check for data-cursor="pointer" or interactive elements (Enlarge ring)
-      const pointerElement = target.closest(
-        '[data-cursor="pointer"], a, button, input[type="submit"], input[type="button"], select, [role="button"]'
-      ) as HTMLElement | null;
-
-      if (pointerElement) {
-        setCursorType("pointer");
-        setCursorText("");
-        return;
-      }
-
-      // 3. Fallback to default state
-      setCursorType("default");
-      setCursorText("");
+      setIsVisible((prev) => (prev ? prev : true));
     };
 
     const handleMouseLeave = () => {
@@ -77,11 +62,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [mouseX, mouseY, isVisible]);
-
-  // Dimension & Style variants for outer ring
-  const isTextMode = cursorType === "text";
-  const isPointerMode = cursorType === "pointer";
+  }, [mouseX, mouseY]);
 
   return (
     <div className="hidden [@media(pointer:fine)]:block pointer-events-none fixed inset-0 z-[999] overflow-hidden">
@@ -115,13 +96,13 @@ export default function CustomCursor() {
           height: isTextMode ? 75 : isPointerMode ? 52 : 36,
           scale: isVisible ? 1 : 0.5,
           backgroundColor: isTextMode
-            ? "var(--signal)"
+            ? "var(--arc)"
             : isPointerMode
-            ? "color-mix(in oklab, var(--signal) 20%, transparent)"
-            : "color-mix(in oklab, var(--signal) 10%, transparent)",
+            ? "color-mix(in oklab, var(--arc) 20%, transparent)"
+            : "color-mix(in oklab, var(--arc) 10%, transparent)",
           borderColor: isTextMode
             ? "var(--rule)"
-            : "var(--signal)",
+            : "var(--arc)",
           boxShadow: "none",
         }}
         transition={{
@@ -141,7 +122,7 @@ export default function CustomCursor() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.5, y: -3 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[10px] font-black tracking-widest text-signal-ink uppercase text-center select-none font-sans px-1"
+              className="text-[10px] font-black tracking-widest text-arc-ink uppercase text-center select-none font-sans px-1"
             >
               {cursorText}
             </motion.span>

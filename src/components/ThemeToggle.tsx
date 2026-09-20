@@ -33,7 +33,7 @@ export default function ThemeToggle() {
     >
       <span
         aria-hidden="true"
-        className="inline-block h-1.5 w-1.5 rounded-full bg-signal"
+        className="inline-block h-1.5 w-1.5 rounded-full bg-arc"
       />
       {theme === "dark" ? "Light" : "Dark"}
     </button>
