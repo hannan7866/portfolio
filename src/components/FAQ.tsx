@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus, Calendar, HelpCircle } from "lucide-react";
+import { Plus, Minus, Calendar } from "lucide-react";
 
 interface FAQItem {
   number: string;
@@ -68,15 +68,14 @@ export default function FAQ({ onOpenContact }: FAQProps) {
 
       {/* Header */}
       <div className="mb-14">
-        <motion.div
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-2"
+          className="text-xs sm:text-sm font-medium text-arc mb-2"
         >
-          <HelpCircle className="w-3.5 h-3.5" />
-          Common Questions
-        </motion.div>
+          Straight answers on timelines, tech choices, and how I work.
+        </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,7 +83,7 @@ export default function FAQ({ onOpenContact }: FAQProps) {
           transition={{ delay: 0.1 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink u-head"
         >
-          FAQs
+          Questions &amp; Practical Details
         </motion.h2>
       </div>
 

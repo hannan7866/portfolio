@@ -21,7 +21,7 @@ import {
   Body,
   Sleeping,
 } from "matter-js";
-import { Code2, Server, Database, BrainCircuit, Terminal } from "lucide-react";
+import { Code2, Server, Database, BrainCircuit } from "lucide-react";
 import {
   ReactIcon,
   NextjsIcon,
@@ -109,45 +109,45 @@ const TOOLS = [
 
 const CAPABILITIES: CapabilityItem[] = [
   {
-    id: "frontend",
-    title: "Frontend Engineering",
+    id: "offline-erp",
+    title: "Offline-First Systems & Desktop Engines",
     description:
-      "Crafting performant, pixel-perfect user interfaces with React.js, Next.js (App Router & SSR), Tailwind CSS, and state management via Redux & React Hooks.",
-    tags: ["React.js", "Next.js (SSR)", "JavaScript", "Tailwind CSS", "HTML5/CSS3", "Responsive UI"],
-    icon: <Code2 className="w-5 h-5 text-arc" />,
+      "Local SQLite transactions, automated backup rotation, and native Windows printing integration. Built for shop floors where poor internet cannot be allowed to freeze sales or customer billing.",
+    tags: ["Python", "SQLite", "ReportLab Engine", "pywin32", "PyInstaller", "Local Schema Migrations"],
+    icon: <Database className="w-5 h-5 text-arc" />,
+    isHighlighted: true,
   },
   {
     id: "backend-apis",
-    title: "Backend APIs & Systems",
+    title: "Backend Services & Transactional APIs",
     description:
-      "Designing resilient RESTful microservices, business automation logic, and high-throughput server backends using Node.js, Express.js, and Python.",
-    tags: ["Node.js", "Express.js", "Python", "REST APIs", "API Integration", "Business Logic"],
+      "RESTful microservices engineered to fail gracefully. Strict schema validation, atomic SQL operations, JWT session integrity, and multi-channel notification dispatchers (Email, WhatsApp, CRM).",
+    tags: ["Node.js", "Express.js", "PostgreSQL", "Supabase RLS", "Atomic Transactions", "Google Apps Script"],
     icon: <Server className="w-5 h-5 text-arc-ink" />,
-    isHighlighted: true, // Vivid hot magenta card
+    isHighlighted: true,
   },
   {
     id: "fullstack",
     title: "Full-Stack Web Architectures",
     description:
-      "Engineering robust web applications from intuitive frontends to scalable backend services. Proficient in Next.js SSR/SSG, React 19, TypeScript, Express, and high-concurrency Node.js microservices.",
-    tags: ["Next.js (App Router)", "React 19", "Node.js", "TypeScript", "Tailwind CSS"],
+      "End-to-end web apps with fast initial loads, zero layout shifts, and clean state boundaries. Built with Next.js App Router, SSR, TypeScript, and Tailwind without bloated widget dependencies.",
+    tags: ["Next.js (App Router)", "React 19", "TypeScript", "Tailwind CSS", "Server Components"],
     icon: <Code2 className="w-5 h-5 text-arc" />,
   },
   {
-    id: "offline-erp",
-    title: "Offline-First Enterprise ERP Systems",
+    id: "frontend",
+    title: "Frontend & Performance Engineering",
     description:
-      "Architecting highly reliable desktop ERP engines and billing platforms built for uninterrupted business continuity. Tested in real-world retail with local SQLite persistence and automated invoice generation.",
-    tags: ["Python", "SQLite", "ReportLab PDF Engine", "Tkinter", "Offline Sync"],
-    icon: <Database className="w-5 h-5 text-arc" />,
-    isHighlighted: true,
+      "High-frame-rate user interfaces tuned for real hardware. Sub-second initial paints, dynamic will-change unpinning, canvas physics optimizations, and accessible semantic markup.",
+    tags: ["Vanilla CSS & Canvas", "Framer Motion", "DPR Scaling", "Accessibility", "Responsive Layouts"],
+    icon: <Code2 className="w-5 h-5 text-arc" />,
   },
   {
     id: "ai-rag",
-    title: "AI & RAG Knowledge Pipelines",
+    title: "Pragmatic AI & Vector Retrieval Pipelines",
     description:
-      "Developing domain-specific AI agents, semantic retrieval pipelines, and autonomous workflow tooling. Integrating vector embeddings with contextual document ingestion.",
-    tags: ["OpenAI API", "Vector Embeddings", "Retrieval Augmented Gen", "Agent Workflows"],
+      "Domain-specific AI tooling that automates actual manual data workflows instead of shallow demo bots. Contextual RAG pipelines, OpenAI tool-calling, and vector document ingestion.",
+    tags: ["OpenAI API", "Vector Embeddings", "Retrieval Augmented Gen", "Automated Workflows"],
     icon: <BrainCircuit className="w-5 h-5 text-arc" />,
   },
 ];
@@ -705,15 +705,14 @@ export default function Services() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column: Title, Live Terminal & Interactive Physics Playground */}
         <div className="lg:col-span-5 lg:sticky lg:top-24 self-start flex flex-col">
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-3"
+            className="text-xs sm:text-sm font-medium text-arc mb-2"
           >
-            <Terminal className="w-3.5 h-3.5" />
-            Core Stack &amp; Skills
-          </motion.div>
+            Engineering discipline over trendy defaults.
+          </motion.p>
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -722,7 +721,7 @@ export default function Services() {
             transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-ink u-head leading-[1.1]"
           >
-            What I build &amp; <span className="text-arc">Engineer...</span>
+            Systems built to <span className="text-arc">last &amp; perform.</span>
           </motion.h2>
 
           {/* Live Terminal Typewriter Window */}

@@ -203,8 +203,12 @@ export default function Footer({ onOpenContact }: FooterProps) {
 
       {/* Bottom Bar: Copyright & Navigation */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-8 border-t border-rule text-xs text-graphite font-medium">
-        <div>
-          © {new Date().getFullYear()} Abdul Hannan. All rights reserved.
+        <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-center sm:text-left">
+          <span>© {new Date().getFullYear()} Abdul Hannan.</span>
+          <span className="hidden sm:inline text-rule">•</span>
+          <span className="font-mono text-[11px] text-graphite/70">
+            Engineered with Next.js 16, Tailwind v4 &amp; Matter.js. 0 KB Three.js. 60fps on real hardware.
+          </span>
         </div>
 
         <div className="flex items-center gap-6">

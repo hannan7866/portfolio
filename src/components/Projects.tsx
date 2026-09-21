@@ -13,7 +13,6 @@ import {
 
 import {
   ArrowUpRight,
-  Sparkles,
   X,
   Code2,
   Globe,
@@ -23,6 +22,8 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  AlertTriangle,
+  Wrench,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -40,6 +41,8 @@ interface Project {
   tags: string[];
   shortDescription: string;
   architectureStory: string;
+  tradeOff?: string;
+  whatBroke?: string;
   evolutionStages?: { stage: string; desc: string }[];
   keyModules?: { title: string; desc: string }[];
   technicalHighlights: string[];
@@ -65,6 +68,10 @@ const PROJECTS: Project[] = [
       "A production-tested, offline-first Windows operations platform that transformed manual workshop workflows into a digital ecosystem with SQLite transactions, branded PDF generation, and automated customer reminders.",
     architectureStory:
       "Started as an offline billing tool and evolved into an end-to-end shop floor operations platform. Features local SQLite transactional storage with migration-safe schema handling, unique bill numbering (`LM + date + sequence`), ReportLab programmatic PDF generation (`D:\\BILLS`), CRM-style service reminders, vehicle delivery-letter compliance records, and PyInstaller desktop distribution with Windows printing integration (`pywin32`).",
+    tradeOff:
+      "Chose local SQLite file persistence over cloud synchronization. Workshop broadband experiences periodic drops; a cloud-first system would halt counter checkout and create customer bottlenecks. The trade-off is requiring local scheduled backups, but billing uptime was 100% across 1,000+ commercial transactions.",
+    whatBroke:
+      "Early receipt sequences suffered collision edge-cases if Windows abruptly rebooted or crashed mid-write. Fixed by replacing manual counter increments with atomic SQLite transactions, write-ahead logging (WAL), and strict PRAGMA foreign keys.",
     evolutionStages: [
       { stage: "01. Core Offline Engine", desc: "Python + Tkinter interface built for rapid billing without internet dependency." },
       { stage: "02. Structured Inventory", desc: "Predefined bike models, categorized part lists, and rates.json rate persistence." },
@@ -113,6 +120,10 @@ const PROJECTS: Project[] = [
       "A production-oriented full-stack platform combining workshop bookings, spare-parts commerce, inventory management, customer accounts, service history, automated notifications, and a pre-owned two-wheeler marketplace.",
     architectureStory:
       "Developed for Lala Motors to bring its workshop, spare-parts business, doorstep services, customer management, and pre-owned two-wheeler marketplace into a unified online ecosystem. The inventory architecture uses UUID primary keys, normalized brand/model/category schemas, real-time stock state validation, and database triggers for automatic SKU generation. The booking pipeline routes customer requests through `/api/booking` → Google Apps Script CRM spreadsheet → dual notification pipeline (customer confirmation + operational alert to business owner).",
+    tradeOff:
+      "Chose lightweight serverless endpoints and clean vanilla DOM hydration over a heavy client-side single-page framework. Shaved bundle size down to sub-100KB so parts search remains instant even on 3G mobile connections in rural workshop areas.",
+    whatBroke:
+      "Initial cart inventory checks suffered race conditions when two customers reserved the last SKU simultaneously. Resolved by introducing atomic PostgreSQL inventory decrement triggers with Row-Level Security checks.",
     keyModules: [
       {
         title: "Workshop & Doorstep Booking",
@@ -325,6 +336,7 @@ function FlipProjectCard({
   isTransitioning?: boolean;
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const isFlagship = project.id === "lala-motors-erp";
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -372,9 +384,16 @@ function FlipProjectCard({
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
         className={cn(
           "group cursor-pointer w-full h-full flex flex-col rounded-3xl bg-surface border border-rule p-4 sm:p-6 shadow-2xl hover:border-arc/50 select-none [contain:layout_paint_style] overflow-hidden relative transition-colors duration-300",
+          isFlagship && "border-ember/40 hover:border-ember shadow-ember/5",
           isTransitioning && "will-change-transform"
         )}
       >
+        {/* Intentional Asymmetry: Flagship Angled Stamp Badge */}
+        {isFlagship && (
+          <div className="absolute -top-2.5 right-6 z-30 px-3 py-1 bg-ember text-void text-[10px] font-mono font-bold tracking-tight rounded-md shadow-lg -rotate-2 select-none pointer-events-none border border-void/20">
+            FLAGSHIP · 1,000+ REAL INVOICES
+          </div>
+        )}
         {/* Image area */}
         <div
           className="relative w-full flex-1 min-h-0 overflow-hidden rounded-2xl bg-sunken border border-rule mb-4 sm:mb-5"
@@ -557,15 +576,14 @@ export default function Projects() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-3 shrink-0 z-30 relative">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <motion.div
+              <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc mb-1"
+                className="text-xs sm:text-sm font-medium text-arc mb-1.5"
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                Curated Software &amp; Systems
-              </motion.div>
+                Seven systems, one theme: they all had to survive without a stable connection.
+              </motion.p>
               <motion.h2
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -855,6 +873,32 @@ export default function Projects() {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Honest Trade-Off callout */}
+              {selectedProject.tradeOff && (
+                <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-ember/10 border border-ember/30">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-ember mb-1.5 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    Engineering Trade-Off (The Honest Choice):
+                  </h4>
+                  <p className="text-xs sm:text-sm text-ink/90 leading-relaxed font-normal">
+                    {selectedProject.tradeOff}
+                  </p>
+                </div>
+              )}
+
+              {/* What Broke in Production callout */}
+              {selectedProject.whatBroke && (
+                <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-alarm/10 border border-alarm/30">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-alarm mb-1.5 flex items-center gap-1.5">
+                    <Wrench className="w-3.5 h-3.5" />
+                    What Broke &amp; How I Fixed It:
+                  </h4>
+                  <p className="text-xs sm:text-sm text-ink/90 leading-relaxed font-normal">
+                    {selectedProject.whatBroke}
+                  </p>
                 </div>
               )}
 

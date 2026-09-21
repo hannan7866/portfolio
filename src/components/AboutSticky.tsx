@@ -4,7 +4,6 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  User,
   ShieldCheck,
   MapPin,
   GraduationCap,
@@ -191,20 +190,19 @@ export default function AboutSticky({ onOpenContact }: AboutStickyProps) {
             transition={{ duration: 0.7 }}
             className="flex flex-col gap-5"
           >
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-arc">
-              <User className="w-3.5 h-3.5" />
-              About Me
-            </div>
+            <p className="text-xs sm:text-sm font-medium text-arc">
+              The honest background.
+            </p>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink u-head">
-              Building software that solves{" "}
-              <span className="text-arc">real-world problems</span>.
+              Software that has to run{" "}
+              <span className="text-arc">without excuses</span>.
             </h2>
 
-            <ScrollTypographyFill text="I am Abdul Hannan, a Full-Stack Developer and Software Engineer with 1.5+ years of hands-on commercial experience. I work across the full engineering lifecycle: understanding domain constraints, architecting performant database schemas, developing responsive interfaces, building reliable REST APIs, and automating operational workflows." />
+            <ScrollTypographyFill text="I build software that has to survive without excuses. Most of my foundational engineering was done on busy shop floors where if an app crashes or the broadband drops out, customer billing halts and mechanics are standing around waiting." />
 
             <p className="text-graphite text-sm sm:text-base leading-relaxed">
-              My foundational production work includes modernizing <strong>Lala Motors</strong>, where I developed an offline-first ERP and billing system in Python, Tkinter, SQLite, and ReportLab that has successfully processed <strong>1,000+ real-world repair and spare parts transactions</strong>, along with a full-stack automotive customer platform in JavaScript, Node.js, Express, PostgreSQL, and Supabase.
+              That experience with <strong>Lala Motors</strong> taught me to respect local SQLite transactions, strict data schemas, and zero-latency performance over whatever framework is trending on social media. Across 1,000+ real-world customer checkouts, zero transactions were lost. Today, I bring that same resilience mindset to every web architecture, backend microservice, and AI workflow I engineer.
             </p>
           </motion.div>
 
