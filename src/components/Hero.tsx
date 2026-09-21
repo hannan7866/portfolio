@@ -197,80 +197,85 @@ export default function Hero({ onOpenContact }: HeroProps) {
           />
 
           {/* =========================================================================
-              LAYER 1: Authentic Signature Headline & Grounded Editorial Typography
+              HEADLINE & 3D AVATAR COMPOSITION (Unified Stacking Area)
              ========================================================================= */}
-          <div
-            className="w-full flex flex-col items-center justify-center select-none pointer-events-auto z-10 text-center max-w-6xl mx-auto px-4 py-2 sm:py-4"
-          >
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-[82px] xl:text-[94px] font-black tracking-tight text-ink u-display leading-[0.98] text-center"
-            >
-              Software that keeps working{" "}
-              <span className="text-arc block mt-1 sm:mt-2">when the internet doesn&apos;t.</span>
-            </motion.h1>
-          </div>
+          <div className="relative w-full flex flex-col items-center justify-center select-none py-4 sm:py-8 md:py-12 my-auto">
+            {/* Layer 1: Scaled Authentic Headline */}
+            <div className="relative z-10 w-full flex flex-col items-center justify-center text-center max-w-7xl mx-auto px-2 sm:px-4 pointer-events-auto">
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full flex flex-col items-center justify-center text-center u-display tracking-[-0.028em]"
+              >
+                <span className="block text-[clamp(2.2rem,7.5vw,6.5rem)] sm:text-[clamp(2.8rem,8vw,6.5rem)] font-black text-ink leading-[0.96]">
+                  Software that keeps working
+                </span>
+                <span className="block text-[clamp(1.75rem,6vw,5.2rem)] sm:text-[clamp(2.24rem,6.4vw,5.2rem)] font-black text-arc leading-[0.96] mt-2 sm:mt-3 md:mt-4">
+                  when the internet doesn&apos;t.
+                </span>
+              </motion.h1>
+            </div>
 
-          {/* 3D Transparent Avatar Head - Centerpiece with Interactive Cyber Easter Egg */}
-          <motion.div
-            style={{
-              rotateX,
-              rotateY,
-              x: translateX,
-              y: translateY,
-              transformPerspective: 1200,
-              transformStyle: "preserve-3d",
-              WebkitTransform: "translate3d(0,0,0)",
-            }}
-            initial={{ scale: 0.75, opacity: 0, filter: "blur(8px)" }}
-            animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 z-20 pointer-events-none will-change-transform flex items-center justify-center my-2 sm:my-3"
-          >
+            {/* Layer 2: 3D Transparent Avatar Head - Overlapping the headline composition */}
             <motion.div
-              onClick={handleAvatarClick}
-              animate={
-                isGlitching
-                  ? {
-                      x: [-10, 10, -10, 10, -5, 5, 0],
-                      y: [-5, 5, -5, 5, -2, 2, 0],
-                      filter: [
-                        "hue-rotate(90deg) contrast(150%)",
-                        "hue-rotate(-90deg) contrast(150%)",
-                        "hue-rotate(0deg) contrast(100%)",
-                      ],
-                    }
-                  : {
-                      x: 0,
-                      y: 0,
-                      filter: "hue-rotate(0deg) contrast(100%)",
-                    }
-              }
-              transition={
-                isGlitching
-                  ? { duration: 0.3, ease: "easeInOut" }
-                  : { duration: 0.2 }
-              }
-              className="relative w-full h-full flex items-center justify-center pointer-events-none transition-transform active:scale-95 select-none"
+              style={{
+                rotateX,
+                rotateY,
+                x: translateX,
+                y: translateY,
+                transformPerspective: 1200,
+                transformStyle: "preserve-3d",
+                WebkitTransform: "translate3d(0,0,0)",
+              }}
+              initial={{ scale: 0.75, opacity: 0, filter: "blur(8px)" }}
+              animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-[58%] sm:top-[56%] md:top-[58%] lg:top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 md:w-[380px] md:h-[380px] lg:w-[440px] lg:h-[440px] xl:w-[490px] xl:h-[490px] z-20 pointer-events-none will-change-transform flex items-center justify-center"
             >
-              <Image
-                src="/images/avatar_3d_v2.png"
-                alt="3D Avatar of Abdul Hannan"
-                fill
-                priority
-                sizes="(max-width: 768px) 220px, 320px"
-                className="object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.95)] pointer-events-none"
-              />
+              <motion.div
+                onClick={handleAvatarClick}
+                animate={
+                  isGlitching
+                    ? {
+                        x: [-10, 10, -10, 10, -5, 5, 0],
+                        y: [-5, 5, -5, 5, -2, 2, 0],
+                        filter: [
+                          "hue-rotate(90deg) contrast(150%)",
+                          "hue-rotate(-90deg) contrast(150%)",
+                          "hue-rotate(0deg) contrast(100%)",
+                        ],
+                      }
+                    : {
+                        x: 0,
+                        y: 0,
+                        filter: "hue-rotate(0deg) contrast(100%)",
+                      }
+                }
+                transition={
+                  isGlitching
+                    ? { duration: 0.3, ease: "easeInOut" }
+                    : { duration: 0.2 }
+                }
+                className="relative w-full h-full flex items-center justify-center pointer-events-none transition-transform active:scale-95 select-none"
+              >
+                <Image
+                  src="/images/avatar_3d_v2.png"
+                  alt="3D Avatar of Abdul Hannan"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 256px, 480px"
+                  className="object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.95)] pointer-events-none"
+                />
 
-              {/* Dedicated Clickable Hitbox — covers just the face area */}
-              <div
-                className="absolute top-[25%] w-[45%] h-[50%] pointer-events-auto cursor-pointer rounded-full"
-                data-cursor-text="SURPRISE"
-              />
+                {/* Dedicated Clickable Hitbox — covers just the face area */}
+                <div
+                  className="absolute top-[25%] w-[45%] h-[50%] pointer-events-auto cursor-pointer rounded-full"
+                  data-cursor-text="SURPRISE"
+                />
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Hero Bottom Row: Left Subtext & Right Button on Same Line */}
