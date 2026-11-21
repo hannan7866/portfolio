@@ -270,7 +270,7 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
           </div>
 
           {/* Messages Body */}
-          <div ref={bodyRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto p-3.5">
+          <div ref={bodyRef} data-lenis-prevent aria-live="polite" className="flex-1 space-y-3 overflow-y-auto p-3.5 custom-scrollbar">
             {!booted ? (
               <div className="flex items-center gap-2 font-mono text-[11px] text-graphite">
                 <span className="inline-block h-2 w-2 rounded-full bg-arc animate-ping" />

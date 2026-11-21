@@ -2,22 +2,24 @@
 
 import React, { useEffect } from "react";
 import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Initialize ultra-smooth butter-scroll engine
+    // Ultra-smooth butter-scroll engine with balanced momentum and responsive inertia
     const lenis = new Lenis({
-      duration: 1.25,
+      lerp: 0.085,
+      duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.05,
-      touchMultiplier: 2,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 1.5,
       infinite: false,
     });
 
-    // RAF loop
+    // High performance RAF loop
     let rafId: number;
     function raf(time: number) {
       lenis.raf(time);
@@ -35,8 +37,8 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
           if (el) {
             e.preventDefault();
             lenis.scrollTo(el as HTMLElement, {
-              offset: 0,
-              duration: 1.2,
+              offset: -40,
+              duration: 1.25,
               easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             });
           }
