@@ -26,13 +26,13 @@ export type ErrorCode =
 // Safe, visitor-facing text. Raw upstream errors are only logged on the server.
 const USER_MESSAGES: Record<ErrorCode, string> = {
   bad_request: "I couldn't read that. Keep it under 600 characters and try again.",
-  rate_limited: "That's a lot of questions at once. Give it a minute and try again.",
-  missing_key: "Abdul.exe isn't fully set up yet. Please use the contact button for now.",
-  auth: "Abdul.exe can't reach its AI service right now. Please use the contact button.",
-  billing: "Abdul.exe can't reach its AI service right now. Please use the contact button.",
-  model: "Abdul.exe can't reach its AI service right now. Please use the contact button.",
-  upstream: "Abdul.exe is busy right now. Try again in a moment, or use the contact button.",
-  empty: "I didn't get an answer that time. Try asking again.",
+  rate_limited: "That's quite a few questions at once! Give it a minute and try again.",
+  missing_key: "The AI assistant isn't fully configured yet. Feel free to contact Abdul directly via WhatsApp or email above!",
+  auth: "Temporarily having trouble connecting to AI services. You can reach Abdul directly via WhatsApp or email above!",
+  billing: "Temporarily having trouble connecting to AI services. You can reach Abdul directly via WhatsApp or email above!",
+  model: "I got a bit overwhelmed for a moment! Please try asking again, or reach Abdul directly above.",
+  upstream: "Abdul's AI is experiencing high demand right now. Please try asking again in a few seconds, or reach Abdul directly above!",
+  empty: "I didn't get a complete answer that time. Try asking again!",
 };
 
 export const STATUS: Record<ErrorCode, number> = {
@@ -102,9 +102,8 @@ export function geminiModelList(env: Record<string, string | undefined> = proces
   const list = [
     env.GEMINI_MODEL,
     "gemini-3.5-flash-lite",
-    "gemini-3.1-flash-lite",
     "gemini-flash-lite-latest",
-    "gemini-2.5-flash",
+    "gemini-3.1-flash-lite",
   ];
   return list.filter((m, i): m is string => Boolean(m) && list.indexOf(m) === i);
 }

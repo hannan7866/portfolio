@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Terminal, Phone, Mail, X } from "lucide-react";
+import Image from "next/image";
+import { Sparkles, Phone, Mail, X, Send, MessageSquare } from "lucide-react";
 
 type Msg = {
   role: "user" | "assistant";
@@ -13,9 +14,10 @@ type Msg = {
 const MAX_CHARS = 600;
 
 const STARTERS = [
-  "What do you build?",
-  "Tell me about Lala Motors",
-  "I want to hire you",
+  { icon: "⚡", label: "What do you build?", q: "What do you build?" },
+  { icon: "🏍️", label: "Lala Motors ERP", q: "Tell me about the Lala Motors ERP" },
+  { icon: "💼", label: "Why looking for roles?", q: "Why are you looking for roles now?" },
+  { icon: "📬", label: "How to contact you?", q: "How can I contact Abdul?" },
 ];
 
 function WhatsappIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
@@ -36,12 +38,23 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bubbleDismissed, setBubbleDismissed] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(false);
+
   const bodyRef = useRef<HTMLDivElement>(null);
   const MAX_TURNS = 12;
 
+  // Gentle greeting tooltip delay on initial page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowGreeting(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     if (open && !booted) {
-      const t = setTimeout(() => setBooted(true), 600);
+      const t = setTimeout(() => setBooted(true), 400);
       return () => clearTimeout(t);
     }
   }, [open, booted]);
@@ -60,7 +73,6 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
     setInput("");
     setLoading(true);
     try {
-      // Only role and content go to the server; error bubbles are not part of the conversation.
       const history = next
         .filter((m) => !m.isError)
         .map(({ role, content }) => ({ role, content }));
@@ -68,7 +80,7 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ messages: history }),
-        signal: AbortSignal.timeout(25_000),
+        signal: AbortSignal.timeout(20_000),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.text) {
@@ -79,14 +91,18 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
           {
             role: "assistant",
             isError: true,
-            content: data.message || "Something went wrong on my side. Try again, or use the contact button.",
+            content: data.message || "I experienced a brief pause. Please try asking again or reach Abdul via WhatsApp/Email!",
           },
         ]);
       }
     } catch {
       setMessages([
         ...next,
-        { role: "assistant", isError: true, content: "I couldn't reach the server. Check your connection and try again." },
+        {
+          role: "assistant",
+          isError: true,
+          content: "I couldn't reach the server right now. Check your connection or message Abdul directly above!",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -94,27 +110,116 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
   }
 
   return (
-    <div className="fixed bottom-4 right-3 z-40 sm:bottom-5 sm:right-5">
+    <div className="fixed bottom-4 right-3 z-40 sm:bottom-6 sm:right-6">
+      {/* Floating Greeting Speech Bubble (Shown when chat is closed and not dismissed) */}
+      {!open && showGreeting && !bubbleDismissed && (
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => {
+            setOpen(true);
+            setBubbleDismissed(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setOpen(true);
+              setBubbleDismissed(true);
+            }
+          }}
+          className="group absolute bottom-16 right-0 mb-2 flex w-[290px] sm:w-[320px] cursor-pointer items-start gap-3 rounded-2xl border border-arc/40 bg-surface/95 p-3.5 shadow-[0_10px_35px_rgba(0,0,0,0.5),0_0_20px_rgba(56,232,255,0.2)] backdrop-blur-xl transition-all duration-300 hover:border-arc hover:scale-[1.02] hover:shadow-[0_10px_35px_rgba(0,0,0,0.5),0_0_25px_rgba(56,232,255,0.35)] animate-gentle-float text-left"
+          aria-label="Open chat with Abdul"
+        >
+          {/* Avatar with Waving Hand Badge */}
+          <div className="relative flex-shrink-0">
+            <div className="relative h-11 w-11 overflow-hidden rounded-full border-2 border-arc/60 bg-void shadow-md group-hover:border-arc transition-colors">
+              <Image
+                src="/images/avatar_3d_v2.png"
+                alt="Abdul Hannan Avatar"
+                fill
+                sizes="44px"
+                className="object-cover object-top scale-110"
+              />
+            </div>
+            {/* Animated Waving Hand */}
+            <span
+              className="absolute -top-1 -right-1 text-base select-none animate-wave-hand filter drop-shadow"
+              title="Waving hand"
+            >
+              👋
+            </span>
+            <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-surface bg-[#27C93F] shadow-sm animate-pulse" />
+          </div>
+
+          {/* Bubble Text Content */}
+          <div className="flex-1 min-w-0 pr-4">
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-xs text-arc tracking-wide">
+                Talk to Abdul
+              </span>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-arc/80" />
+              <span className="font-mono text-[10px] text-graphite">AI Assistant</span>
+            </div>
+            <p className="mt-1 text-[12px] leading-snug text-ink/90 font-medium">
+              Hey there! 👋 Have questions about my projects or looking to hire? Let&apos;s talk!
+            </p>
+            <div className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-arc group-hover:text-ink transition-colors">
+              <span>Start chatting</span>
+              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+            </div>
+          </div>
+
+          {/* Close / Dismiss Greeting Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setBubbleDismissed(true);
+            }}
+            aria-label="Dismiss greeting"
+            title="Dismiss greeting"
+            className="absolute top-2.5 right-2.5 rounded-full p-1 text-graphite hover:bg-void hover:text-ink transition-colors cursor-pointer"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Main Chat Dialog Window */}
       {open && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Chat with Abdul.exe"
-          className="absolute bottom-16 right-0 flex h-[460px] w-[320px] sm:w-[350px] flex-col overflow-hidden rounded-2xl border border-rule bg-surface shadow-2xl backdrop-blur-2xl"
+          aria-label="Chat with Abdul Hannan"
+          className="absolute bottom-16 right-0 flex h-[480px] w-[330px] sm:w-[370px] flex-col overflow-hidden rounded-2xl border border-arc/40 bg-surface/95 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_30px_rgba(56,232,255,0.25)] backdrop-blur-2xl transition-all"
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-rule bg-void px-3.5 py-2.5">
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="inline-block h-2 w-2 rounded-full bg-[#27C93F] shadow-sm animate-pulse" />
-                <b className="font-mono text-[13px] text-arc tracking-wide">Abdul.exe</b>
+          <div className="flex items-center justify-between border-b border-rule bg-void/90 px-3.5 py-3">
+            <div className="flex items-center gap-2.5">
+              {/* Avatar in Header */}
+              <div className="relative h-8 w-8 overflow-hidden rounded-full border border-arc/50 bg-void flex-shrink-0">
+                <Image
+                  src="/images/avatar_3d_v2.png"
+                  alt="Abdul Hannan"
+                  fill
+                  sizes="32px"
+                  className="object-cover object-top scale-110"
+                />
+                <span className="absolute bottom-0 right-0 h-2 w-2 rounded-full border border-void bg-[#27C93F] animate-pulse" />
               </div>
-              <span className="block font-mono text-[10px] text-graphite">
-                {booted ? "status: online & ready" : "booting..."}
-              </span>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <b className="text-[13.5px] font-semibold text-ink tracking-tight">Talk to Abdul</b>
+                  <span className="rounded-full bg-arc/15 px-1.5 py-0.2 font-mono text-[9px] font-medium text-arc">
+                    AI
+                  </span>
+                </div>
+                <span className="block font-mono text-[10px] text-graphite">
+                  {booted ? "status: online & ready" : "connecting..."}
+                </span>
+              </div>
             </div>
 
-            {/* Header Contact Actions (preserved from FloatingDock) */}
+            {/* Header Contact Quick Actions */}
             <div className="flex items-center gap-1.5">
               <a
                 href="https://wa.me/917310542113?text=Hi%20Abdul%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project%2Frole%20with%20you."
@@ -157,49 +262,66 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                className="rounded-full p-1.5 hover:bg-void text-graphite hover:text-ink transition-colors cursor-pointer"
+                className="rounded-full p-1.5 hover:bg-void text-graphite hover:text-ink transition-colors cursor-pointer ml-0.5"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>
 
           {/* Messages Body */}
-          <div ref={bodyRef} aria-live="polite" className="flex-1 space-y-2.5 overflow-y-auto p-3.5">
+          <div ref={bodyRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto p-3.5">
             {!booted ? (
-              <p className="font-mono text-[11px] text-graphite">
-                &gt; initializing Abdul.exe...<br />&gt; loading knowledge base...
-              </p>
+              <div className="flex items-center gap-2 font-mono text-[11px] text-graphite">
+                <span className="inline-block h-2 w-2 rounded-full bg-arc animate-ping" />
+                <span>Initializing assistant...</span>
+              </div>
             ) : messages.length === 0 ? (
-              <>
-                <div className="max-w-[85%] rounded-2xl rounded-bl-sm border border-rule bg-void px-3 py-2 text-[13px] text-ink leading-relaxed">
-                  Hey — it&apos;s Abdul. Ask me anything about what I build, or what I&apos;m looking for.
+              <div className="space-y-3.5 pt-1">
+                {/* Friendly Greeting Card inside chat */}
+                <div className="rounded-2xl rounded-bl-sm border border-rule bg-void/80 p-3.5 text-ink shadow-sm">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-lg select-none animate-wave-hand">👋</span>
+                    <span className="font-semibold text-[13px] text-arc">Welcome to my portfolio!</span>
+                  </div>
+                  <p className="text-[12.5px] leading-relaxed text-ink/90">
+                    I&apos;m Abdul&apos;s AI assistant. Ask me anything about his production projects (like the Lala Motors ERP), full-stack tech stack, or engineering background.
+                  </p>
                 </div>
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {STARTERS.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => send(s)}
-                      className="rounded-full border border-rule bg-void/50 px-2.5 py-1 font-mono text-[10px] text-graphite hover:border-arc hover:text-ink transition-colors cursor-pointer"
-                    >
-                      {s}
-                    </button>
-                  ))}
+
+                {/* Suggested Quick Starters */}
+                <div>
+                  <span className="block font-mono text-[10px] text-graphite uppercase tracking-wider mb-2">
+                    Suggested Questions
+                  </span>
+                  <div className="grid grid-cols-1 gap-1.5">
+                    {STARTERS.map((s) => (
+                      <button
+                        key={s.q}
+                        onClick={() => send(s.q)}
+                        className="flex items-center gap-2 rounded-xl border border-rule bg-void/60 px-3 py-2 text-left text-[12px] text-ink hover:border-arc hover:bg-void hover:text-arc transition-all cursor-pointer group"
+                      >
+                        <span className="text-sm select-none">{s.icon}</span>
+                        <span className="flex-1 font-medium">{s.label}</span>
+                        <span className="text-graphite group-hover:text-arc transition-colors">→</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </>
+              </div>
             ) : (
               messages.map((m, i) => (
                 <div
                   key={i}
-                  className={`max-w-[85%] rounded-2xl px-3 py-2 text-[13px] leading-relaxed ${
+                  className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${
                     m.role === "user"
-                      ? "ml-auto rounded-br-sm bg-arc text-arc-ink font-medium"
-                      : "rounded-bl-sm border border-rule bg-void text-ink"
+                      ? "ml-auto rounded-br-sm bg-arc text-arc-ink font-medium shadow-md"
+                      : "rounded-bl-sm border border-rule bg-void/90 text-ink shadow-sm"
                   }`}
                 >
                   <span className="whitespace-pre-wrap">{m.content}</span>
                   {m.role === "assistant" && m.sources && m.sources.length > 0 && (
-                    <span className="mt-1.5 block font-mono text-[9.5px] leading-snug text-graphite">
+                    <span className="mt-2 block border-t border-rule/60 pt-1.5 font-mono text-[9.5px] leading-snug text-graphite">
                       sources: {m.sources.join(" · ")}
                     </span>
                   )}
@@ -207,8 +329,13 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
               ))
             )}
             {loading && (
-              <div className="max-w-[60%] rounded-2xl rounded-bl-sm border border-rule bg-void px-3 py-2 text-[13px] text-graphite font-mono animate-pulse">
-                &gt; thinking...
+              <div className="flex items-center gap-2 max-w-[65%] rounded-2xl rounded-bl-sm border border-rule bg-void/90 px-3.5 py-2.5 text-[12.5px] text-graphite font-mono">
+                <span className="text-xs text-arc">Abdul is typing</span>
+                <span className="inline-flex gap-1 items-center">
+                  <span className="h-1.5 w-1.5 rounded-full bg-arc animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="h-1.5 w-1.5 rounded-full bg-arc animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="h-1.5 w-1.5 rounded-full bg-arc animate-bounce" style={{ animationDelay: "300ms" }} />
+                </span>
               </div>
             )}
           </div>
@@ -219,42 +346,65 @@ export default function AbdulExe({ onOpenContact }: AbdulExeProps) {
               e.preventDefault();
               send(input);
             }}
-            className="flex gap-2 border-t border-rule bg-void/70 p-2.5"
+            className="flex items-center gap-2 border-t border-rule bg-void/80 p-2.5"
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder={limitReached ? "Chat limit reached — use the contact buttons above" : "Ask me something..."}
+              placeholder={limitReached ? "Chat limit reached — contact Abdul above!" : "Ask anything about Abdul's work..."}
               maxLength={MAX_CHARS}
               disabled={loading || limitReached}
-              className="flex-1 rounded-full border border-rule bg-void px-3 py-1.5 text-[12.5px] text-ink outline-none focus:border-arc placeholder:text-graphite/60"
+              className="flex-1 rounded-full border border-rule bg-surface/80 px-3.5 py-2 text-[12.5px] text-ink outline-none focus:border-arc placeholder:text-graphite/60 transition-colors"
             />
             <button
               type="submit"
               disabled={loading || limitReached || !input.trim()}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-arc text-arc-ink font-bold disabled:opacity-40 transition-opacity cursor-pointer hover:opacity-90"
+              aria-label="Send message"
+              title="Send message"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-arc text-arc-ink font-bold disabled:opacity-40 transition-all cursor-pointer hover:opacity-90 hover:scale-105 active:scale-95 shadow-md flex-shrink-0"
             >
-              ↑
+              <Send className="h-4 w-4" />
             </button>
           </form>
         </div>
       )}
 
-      {/* Terminal-Style Trigger Button */}
+      {/* Main Trigger Capsule Button ("Talk to Abdul") */}
       <button
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close Abdul.exe" : "Open Abdul.exe"}
-        className="flex items-center gap-2.5 rounded-full border border-rule bg-void/90 px-3.5 sm:px-4 py-2 sm:py-2.5 shadow-2xl backdrop-blur-xl transition-all hover:border-arc hover:bg-surface active:scale-95 group cursor-pointer"
+        onClick={() => {
+          setOpen((v) => !v);
+          setBubbleDismissed(true);
+        }}
+        aria-label={open ? "Close chat" : "Talk to Abdul"}
+        className="group relative flex items-center gap-2.5 rounded-full border border-arc/50 bg-surface/90 px-3.5 sm:px-4 py-2 sm:py-2.5 shadow-[0_0_20px_rgba(56,232,255,0.25)] backdrop-blur-xl transition-all duration-300 hover:border-arc hover:shadow-[0_0_30px_rgba(56,232,255,0.45)] hover:scale-105 active:scale-95 cursor-pointer"
       >
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-arc opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-arc" />
-        </span>
-        <span className="font-mono text-xs font-bold text-ink group-hover:text-arc transition-colors flex items-center gap-1">
-          <span className="text-arc font-semibold">&gt;</span> Abdul.exe
-        </span>
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-surface border border-rule text-arc group-hover:border-arc transition-colors">
-          {open ? <X className="h-3.5 w-3.5" /> : <Terminal className="h-3.5 w-3.5" />}
+        {/* Avatar Thumbnail with Pulse Dot */}
+        <div className="relative h-6 w-6 overflow-hidden rounded-full border border-arc/70 bg-void flex-shrink-0">
+          <Image
+            src="/images/avatar_3d_v2.png"
+            alt="Abdul"
+            fill
+            sizes="24px"
+            className="object-cover object-top scale-110"
+          />
+          <span className="absolute bottom-0 right-0 h-1.5 w-1.5 rounded-full bg-[#27C93F] animate-pulse" />
+        </div>
+
+        {/* Text */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[13px] font-semibold text-ink group-hover:text-arc transition-colors">
+            {open ? "Close Chat" : "Talk to Abdul"}
+          </span>
+          {!open && (
+            <span className="hidden sm:inline-block rounded-full bg-arc/15 px-1.5 py-0.5 font-mono text-[9px] font-semibold text-arc">
+              AI
+            </span>
+          )}
+        </div>
+
+        {/* Right Icon */}
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-void/80 border border-rule text-arc group-hover:border-arc transition-colors">
+          {open ? <X className="h-3.5 w-3.5" /> : <Sparkles className="h-3.5 w-3.5 animate-pulse" />}
         </div>
       </button>
     </div>
