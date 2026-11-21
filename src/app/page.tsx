@@ -12,7 +12,7 @@ import TestimonialQuote from "@/components/TestimonialQuote";
 import AboutSticky from "@/components/AboutSticky";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
-import FloatingDock from "@/components/FloatingDock";
+import AbdulExe from "@/components/AbdulExe";
 import ContactModal, { ContactMode } from "@/components/ContactModal";
 
 const Services = dynamic(() => import("@/components/Services"), {
@@ -54,7 +54,7 @@ export default function Home() {
         <Footer onOpenContact={() => handleOpenContact("hire")} />
       </SmoothScroll>
 
-      <FloatingDock onOpenContact={() => handleOpenContact("direct")} />
+      <AbdulExe />
 
       <ContactModal
         isOpen={isContactOpen}

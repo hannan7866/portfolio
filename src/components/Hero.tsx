@@ -8,6 +8,7 @@ import {
   useSpring,
   useTransform,
   useScroll,
+  Variants,
 } from "framer-motion";
 
 import confetti from "canvas-confetti";
@@ -77,6 +78,45 @@ function ScrambleText({ text, className = "" }: { text: string; className?: stri
     </span>
   );
 }
+
+// Kinetic letter stagger animation variants
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: (i: number = 0) => ({
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 2.6 + i * 0.15,
+    },
+  }),
+};
+
+const letterVariant: Variants = {
+  hidden: {
+    opacity: 0,
+    rotateX: 140,
+    rotateY: 20,
+    z: -400,
+    y: 80,
+    scale: 0.6,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    rotateX: 0,
+    rotateY: 0,
+    z: 0,
+    y: 0,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring" as const,
+      stiffness: 110,
+      damping: 12,
+      mass: 1.5,
+      bounce: 0.4,
+    },
+  },
+};
 
 export default function Hero({ onOpenContact }: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
@@ -197,85 +237,161 @@ export default function Hero({ onOpenContact }: HeroProps) {
           />
 
           {/* =========================================================================
-              HEADLINE & 3D AVATAR COMPOSITION (Unified Stacking Area)
+              LAYER 1: Interactive Bubble Text — hollow outline that ignites on hover
              ========================================================================= */}
-          <div className="relative w-full flex flex-col items-center justify-center select-none py-4 sm:py-8 md:py-12 my-auto">
-            {/* Layer 1: Scaled Authentic Headline */}
-            <div className="relative z-10 w-full flex flex-col items-center justify-center text-center max-w-7xl mx-auto px-2 sm:px-4 pointer-events-auto">
-              <motion.h1
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full flex flex-col items-center justify-center text-center u-display tracking-[-0.028em]"
-              >
-                <span className="block text-[clamp(2.2rem,7.5vw,6.5rem)] sm:text-[clamp(2.8rem,8vw,6.5rem)] font-black text-ink leading-[0.96]">
-                  Software that keeps working
-                </span>
-                <span className="block text-[clamp(1.75rem,6vw,5.2rem)] sm:text-[clamp(2.24rem,6.4vw,5.2rem)] font-black text-arc leading-[0.96] mt-2 sm:mt-3 md:mt-4">
-                  when the internet doesn&apos;t.
-                </span>
-              </motion.h1>
-            </div>
-
-            {/* Layer 2: 3D Transparent Avatar Head - Overlapping the headline composition */}
-            <motion.div
-              style={{
-                rotateX,
-                rotateY,
-                x: translateX,
-                y: translateY,
-                transformPerspective: 1200,
-                transformStyle: "preserve-3d",
-                WebkitTransform: "translate3d(0,0,0)",
-              }}
-              initial={{ scale: 0.75, opacity: 0, filter: "blur(8px)" }}
-              animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute top-[58%] sm:top-[56%] md:top-[58%] lg:top-[60%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-80 sm:h-80 md:w-[380px] md:h-[380px] lg:w-[440px] lg:h-[440px] xl:w-[490px] xl:h-[490px] z-20 pointer-events-none will-change-transform flex items-center justify-center"
+          <div
+            className="w-full flex flex-col items-center justify-center select-none pointer-events-auto z-10"
+            role="heading"
+            aria-level={1}
+            aria-label="THINK CREATIVELY"
+          >
+            {/* Bubble THINK */}
+            <motion.h1
+              aria-hidden="true"
+              custom={0}
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-[28vw] sm:text-[22vw] md:text-[20vw] lg:text-[260px] xl:text-[290px] font-black tracking-tighter uppercase leading-[0.85] text-center u-display whitespace-nowrap flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
             >
-              <motion.div
-                onClick={handleAvatarClick}
-                animate={
-                  isGlitching
-                    ? {
-                        x: [-10, 10, -10, 10, -5, 5, 0],
-                        y: [-5, 5, -5, 5, -2, 2, 0],
-                        filter: [
-                          "hue-rotate(90deg) contrast(150%)",
-                          "hue-rotate(-90deg) contrast(150%)",
-                          "hue-rotate(0deg) contrast(100%)",
-                        ],
-                      }
-                    : {
-                        x: 0,
-                        y: 0,
-                        filter: "hue-rotate(0deg) contrast(100%)",
-                      }
-                }
-                transition={
-                  isGlitching
-                    ? { duration: 0.3, ease: "easeInOut" }
-                    : { duration: 0.2 }
-                }
-                className="relative w-full h-full flex items-center justify-center pointer-events-none transition-transform active:scale-95 select-none"
-              >
-                <Image
-                  src="/images/avatar_3d_v2.png"
-                  alt="3D Avatar of Abdul Hannan"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 256px, 480px"
-                  className="object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.95)] pointer-events-none"
-                />
+              {"THINK".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  variants={letterVariant}
+                  whileHover={{
+                    scale: 1.3,
+                    y: -15,
+                  }}
+                  style={{
+                    transformOrigin: "bottom",
+                    position: "relative",
+                    WebkitTransform: "translateZ(0)",
+                  }}
+                  className="group inline-block cursor-default will-change-transform"
+                >
+                  <span
+                    style={{
+                      WebkitTextStroke: "2.5px var(--rule)",
+                      color: "transparent",
+                    }}
+                  >
+                    {char}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    style={{ color: "var(--ink)" }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none select-none"
+                  >
+                    {char}
+                  </span>
+                </motion.span>
+              ))}
+            </motion.h1>
 
-                {/* Dedicated Clickable Hitbox — covers just the face area */}
-                <div
-                  className="absolute top-[25%] w-[45%] h-[50%] pointer-events-auto cursor-pointer rounded-full"
-                  data-cursor-text="SURPRISE"
-                />
-              </motion.div>
-            </motion.div>
+            {/* Bubble CREATIVELY */}
+            <motion.h2
+              aria-hidden="true"
+              custom={1}
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="text-[20.5vw] sm:text-[18vw] md:text-[16vw] lg:text-[210px] xl:text-[240px] font-black tracking-tighter uppercase leading-[0.85] text-center u-display whitespace-nowrap -mt-2 sm:-mt-6 md:-mt-10 lg:-mt-16 xl:-mt-20 flex justify-center -mx-4 sm:mx-0 [perspective:1000px]"
+            >
+              {"CREATIVELY".split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  variants={letterVariant}
+                  whileHover={{
+                    scale: 1.3,
+                    y: -15,
+                  }}
+                  style={{
+                    transformOrigin: "bottom",
+                    position: "relative",
+                    WebkitTransform: "translateZ(0)",
+                  }}
+                  className="group inline-block cursor-default will-change-transform"
+                >
+                  <span
+                    style={{
+                      WebkitTextStroke: "2.5px var(--arc)",
+                      color: "transparent",
+                    }}
+                  >
+                    {char}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    style={{ color: "var(--arc)" }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none select-none"
+                  >
+                    {char}
+                  </span>
+                </motion.span>
+              ))}
+            </motion.h2>
           </div>
+
+
+
+          {/* 3D Transparent Avatar Head - Big & Bold Centerpiece with Interactive Cyber Easter Egg */}
+          <motion.div
+            style={{
+              rotateX,
+              rotateY,
+              x: translateX,
+              y: translateY,
+              transformPerspective: 1200,
+              transformStyle: "preserve-3d",
+              WebkitTransform: "translate3d(0,0,0)",
+            }}
+            initial={{ scale: 0.75, opacity: 0, filter: "blur(8px)" }}
+            animate={{ scale: 1, opacity: 1, filter: "blur(0px)" }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-[66%] sm:top-[62%] md:top-[65%] lg:top-[68%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 sm:w-96 sm:h-96 md:w-[450px] md:h-[450px] lg:w-[500px] lg:h-[500px] xl:w-[550px] xl:h-[550px] z-20 pointer-events-none will-change-transform flex items-center justify-center"
+          >
+            <motion.div
+              onClick={handleAvatarClick}
+              animate={
+                isGlitching
+                  ? {
+                      x: [-10, 10, -10, 10, -5, 5, 0],
+                      y: [-5, 5, -5, 5, -2, 2, 0],
+                      filter: [
+                        "hue-rotate(90deg) contrast(150%)",
+                        "hue-rotate(-90deg) contrast(150%)",
+                        "hue-rotate(0deg) contrast(100%)",
+                      ],
+                    }
+                  : {
+                      x: 0,
+                      y: 0,
+                      filter: "hue-rotate(0deg) contrast(100%)",
+                    }
+              }
+              transition={
+                isGlitching
+                  ? { duration: 0.3, ease: "easeInOut" }
+                  : { duration: 0.2 }
+              }
+              className="relative w-full h-full flex items-center justify-center pointer-events-none transition-transform active:scale-95 select-none"
+            >
+              <Image
+                src="/images/avatar_3d_v2.png"
+                alt="3D Avatar of Abdul Hannan"
+                fill
+                priority
+                sizes="(max-width: 768px) 256px, 480px"
+                className="object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.95)] pointer-events-none"
+              />
+
+              {/* Dedicated Clickable Hitbox — covers just the face area */}
+              <div
+                className="absolute top-[25%] w-[45%] h-[50%] pointer-events-auto cursor-pointer rounded-full"
+                data-cursor-text="SURPRISE"
+              />
+            </motion.div>
+          </motion.div>
         </motion.div>
 
         {/* Hero Bottom Row: Left Subtext & Right Button on Same Line */}
@@ -285,13 +401,13 @@ export default function Hero({ onOpenContact }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-graphite text-[11px] sm:text-sm md:text-base font-normal leading-tight sm:leading-relaxed text-left max-w-[190px] sm:max-w-lg cursor-default"
+            className="text-graphite text-[11px] sm:text-sm md:text-base font-normal leading-tight sm:leading-relaxed text-left max-w-[170px] sm:max-w-md cursor-default"
           >
             <strong className="text-ink font-semibold block sm:inline">
-              <ScrambleText text="Abdul Hannan — Full-Stack & Systems" />
+              <ScrambleText text="Full-Stack Developer & Software Engineer" />
             </strong>{" "}
-            <span className="hidden sm:inline">Crafting offline-first desktop engines, resilient web architectures, and practical automation.</span>
-            <span className="inline sm:hidden text-graphite">Offline-first platforms &amp; systems.</span>
+            <span className="hidden sm:inline">building real-world products, business systems, and interactive web experiences.</span>
+            <span className="inline sm:hidden text-graphite">building real-world products &amp; systems.</span>
           </motion.p>
 
           {/* Right: Magnetic Pill CTA Button */}
